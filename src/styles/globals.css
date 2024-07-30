@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for dark mode */
+.dark .bg-blue-50 {
+  background-color: #1a202c; /* dark background */
+}
+
+.dark .bg-white {
+  background-color: #2d3748; /* slightly lighter dark background */
+}
+
+.dark .text-gray-700 {
+  color: #a0aec0; /* light gray text */
+}
+
+.dark .text-blue-600 {
+  color: #63b3ed; /* light blue text */
+}
+
+.dark .border-gray-300 {
+  border-color: #4a5568; /* dark border color */
+}
+
+.dark .bg-blue-100 {
+  background-color: #2b6cb0; /* dark blue background */
+}
+
+.dark .hover\:bg-blue-50:hover {
+  background-color: #4a5568; /* dark hover background */
+}
