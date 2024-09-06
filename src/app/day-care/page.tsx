@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 
 const mockData = [
   { id: 1, name: "강복례", gender: "여", birth: "1939-03-06", status: "입소", grade: "4등급", number: "L1906113354-100", endDate: "2025-01-11" },
+  { id: 2, name: "박여울", gender: "여", birth: "1939-03-06", status: "입소", grade: "6등급", number: "L1906113354-200", endDate: "2025-01-11" },
+  { id: 3, name: "임율", gender: "여", birth: "1939-03-06", status: "퇴소", grade: "1등급", number: "L1906113354-300", endDate: "2025-01-11" },
+  { id: 4, name: "홍길동", gender: "여", birth: "1939-03-06", status: "입소", grade: "2등급", number: "L1906113354-400", endDate: "2025-01-11" },
   // Add more mock data as needed
 ];
 
