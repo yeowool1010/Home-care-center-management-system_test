@@ -76,15 +76,15 @@ const data = {
     },
   ],
 };
-
 const options = {
   responsive: true,
+  maintainAspectRatio: false, // 비율을 유지하지 않도록 설정
   plugins: {
     legend: {
       position: 'top' as const,
       labels: {
         font: {
-          size: 12, // 범례 텍스트 크기 줄임
+          size: 12,
         },
       },
     },
@@ -92,7 +92,7 @@ const options = {
       display: true,
       text: '홍길동님 최근 5년 체력장 기록',
       font: {
-        size: 12, // 차트 제목 크기 줄임
+        size: 12,
       },
     },
   },
@@ -100,7 +100,7 @@ const options = {
     x: {
       ticks: {
         font: {
-          size: 10, // x축 글씨 크기 줄임
+          size: 10,
         },
       },
     },
@@ -110,23 +110,74 @@ const options = {
       ticks: {
         stepSize: 5,
         font: {
-          size: 10, // y축 숫자 크기 줄임
+          size: 10,
         },
       },
     },
   },
 };
 
+
+// const options = {
+//   responsive: true,
+//   plugins: {
+//     legend: {
+//       position: 'top' as const,
+//       labels: {
+//         font: {
+//           size: 12, // 범례 텍스트 크기 줄임
+//         },
+//       },
+//     },
+//     title: {
+//       display: true,
+//       text: '홍길동님 최근 5년 체력장 기록',
+//       font: {
+//         size: 12, // 차트 제목 크기 줄임
+//       },
+//     },
+//   },
+//   scales: {
+//     x: {
+//       ticks: {
+//         font: {
+//           size: 10, // x축 글씨 크기 줄임
+//         },
+//       },
+//     },
+//     y: {
+//       beginAtZero: true,
+//       max: 20,
+//       ticks: {
+//         stepSize: 5,
+//         font: {
+//           size: 10, // y축 숫자 크기 줄임
+//         },
+//       },
+//     },
+//   },
+// };
 const LineChartComponent = () => {
   return (
-    <div className="w-fit">
+    <div className="w-full">
       <h1 className="text-sm font-bold text-center mb-6 text-teal-500">홍길동님은 센터 내 상위 "00%" 입니다.</h1>
-      <div className="bg-gray-200 w-full mb-2 items-center" style={{ height: '300px' }}> {/* 차트 높이 줄임 */}
-        <Line data={data} options={options} />
+      <div className="bg-gray-200 w-full mb-2 items-center" style={{ height: '300px' }}>
+        <Line data={data} options={{ ...options, maintainAspectRatio: false }} />
       </div>
     </div>
   );
 };
+
+// const LineChartComponent = () => {
+//   return (
+//     <div className="w-fit">
+//       <h1 className="text-sm font-bold text-center mb-6 text-teal-500">홍길동님은 센터 내 상위 "00%" 입니다.</h1>
+//       <div className="bg-gray-200 w-full mb-2 items-center" style={{ height: '300px' }}> {/* 차트 높이 줄임 */}
+//         <Line data={data} options={options} />
+//       </div>
+//     </div>
+//   );
+// };
 
 const PdfGenerator = () => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -167,8 +218,11 @@ const PdfGenerator = () => {
   };
 
   return (
-    <div className="flxe flex-col p-6 bg-gray-100 min-h-screen">
-      <div ref={contentRef} className="bg-white p-4 shadow-lg mx-auto">
+    <div className="flex flex-col p-6 bg-gray-100 min-h-screen">
+      <div
+        ref={contentRef}
+        className="bg-white mx-auto p-4 shadow-lg max-w-[794px] min-h-[1123px] w-full"
+      >
         {/* 상단 로고 및 선 추가 */}
         <header className="flex items-center mb-6 relative">
           <div className="flex items-center">
@@ -176,11 +230,11 @@ const PdfGenerator = () => {
             <span className="text-sm font-bold text-black">경덕재 주간보호센터 기관명1</span>
           </div>
           <div className="flex-grow ml-2 border-t-2 border-teal-500"></div>
-          <div className="w-4 h-8 bg-teal-500 absolute right-0 top-0"></div> {/* 상단 박스 크기 축소 */}
+          <div className="w-4 h-8 bg-teal-500 absolute right-0 top-0"></div>
         </header>
 
         {/* 제목 */}
-        <h1 className="text-base font-bold text-center mb-4 text-black">2024년 9월 7일 홍길동님 보고서</h1>
+        <h1 className="text-lg font-bold text-center mb-4 text-black">2024년 9월 7일 홍길동님 보고서</h1>
 
         {/* 그래프 섹션 */}
         <section className="mb-4">
@@ -188,12 +242,12 @@ const PdfGenerator = () => {
         </section>
 
         {/* 체력장 섹션 */}
-        <h2 className="text-sm font-bold text-black">홍길동님 체력장</h2>
+        <h2 className="text-sm font-bold text-black my-4">홍길동님 체력장</h2>
         <TableComponent />
 
         {/* 체력장 상태 */}
         <section className="mb-4">
-          <div className="flex items-center text-sm my-4">
+          <div className="flex items-center text-lg my-4">
             <p className="font-bold mb-2 text-black">체력장 측정 결과 홍길동 어르신의 상태는&nbsp;</p>
             <p className="text-red-600 mb-2 font-bold underline">양호</p>
             <p className="font-bold mb-2 text-black">&nbsp;입니다.</p>
@@ -210,7 +264,7 @@ const PdfGenerator = () => {
         </div>
 
         <footer className="text-center text-gray-600 mt-6">
-          <p className="text-xs">© Sample University</p>
+          {/* <p className="text-xs">© Sample University</p> */}
         </footer>
       </div>
 
@@ -228,6 +282,7 @@ const PdfGenerator = () => {
 };
 
 export default PdfGenerator;
+
 
 const dummyData = [
   { id: 1, name: '상체근력', score: 7, category: 1, color: 3 },
