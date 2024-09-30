@@ -160,7 +160,7 @@ const options = {
 const LineChartComponent = () => {
   return (
     <div className="w-full">
-      <h1 className="text-sm font-bold text-center mb-6 text-teal-500">홍길동님은 센터 내 상위 "00%" 입니다.</h1>
+      <h1 className="text-sm font-bold text-center mb-6 text-teal-500">홍길동님은 센터 내 상위 &quot;00%&quot; 입니다.</h1>
       <div className="bg-gray-200 w-full mb-2 items-center" style={{ height: '300px' }}>
         <Line data={data} options={{ ...options, maintainAspectRatio: false }} />
       </div>
