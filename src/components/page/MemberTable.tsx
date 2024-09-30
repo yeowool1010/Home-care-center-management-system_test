@@ -1,37 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import CreateModal from '../organisms/CreateModal'
+import Alert from '../organisms/Alert';
 
 const MemberTable = () => {
-  const data = Array(10).fill({
-    memberNumber: 'H_001',
-    name: '홍길동',
-    birthdate: '1994.10.10',
-    gender: '여자',
-    careLevel: '1등급',
-    assistiveDevice: '휠체어',
-    address: '인천시 부평구',
-    phoneNumber: '010-1234-5678',
-  });
+  // State to track the active tab
+  const [activeTab, setActiveTab] = useState<string>('회원 목록');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Define tab options
+  // const tabs = ['측정기록', '보고서'];
+  const tabs = ['보고서'];
 
   return (
-    <div className="flex flex-col items-center p-4">
-      {/* Header Buttons */}
+    <div className="flex flex-col items-center p-4 text-bl text-black">
+       {/* Modal Component */}
+       <CreateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/* Header Tabs */}
       <div className="flex justify-between w-full max-w-6xl mb-4">
-        <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
+        <button
+          onClick={() => setIsModalOpen(true)} 
+          className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
           회원추가
         </button>
-        <div className="space-x-4">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
-            회원 목록
-          </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
-            회원 정보
-          </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
-            결과분석
-          </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
-            보고서
-          </button>
+        <div className="space-x-4 flex">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-lg shadow-md text-white transition-all duration-300 ${
+                activeTab === tab
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-300 shadow-lg'
+                  : 'bg-blue-500 hover:bg-blue-600'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -50,7 +54,16 @@ const MemberTable = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, index) => (
+          {Array(10).fill({
+            memberNumber: 'H_001',
+            name: '홍길동',
+            birthdate: '1994.10.10',
+            gender: '여자',
+            careLevel: '1등급',
+            assistiveDevice: '휠체어',
+            address: '인천시 부평구',
+            phoneNumber: '010-1234-5678',
+          }).map((row, index) => (
             <tr
               key={index}
               className={`${

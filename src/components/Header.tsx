@@ -7,7 +7,7 @@ const Header = () => {
   const menuItems = ['기관명1', '기관명2', '기관명3', '기관명4', '기관명5'];
 
   return (
-    <header className="bg-gradient-to-r from-white via-blue-100 to-blue-200 p-4 shadow-md fixed w-full top-0 z-50">
+    <header className="bg-gradient-to-r from-white via-blue-100 to-blue-200 p-4 shadow-md fixed w-full top-0 z-10">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center space-x-4">
