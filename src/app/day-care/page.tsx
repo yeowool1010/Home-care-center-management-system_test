@@ -60,7 +60,7 @@ export default function Home() {
               <th className="border border-gray-300 dark:border-gray-600 p-2">만료일자</th>
             </tr>
           </thead>
-          <tbody>
+          {/* <tbody>
             {mockData.map((person) => (
               <tr key={person.id} className="hover:bg-blue-50 dark:hover:bg-gray-600 cursor-pointer" onClick={() => setSelectedPerson(person)}>
                 <td className="border border-gray-300 dark:border-gray-600 p-2">{person.name}</td>
@@ -72,7 +72,7 @@ export default function Home() {
                 <td className="border border-gray-300 dark:border-gray-600 p-2">{person.endDate}</td>
               </tr>
             ))}
-          </tbody>
+          </tbody> */}
         </table>
         {selectedPerson && (
           <div className="mt-6 p-4 bg-blue-100 dark:bg-gray-700 rounded-lg">
