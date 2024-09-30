@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import CreateModal from '../organisms/CreateModal'
 import Alert from '../organisms/Alert';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const MemberTable = () => {
+  // const router = useRouter();
+
+  // const handleRowClick = (name: string) => {
+  //   router.push(`/memberInfo-page?id=${name}`);
+  // };
+
   // State to track the active tab
   const [activeTab, setActiveTab] = useState<string>('회원 목록');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +46,7 @@ const MemberTable = () => {
           ))}
         </div>
       </div>
+      
 
       {/* Table */}
       <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
@@ -64,21 +73,22 @@ const MemberTable = () => {
             address: '인천시 부평구',
             phoneNumber: '010-1234-5678',
           }).map((row, index) => (
-            <tr
-              key={index}
-              className={`${
-                index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-              } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200`}
-            >
-              <td className="px-4 py-2 text-center">{row.memberNumber}</td>
-              <td className="px-4 py-2 text-center">{row.name}</td>
-              <td className="px-4 py-2 text-center">{row.birthdate}</td>
-              <td className="px-4 py-2 text-center">{row.gender}</td>
-              <td className="px-4 py-2 text-center">{row.careLevel}</td>
-              <td className="px-4 py-2 text-center">{row.assistiveDevice}</td>
-              <td className="px-4 py-2 text-center">{row.address}</td>
-              <td className="px-4 py-2 text-center">{row.phoneNumber}</td>
-            </tr>
+              <tr
+                key={index}
+                className={`${
+                  index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200`}
+                // onClick={() => handleRowClick(row.name)}
+              >
+                <td className="px-4 py-2 text-center">{row.memberNumber}</td>
+                <td className="px-4 py-2 text-center">{row.name}</td>
+                <td className="px-4 py-2 text-center">{row.birthdate}</td>
+                <td className="px-4 py-2 text-center">{row.gender}</td>
+                <td className="px-4 py-2 text-center">{row.careLevel}</td>
+                <td className="px-4 py-2 text-center">{row.assistiveDevice}</td>
+                <td className="px-4 py-2 text-center">{row.address}</td>
+                <td className="px-4 py-2 text-center">{row.phoneNumber}</td>
+              </tr>
           ))}
         </tbody>
       </table>

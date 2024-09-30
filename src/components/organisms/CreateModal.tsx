@@ -142,7 +142,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     onClick={handleAddDevice}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
                   >
-                    추가
+                    +
                   </button>
                 </div>
                 {/* Display selected devices */}
