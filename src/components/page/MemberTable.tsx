@@ -30,6 +30,12 @@ const MemberTable = () => {
           className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
           회원추가
         </button>
+        <Link href={`/memberInfo-page?id=${'H-001'}`} passHref>
+            <button
+              className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
+              임시 회원 정보 진입
+            </button>
+         </Link>
         <div className="space-x-4 flex">
           {tabs.map((tab) => (
             <button

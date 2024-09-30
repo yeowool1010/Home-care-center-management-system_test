@@ -10,9 +10,11 @@ const Header = () => {
     <header className="bg-gradient-to-r from-white via-blue-100 to-blue-200 p-4 shadow-md fixed w-full top-0 z-10">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center space-x-4">
-          <img src="/img/Logo.svg" alt="Logo" className="h-12" />
-        </div>
+        <Link href={'/'}>
+          <div className="flex items-center space-x-4">
+            <img src="/img/Logo.svg" alt="Logo" className="h-12" />
+          </div>
+        </Link>
 
 
         {/* Menu */}
