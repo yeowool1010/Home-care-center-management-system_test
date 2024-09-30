@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <div className="bg-blue-50 text-gray-700 dark:text-white dark:bg-gray-900 min-h-screen p-8">
-      <div className="container mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+      {/* <div className="container mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-300">목욕서비스 제공 기록</h1>
           <button onClick={() => setDarkMode(!darkMode)} className="px-4 py-2 bg-blue-600 dark:bg-blue-400 text-white rounded-md shadow-md">
@@ -60,7 +60,7 @@ export default function Home() {
               <th className="border border-gray-300 dark:border-gray-600 p-2">만료일자</th>
             </tr>
           </thead>
-          {/* <tbody>
+          <tbody>
             {mockData.map((person) => (
               <tr key={person.id} className="hover:bg-blue-50 dark:hover:bg-gray-600 cursor-pointer" onClick={() => setSelectedPerson(person)}>
                 <td className="border border-gray-300 dark:border-gray-600 p-2">{person.name}</td>
@@ -72,7 +72,7 @@ export default function Home() {
                 <td className="border border-gray-300 dark:border-gray-600 p-2">{person.endDate}</td>
               </tr>
             ))}
-          </tbody> */}
+          </tbody>
         </table>
         {selectedPerson && (
           <div className="mt-6 p-4 bg-blue-100 dark:bg-gray-700 rounded-lg">
@@ -104,7 +104,7 @@ export default function Home() {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
