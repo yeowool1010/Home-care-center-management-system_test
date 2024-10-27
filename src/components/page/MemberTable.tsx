@@ -1,58 +1,39 @@
-import React, { useState } from 'react';
-import CreateModal from '../organisms/CreateModal'
+import React, { useState, useEffect } from 'react';
+import CreateModal from '../organisms/CreateModal';
 import Alert from '../organisms/Alert';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 const MemberTable = () => {
-  // const router = useRouter();
-
-  // const handleRowClick = (name: string) => {
-  //   router.push(`/memberInfo-page?id=${name}`);
-  // };
-
-  // State to track the active tab
   const [activeTab, setActiveTab] = useState<string>('회원 목록');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [members, setMembers] = useState<any[]>([]);
 
-  // Define tab options
-  // const tabs = ['측정기록', '보고서'];
-  const tabs = ['보고서'];
+  // Fetch people data from API on component mount
+  useEffect(() => {
+    fetch('/api/people')
+      .then((response) => response.json())
+      .then((data) => setMembers(data))
+      .catch((error) => console.error('Error fetching members:', error));
+  }, []);
 
   return (
     <div className="flex flex-col items-center p-4 text-bl text-black">
-       {/* Modal Component */}
-       <CreateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/* Modal Component */}
+      <CreateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       {/* Header Tabs */}
       <div className="flex justify-between w-full max-w-6xl mb-4">
         <button
-          onClick={() => setIsModalOpen(true)} 
-          className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
+          onClick={() => setIsModalOpen(true)}
+          className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600"
+        >
           회원추가
         </button>
         <Link href={`/memberInfo-page?id=${'H-001'}`} passHref>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
-              임시 회원 정보 진입
-            </button>
-         </Link>
-        <div className="space-x-4 flex">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-lg shadow-md text-white transition-all duration-300 ${
-                activeTab === tab
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-300 shadow-lg'
-                  : 'bg-blue-500 hover:bg-blue-600'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+          <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
+            임시 회원 정보 진입
+          </button>
+        </Link>
       </div>
-      
 
       {/* Table */}
       <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
@@ -69,32 +50,22 @@ const MemberTable = () => {
           </tr>
         </thead>
         <tbody>
-          {Array(10).fill({
-            memberNumber: 'H_001',
-            name: '홍길동',
-            birthdate: '1994.10.10',
-            gender: '여자',
-            careLevel: '1등급',
-            assistiveDevice: '휠체어',
-            address: '인천시 부평구',
-            phoneNumber: '010-1234-5678',
-          }).map((row, index) => (
-              <tr
-                key={index}
-                className={`${
-                  index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200`}
-                // onClick={() => handleRowClick(row.name)}
-              >
-                <td className="px-4 py-2 text-center">{row.memberNumber}</td>
-                <td className="px-4 py-2 text-center">{row.name}</td>
-                <td className="px-4 py-2 text-center">{row.birthdate}</td>
-                <td className="px-4 py-2 text-center">{row.gender}</td>
-                <td className="px-4 py-2 text-center">{row.careLevel}</td>
-                <td className="px-4 py-2 text-center">{row.assistiveDevice}</td>
-                <td className="px-4 py-2 text-center">{row.address}</td>
-                <td className="px-4 py-2 text-center">{row.phoneNumber}</td>
-              </tr>
+          {members.map((member, index) => (
+            <tr
+              key={member.memberId}
+              className={`${
+                index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+              } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200`}
+            >
+              <td className="px-4 py-2 text-center">{member.userId}</td>
+              <td className="px-4 py-2 text-center">{member.name}</td>
+              <td className="px-4 py-2 text-center">{member.birthDate}</td>
+              <td className="px-4 py-2 text-center">{member.gender}</td>
+              <td className="px-4 py-2 text-center">{member.careLevel}</td>
+              <td className="px-4 py-2 text-center">{member.assistiveDevice}</td>
+              <td className="px-4 py-2 text-center">{member.address}</td>
+              <td className="px-4 py-2 text-center">{member.phoneNumber}</td>
+            </tr>
           ))}
         </tbody>
       </table>
