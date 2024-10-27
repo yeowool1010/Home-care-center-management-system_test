@@ -20,7 +20,7 @@ interface Person {
 const assistiveDevices = ["휠체어", "워커", "지팡이", "없음"];
 const organizations = ["A", "B", "C", "D", "E"];
 
-const people: Person[] = Array.from({ length: 200 }, (_, i) => {
+const people: Person[] = Array.from({ length: 300 }, (_, i) => {
   const org = organizations[i % organizations.length]; // Cycle through A, B, C, D, E
   return {
     memberId: String(i + 1).padStart(3, '0'), // Simple sequential number as memberId

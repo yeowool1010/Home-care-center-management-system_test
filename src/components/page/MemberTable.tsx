@@ -52,15 +52,11 @@ const MemberTable = () => {
         >
           회원추가
         </button>
-        <Link href={`/memberInfo-page?id=${'H-001'}`} passHref>
-          <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600">
-            임시 회원 정보 진입
-          </button>
-        </Link>
+
       </div>
 
       {/* Table */}
-      <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
+      {/* <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
         <thead>
           <tr className="bg-blue-100">
             <th className="px-4 py-2">회원번호</th>
@@ -92,7 +88,39 @@ const MemberTable = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
+
+      {/* Table Body */}
+      <div className="divide-y">
+      <div className="grid grid-cols-8 bg-blue-100 text-sm text-center font-semibold">
+        <div className="px-4 py-2 whitespace-nowrap">회원번호</div>
+        <div className="px-4 py-2 whitespace-nowrap">이름</div>
+        <div className="px-4 py-2 whitespace-nowrap">생년월일</div>
+        <div className="px-4 py-2 whitespace-nowrap">성별</div>
+        <div className="px-4 py-2 whitespace-nowrap">장기요양등급</div>
+        <div className="px-4 py-2 whitespace-nowrap">보조기</div>
+        <div className="px-4 py-2 whitespace-nowrap">주소</div>
+        <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
+      </div>
+        {currentMembers.map((member, index) => (
+          <Link key={member.memberId} href={`/memberInfo-page?id=${member.userId}`} passHref>
+            <div
+              className={`grid grid-cols-8 px-4 py-2 text-center text-sm ${
+                index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+              } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200 cursor-pointer`}
+            >
+              <div>{member.userId}</div>
+              <div>{member.name}</div>
+              <div>{member.birthDate}</div>
+              <div>{member.gender}</div>
+              <div>{member.careLevel}</div>
+              <div>{member.assistiveDevice}</div>
+              <div>{member.address}</div>
+              <div>{member.phoneNumber}</div>
+            </div>
+          </Link>
+        ))}
+      </div>
 
       {/* Pagination */}
       <div className="mt-4 flex justify-center space-x-2">
@@ -101,7 +129,7 @@ const MemberTable = () => {
           disabled={currentPage === 1}
           className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
         >
-          ◀◀
+          처음
         </button>
         <button
           onClick={() => handlePageChange(startPage - 1)}
@@ -133,7 +161,7 @@ const MemberTable = () => {
           disabled={currentPage === totalPages}
           className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
         >
-          ▶▶
+          마지막
         </button>
       </div>
     </div>
