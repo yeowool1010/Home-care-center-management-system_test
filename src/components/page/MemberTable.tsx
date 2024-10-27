@@ -7,6 +7,9 @@ const MemberTable = () => {
   const [activeTab, setActiveTab] = useState<string>('회원 목록');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [members, setMembers] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const membersPerPage = 10; // Number of members to show per page
+  const pageGroupSize = 5; // Number of page buttons to show in pagination
 
   // Fetch people data from API on component mount
   useEffect(() => {
@@ -15,6 +18,27 @@ const MemberTable = () => {
       .then((data) => setMembers(data))
       .catch((error) => console.error('Error fetching members:', error));
   }, []);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(members.length / membersPerPage);
+
+  // Get current page members
+  const currentMembers = members.slice(
+    (currentPage - 1) * membersPerPage,
+    currentPage * membersPerPage
+  );
+
+  // Calculate the start and end of the current page group
+  const currentGroup = Math.floor((currentPage - 1) / pageGroupSize);
+  const startPage = currentGroup * pageGroupSize + 1;
+  const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center p-4 text-bl text-black">
@@ -50,7 +74,7 @@ const MemberTable = () => {
           </tr>
         </thead>
         <tbody>
-          {members.map((member, index) => (
+          {currentMembers.map((member, index) => (
             <tr
               key={member.memberId}
               className={`${
@@ -72,21 +96,44 @@ const MemberTable = () => {
 
       {/* Pagination */}
       <div className="mt-4 flex justify-center space-x-2">
-        <button className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400">
+        <button
+          onClick={() => handlePageChange(1)}
+          disabled={currentPage === 1}
+          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+        >
+          ◀◀
+        </button>
+        <button
+          onClick={() => handlePageChange(startPage - 1)}
+          disabled={startPage === 1}
+          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+        >
           ◀
         </button>
-        {Array.from({ length: 10 }, (_, i) => (
+        {Array.from({ length: endPage - startPage + 1 }, (_, i) => (
           <button
             key={i}
+            onClick={() => handlePageChange(startPage + i)}
             className={`px-3 py-1 rounded-lg ${
-              i === 0 ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-gray-400'
+              currentPage === startPage + i ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-gray-400'
             }`}
           >
-            {i + 1}
+            {startPage + i}
           </button>
         ))}
-        <button className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400">
+        <button
+          onClick={() => handlePageChange(endPage + 1)}
+          disabled={endPage === totalPages}
+          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+        >
           ▶
+        </button>
+        <button
+          onClick={() => handlePageChange(totalPages)}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+        >
+          ▶▶
         </button>
       </div>
     </div>
