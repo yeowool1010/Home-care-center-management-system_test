@@ -103,7 +103,18 @@ const MemberTable = () => {
         <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
       </div>
         {currentMembers.map((member, index) => (
-          <Link key={member.memberId} href={`/memberInfo-page?id=${member.userId}`} passHref>
+          <Link 
+            key={member.memberId} 
+            href={
+              {
+                pathname :`/memberInfo-page`,
+                query : {
+                  id : `${member.userId}`                    
+                }
+              }
+            } 
+            passHref
+          >
             <div
               className={`grid grid-cols-8 px-4 py-2 text-center text-sm ${
                 index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
