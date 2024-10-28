@@ -26,7 +26,7 @@ const MemberInfo: React.FC = () => {
   // console.log(router);
 
 
-  const id = pathname.get("id") || '';
+  const id = pathname?.get("id") || '';
   console.log(id);
 
   useEffect(() => {
