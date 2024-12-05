@@ -4,14 +4,17 @@ import React, { useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
+import HexagonalChart from './HexagonalChart'
+import HexagonalChart2 from './HexagonalChart2'
+import IndividualLineCharts from './IndividualLineCharts'
+import LevelTable from './LevelTable'
 
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -21,502 +24,401 @@ import {
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-// 예시 데이터: 시기별 6개 항목
 const data = {
-  labels: ['2019', '2020', '2021', '2022', '2023'],
+  labels: ['상체근력', '상체유연성', '하체근력', '하체유연성', 'TUG', '2분제자리걷기'],
   datasets: [
     {
-      label: '상체근력',
-      data: [5, 9, 7, 10, 12],
-      borderColor: '#00bfae',
-      backgroundColor: 'rgba(0, 191, 174, 0.5)',
-      fill: true,
+      label: '최초기록',
+      data: [3, 4.5, 2, 3, 2, 3],
+      backgroundColor: '#00bfae', // 차트 색상
     },
     {
-      label: '상체유연성',
-      data: [10, 8, 12, 14, 13],
-      borderColor: '#999999',
-      backgroundColor: 'rgba(153, 153, 153, 0.5)',
-      fill: true,
+      label: '직전기록',
+      data: [5, 3.5, 2.2, 3, 3.2, 4],
+      backgroundColor: '#f39c12', // 차트 색상
     },
     {
-      label: '하체근력',
-      data: [12, 11, 10, 15, 18],
-      borderColor: '#ff6347',
-      backgroundColor: 'rgba(255, 99, 71, 0.5)',
-      fill: true,
-    },
-    {
-      label: '하체유연성',
-      data: [8, 6, 5, 7, 8],
-      borderColor: '#f39c12',
-      backgroundColor: 'rgba(243, 156, 18, 0.5)',
-      fill: true,
-    },
-    {
-      label: 'TUG',
-      data: [15, 13, 12, 11, 14],
-      borderColor: '#9b59b6',
-      backgroundColor: 'rgba(155, 89, 182, 0.5)',
-      fill: true,
-    },
-    {
-      label: '2분제자리',
-      data: [7, 8, 10, 12, 9],
-      borderColor: '#3498db',
-      backgroundColor: 'rgba(52, 152, 219, 0.5)',
-      fill: true,
+      label: '최근기록',
+      data: [3, 2, 4, 2.1, 4.3, 2.5],
+      backgroundColor: '#ff6347', // 차트 색상
     },
   ],
 };
+
 const options = {
   responsive: true,
-  maintainAspectRatio: false, // 비율을 유지하지 않도록 설정
   plugins: {
     legend: {
       position: 'top' as const,
-      labels: {
-        font: {
-          size: 12,
-        },
-      },
     },
     title: {
       display: true,
-      text: '홍길동님 최근 5년 체력장 기록',
-      font: {
-        size: 12,
-      },
+      text: '최초 및 최근 기록 level 기준 그래프',
     },
   },
   scales: {
-    x: {
-      ticks: {
-        font: {
-          size: 10,
-        },
-      },
-    },
     y: {
       beginAtZero: true,
-      max: 20,
+      max: 5,
       ticks: {
         stepSize: 5,
-        font: {
-          size: 10,
-        },
       },
     },
   },
 };
 
-
-// const options = {
-//   responsive: true,
-//   plugins: {
-//     legend: {
-//       position: 'top' as const,
-//       labels: {
-//         font: {
-//           size: 12, // 범례 텍스트 크기 줄임
-//         },
-//       },
-//     },
-//     title: {
-//       display: true,
-//       text: '홍길동님 최근 5년 체력장 기록',
-//       font: {
-//         size: 12, // 차트 제목 크기 줄임
-//       },
-//     },
-//   },
-//   scales: {
-//     x: {
-//       ticks: {
-//         font: {
-//           size: 10, // x축 글씨 크기 줄임
-//         },
-//       },
-//     },
-//     y: {
-//       beginAtZero: true,
-//       max: 20,
-//       ticks: {
-//         stepSize: 5,
-//         font: {
-//           size: 10, // y축 숫자 크기 줄임
-//         },
-//       },
-//     },
-//   },
-// };
-const LineChartComponent = () => {
+const BarChartComponent = () => {
   return (
     <div className="w-full">
-      <h1 className="text-sm font-bold text-center mb-6 text-teal-500">홍길동님은 센터 내 상위 &quot;00%&quot; 입니다.</h1>
-      <div className="bg-gray-200 w-full mb-2 items-center" style={{ height: '300px' }}>
-        <Line data={data} options={{ ...options, maintainAspectRatio: false }} />
+      <div className="bg-amber-50 w-full mb-4">
+        <Bar data={data} options={options} />
       </div>
     </div>
   );
 };
 
-// const LineChartComponent = () => {
-//   return (
-//     <div className="w-fit">
-//       <h1 className="text-sm font-bold text-center mb-6 text-teal-500">홍길동님은 센터 내 상위 "00%" 입니다.</h1>
-//       <div className="bg-gray-200 w-full mb-2 items-center" style={{ height: '300px' }}> {/* 차트 높이 줄임 */}
-//         <Line data={data} options={options} />
-//       </div>
-//     </div>
-//   );
-// };
-
 const PdfGenerator = () => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const coverRef = useRef<HTMLDivElement>(null);
+  const additionalPageRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadPdf = async () => {
-    const content = contentRef.current;
 
-    if (!content) return;
+  const dummyData = [
+    { id: 1, name: '상체근력', score1: {value: 20, level: 3}, score2: {value: 20, level: 3}, score3: {value: 24, level: 3.2}},
+    { id: 2, name: '상체유연성', score1: {value: -28, level: 3}, score2: {value: -30, level: 3.2}, score3: {value: -10, level: 5}},
+    { id: 3, name: '하체근력', score1: {value: 11, level: 3}, score2: {value: 17, level: 4}, score3: {value: 20, level: 3.5}},
+    { id: 4, name: '하체유연성', score1: {value: 2.5, level: 3}, score2: {value: 3.2, level: 2}, score3: {value: 4, level: 4}},
+    { id: 5, name: '2분제자리걷기', score1: {value: 218, level: 3}, score2: {value: 200, level: 3.2}, score3: {value: 220, level: 3.6}},
+    { id: 6, name: 'TUG', score1: {value: 16, level: 3}, score2: {value: 20, level: 3.6}, score3: {value: 22, level: 3.8}},
+  ];
 
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
-
-    const canvas = await html2canvas(content, { scale: 2 });
-    const imageData = canvas.toDataURL('image/png');
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(imageData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
-
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imageData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
+  const getUnit =(string: String) => {
+    switch (string) {
+      case "상체근력":
+        return "회";
+      case "상체유연성":
+        return "cm";
+      case "하체근력":
+        return "회";
+      case "하체유연성":
+        return "cm";
+      case "TUG":
+        return "초";
+      case "2분제자리걷기":
+        return "회";
+      default:
+        return "";
     }
+  }
+    
+  
+  const TableComponent = () => {
+    return (
+      <div className="overflow-x-auto text-black">
+        <table className="min-w-full bg-white border border-gray-300 text-sm"> {/* 테이블 폰트 크기 줄임 */}
+          <thead>
+            <tr>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left">항목</th>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left">1차 측정</th>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left">직전회차측정</th>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left">최근회차측정</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dummyData.map((item, index) => (
+              <tr
+                key={item.id}
+                className={index % 2 === 0 ? 'bg-white' : 'bg-amber-50'} // 홀짝 줄 배경색
+              >
+                <td className="py-1 px-2 border-b font-bold">{item.name}</td>
+                <td className="py-1 px-2 border-b font-bold">
+                  {item.score1.value}
+                  {getUnit(item.name)} <span className="font-bold text-teal-500">{"Lv_" + item.score1.level}</span>
+                </td>
+                <td className="py-1 px-2 border-b font-bold">
+                  {item.score2.value}
+                  {getUnit(item.name)} <span className="font-bold text-teal-500">{"Lv_" + item.score2.level}</span>
+                </td>
+                <td className="py-1 px-2 border-b font-bold">
+                  {item.score3.value}
+                  {getUnit(item.name)} <span className="font-bold text-teal-500">{"Lv_" + item.score3.level}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
 
-    pdf.save('generated.pdf');
+        </table>
+      </div>
+    );
   };
 
+
+
+
+
+  const handleDownloadPdf = async () => {
+    try {
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+  
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const scale = 2; // HTML 요소를 2배 해상도로 캡처
+  
+      // Helper function to capture and add pages
+      const captureAndAddPage = async (ref: React.RefObject<HTMLDivElement>) => {
+        if (ref.current) {
+          const canvas = await html2canvas(ref.current, {
+            scale, // 고해상도로 캡처
+            useCORS: true, // 외부 이미지 허용
+          });
+  
+          const imageData = canvas.toDataURL("image/png");
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+          pdf.addImage(imageData, "PNG", 0, 0, imgWidth, imgHeight);
+  
+          // 페이지 높이가 A4를 초과하면 다음 페이지로 이동
+          if (imgHeight > pageHeight) {
+            pdf.addPage();
+          }
+        }
+      };
+  
+      // 1. Cover Page
+      await captureAndAddPage(coverRef);
+  
+      
+      // 3. Main Content Page
+      pdf.addPage();
+      await captureAndAddPage(contentRef);
+
+      // 2. Additional Page
+      pdf.addPage();
+      await captureAndAddPage(additionalPageRef);
+  
+      // Save the PDF
+      pdf.save("generated.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
+  };
+
+  const handlereportSubmit = () => {
+    console.log("보고서저장")
+    // 코멘트 문구 상태 만들어서 이 지점 최종 저장
+
+  }
+
+
   return (
-    <div className="flex flex-col p-6 bg-gray-100 min-h-screen">
-      <div
-        ref={contentRef}
-        className="bg-white mx-auto p-4 shadow-lg max-w-[794px] min-h-[1123px] w-full"
-      >
-        {/* 상단 로고 및 선 추가 */}
-        <header className="flex items-center mb-6 relative">
-          <div className="flex items-center">
-            <p className="text-sm text-black">로고</p>
-            <span className="text-sm font-bold text-black">경덕재 주간보호센터 기관명1</span>
+    <div className='flex flex-col'>
+      <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
+          {/* Cover Page */}
+        <div ref={coverRef} className="bg-white p-14 shadow-lg mx-auto">
+
+          <header className="relative">
+            {/* 제목 */}
+            <div className="text-center">
+              <div className="absolute left-0 top-0 w-2 h-full bg-amber-400"></div>
+              <h2 className="text-2xl font-bold mb-5 text-amber-700">경덕재 곤지암점</h2>
+              <h1 className="text-4xl font-bold mb-5 text-black">체력측정 검사 결과지</h1>
+              <div className="absolute right-0 top-0 w-2 h-full bg-amber-400"></div>
+            </div>
+          </header>
+
+          <div className="grid grid-cols-2 gap-10 text-black mt-20">
+            {/* 측정일 */}
+            <div className="bg-amber-100 p-10 rounded-lg">
+              <div className="mb-3">
+                <p className="text-lg font-bold">보고서 작성일</p>
+                <p className="text-xl font-bold text-amber-700">2024-12-06</p>
+              </div>
+              <div className="mb-3">
+                <p className="text-lg font-bold">보고서 작성자</p>
+                <p className="text-xl font-bold text-amber-700">홍길동</p>
+              </div>
+            </div>
+
+            {/* 센터명, 이름, 생년월일 */}
+            <div className="bg-amber-100 p-10 rounded-lg">
+              <div className="mb-3">
+                <p className="text-lg font-bold">이름</p>
+                <p className="text-xl font-bold text-amber-700">홍길동</p>
+              </div>
+              <div>
+                <p className="text-lg font-bold">생년월일</p>
+                <p className="text-xl font-bold text-amber-700">1990-01-01</p>
+              </div>
+            </div>
           </div>
-          <div className="flex-grow ml-2 border-t-2 border-teal-500"></div>
-          <div className="w-4 h-8 bg-teal-500 absolute right-0 top-0"></div>
-        </header>
 
-        {/* 제목 */}
-        <h1 className="text-lg font-bold text-center mb-4 text-black">2024년 9월 7일 홍길동님 보고서</h1>
+          <div className="border-t-2 border-amber-400 my-5"></div>
 
-        {/* 그래프 섹션 */}
-        <section className="mb-4">
-          <LineChartComponent />
-        </section>
+          {/* 그래프 섹션 */}
+          <section className="mb-8 flex flex-row">
+            <HexagonalChart dummyData={dummyData} />
+            <HexagonalChart2 dummyData={dummyData}/>
 
-        {/* 체력장 섹션 */}
-        <h2 className="text-sm font-bold text-black my-4">홍길동님 체력장</h2>
-        <TableComponent />
+          </section>
+  
+          {/* 체력장 상태 */}
+          <section className="m-2">
+             <div className="flex items-center text-lg my-4">
+               <p className="font-bold mb-2 text-black">체력장 측정 결과 홍길동 어르신의 상태는&nbsp;</p>
+               <p className="text-red-600 mb-2 font-bold underline">양호</p>
+               <p className="font-bold mb-2 text-black">&nbsp;입니다.</p>
+             </div>
+          </section>
 
-        {/* 체력장 상태 */}
-        <section className="mb-4">
-          <div className="flex items-center text-lg my-4">
-            <p className="font-bold mb-2 text-black">체력장 측정 결과 홍길동 어르신의 상태는&nbsp;</p>
-            <p className="text-red-600 mb-2 font-bold underline">양호</p>
-            <p className="font-bold mb-2 text-black">&nbsp;입니다.</p>
+          <div className="bg-yellow-400 p-4 rounded-lg">
+            <h2 className="text-white font-bold text-lg mb-2">Comments</h2>
+            <textarea
+              className="w-full h-40 p-2 border rounded-md text-black"
+              placeholder="코멘트를 입력하세요."
+            ></textarea>
           </div>
-        </section>
 
-        {/* 하단 색상 박스 및 코멘트 섹션 */}
-        <div className="bg-teal-500 text-white p-4 mt-4">
-          <h3 className="text-sm font-bold mb-2">Comments</h3>
-          <textarea
-            className="w-full h-16 p-2 text-black rounded-md"
-            placeholder="Add your comments here"
-          ></textarea>
+          {/* 아이콘 및 설명 섹션 */}
+          <section className="grid grid-cols-3 gap-4 text-center m-8">
+            <div>
+            <h3 className="font-bold text-white">경덕재 </h3>
+            <p className="text-sm text-white">일어서기▶3m걷기▶회전▶3m걷기▶앉기</p>
+            </div>
+          </section>
+
+
         </div>
-
-        <footer className="text-center text-gray-600 mt-6">
-          {/* <p className="text-xs">© Sample University</p> */}
-        </footer>
       </div>
 
-      {/* 버튼을 가운데로 정렬하는 부분 */}
-      <div className="flex justify-center">
-        <button
-          onClick={handleDownloadPdf}
-          className="mt-4 px-2 py-1 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[10vw] text-sm"
-        >
-          PDF 다운로드
-        </button>
+{/* 두 번째 페이지 */}
+      <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
+        
+        <div ref={contentRef} className="bg-white p-14 shadow-lg mx-auto">
+       
+          {/* 상단 로고 및 선 추가 */}
+          <header className="flex items-center mb-8 relative">
+            <div className="flex items-center">
+              <span className="text-lg font-bold text-black">경덕재 곤지암점</span>
+            </div>
+            <div className="flex-grow ml-4 border-t-2 border-amber-400"></div>
+            <div className="w-6 h-6 bg-amber-400 absolute right-0 top-0"></div>
+          </header>
+  
+          {/* 제목 */}
+          <h1 className="text-3xl font-bold text-center mb-8 text-black">홍길동님 세부 측정 결과</h1>
+  
+          {/* 그래프 섹션 */}
+          <section className="mb-8">
+            <BarChartComponent />
+          </section>
+  
+         <h2 className="text-sm font-bold text-black my-4">최초 및 최근 기록 상세 내용</h2>
+          <TableComponent />
+
+          {/* 아이콘 및 설명 섹션 */}
+          <section className="grid grid-cols-3 gap-4 text-center m-8">
+            <div>
+              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
+                <i className="fas fa-hand-pointer text-2xl"></i>
+              </div>
+              <h3 className="font-bold text-teal-500">상체근력</h3>
+              <p className="text-sm text-gray-600">n분동안 윗몸일으키기</p>
+            </div>
+            <div>
+              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
+                <i className="fas fa-heart text-2xl"></i>
+              </div>
+              <h3 className="font-bold text-teal-500">상체유연성</h3>
+              <p className="text-sm text-gray-600">설명 필요</p>
+            </div>
+            <div>
+              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
+                <i className="fas fa-chart-bar text-2xl"></i>
+              </div>
+              <h3 className="font-bold text-teal-500">하체근력</h3>
+              <p className="text-sm text-gray-600">설명 필요</p>
+            </div>
+            <div>
+              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
+                <i className="fas fa-chart-bar text-2xl"></i>
+              </div>
+              <h3 className="font-bold text-teal-500">하체유연성</h3>
+              <p className="text-sm text-gray-600">설명 필요</p>
+            </div>
+            <div>
+              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
+                <i className="fas fa-chart-bar text-2xl"></i>
+              </div>
+              <h3 className="font-bold text-teal-500">TUG</h3>
+              <p className="text-sm text-gray-600">일어서기▶3m걷기▶회전▶3m걷기▶앉기</p>
+            </div>
+            <div>
+              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
+                <i className="fas fa-chart-bar text-2xl"></i>
+              </div>
+              <h3 className="font-bold text-teal-500">2분제자리걷기</h3>
+              <p className="text-sm text-gray-600">2분동안 제자리 걷기 횟수</p>
+            </div>
+          </section>
+        </div>
+
+  {/* 세 번째 페이지 */}
+      <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
+        <div ref={additionalPageRef} className="bg-white p-14 shadow-lg mx-auto">
+       
+          {/* 상단 로고 및 선 추가 */}
+          <header className="flex items-center mb-8 relative">
+            <div className="flex items-center">
+              <span className="text-lg font-bold text-black">경덕재 곤지암점</span>
+            </div>
+            <div className="flex-grow ml-4 border-t-2 border-amber-400"></div>
+            <div className="w-6 h-6 bg-amber-400 absolute right-0 top-0"></div>
+          </header>
+  
+          {/* 제목 */}
+          <h1 className="text-3xl font-bold text-center mb-8 text-black">홍길동님 최근 5회차 기록</h1>
+  
+          {/* 그래프 섹션 */}
+          <section className="">
+            <IndividualLineCharts/>
+          </section>
+  
+         <h2 className="text-lg font-bold text-black mt-2">측정검사 별 구간(Level)기준</h2>
+          <LevelTable />
+
+        </div>
+      </div>
+    {/* 세 번째 페이지 */}
+
+        {/* 버튼을 가운데로 정렬하는 부분 */}
+        <div className="flex justify-center">
+          <button
+            onClick={handleDownloadPdf}
+            className="font-bold px-4 py-2 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[11vw] mx-5"
+          >
+            PDF 다운로드
+          </button>
+          <button
+            onClick={handlereportSubmit}
+            className="font-bold px-4 py-2 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[11vw] mx-5"
+          >
+            보고서 저장
+          </button>
+        </div>
+
       </div>
     </div>
   );
 };
 
 export default PdfGenerator;
-
-
-const dummyData = [
-  { id: 1, name: '상체근력', score: 7, category: 1, color: 3 },
-  { id: 2, name: '상체유연성', score: 6, category: 2, color: 4 },
-  { id: 3, name: '하체근력', score: 0, category: 2, color: 1 },
-  { id: 4, name: '하체유연성', score: 7, category: 4, color: 3 },
-  { id: 5, name: '2분제자리', score: 0, category: 1, color: 6 },
-  { id: 6, name: 'TUG', score: 8, category: 1, color: 1 },
-];
-
-const TableComponent = () => {
-  return (
-    <div className="overflow-x-auto text-black">
-      <table className="min-w-full bg-white border border-gray-300 text-sm"> {/* 테이블 폰트 크기 줄임 */}
-        <thead>
-          <tr>
-            <th className="py-1 px-2 border-b border-gray-300 bg-gray-200 text-left">항목</th>
-            <th className="py-1 px-2 border-b border-gray-300 bg-gray-200 text-left">1차 측정</th>
-            <th className="py-1 px-2 border-b border-gray-300 bg-gray-200 text-left">직전회차측정</th>
-            <th className="py-1 px-2 border-b border-gray-300 bg-gray-200 text-left">최근회차측정</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dummyData.map((item) => (
-            <tr key={item.id}>
-              <td className="py-1 px-2 border-b border-gray-300">{item.name}</td>
-              <td className="py-1 px-2 border-b border-gray-300">{item.score}</td>
-              <td className="py-1 px-2 border-b border-gray-300">{item.category}</td>
-              <td className="py-1 px-2 border-b border-gray-300">{item.color}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-
-
-
-
-
-
-// 막대그래프
-
-// "use client";
-
-// import React, { useRef } from 'react';
-// import jsPDF from 'jspdf';
-// import html2canvas from 'html2canvas';
-// import Image from 'next/image';
-
-// import { Bar } from 'react-chartjs-2';
-// import {
-//   Chart as ChartJS,
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// } from 'chart.js';
-
-// // Chart.js 필수 요소 등록
-// ChartJS.register(
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend
-// );
-
-// const data = {
-//   labels: ['2019', '2020', '2021', '2022', '2023'],
-//   datasets: [
-//     {
-//       label: 'Teal Bars',
-//       data: [5, 10, 7, 13, 11],
-//       backgroundColor: '#00bfae', // 차트 색상
-//     },
-//     {
-//       label: 'Gray Bars',
-//       data: [7, 8, 12, 15, 10],
-//       backgroundColor: '#999999', // 차트 색상
-//     },
-//   ],
-// };
-
-// const options = {
-//   responsive: true,
-//   plugins: {
-//     legend: {
-//       position: 'top' as const,
-//     },
-//     title: {
-//       display: true,
-//       text: 'Performance over the years',
-//     },
-//   },
-//   scales: {
-//     y: {
-//       beginAtZero: true,
-//       max: 25,
-//       ticks: {
-//         stepSize: 5,
-//       },
-//     },
-//   },
-// };
-
-// const BarChartComponent = () => {
-//   return (
-//     <div className="w-full">
-//       <h1 className="text-3xl font-bold text-center mb-8">Research Proposal</h1>
-//       <div className="bg-gray-200 w-full mb-4">
-//         {/* Bar Chart */}
-//         <Bar data={data} options={options} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// const PdfGenerator = () => {
-//   const contentRef = useRef<HTMLDivElement>(null);
-
-//   const handleDownloadPdf = async () => {
-//     const content = contentRef.current;
-
-//     if (!content) return;
-
-//     const canvas = await html2canvas(content);
-//     const imageData = canvas.toDataURL('image/png');
-
-//     const pdf = new jsPDF({
-//       orientation: 'portrait',
-//       unit: 'mm',
-//       format: 'a4',
-//     });
-
-//     const imgWidth = 210;
-//     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-//     pdf.addImage(imageData, 'PNG', 0, 0, imgWidth, imgHeight);
-//     pdf.save('generated.pdf');
-//   };
-
-//   return (
-//     <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
-//       <div ref={contentRef} className="bg-white p-6 shadow-lg mx-auto">
-//         {/* 상단 로고 및 선 추가 */}
-//         <header className="flex items-center mb-8 relative">
-//           <div className="flex items-center">
-//             <Image src="/path-to-logo.png" alt="logo" width={40} height={40} className="mr-2" />
-//             <span className="text-lg font-bold">Sample University</span>
-//           </div>
-//           <div className="flex-grow ml-4 border-t-2 border-teal-500"></div>
-//           <div className="w-6 h-10 bg-teal-500 absolute right-0 top-0"></div>
-//         </header>
-
-//         {/* 제목 */}
-//         <h1 className="text-3xl font-bold text-center mb-8">Research Proposal</h1>
-
-//         {/* 그래프 섹션 */}
-//         <section className="mb-8">
-//           <BarChartComponent />
-//           <div className="text-center mb-4">
-//             <h2 className="text-xl font-bold">Performance over the years</h2>
-//           </div>
-//           <div className="bg-gray-200 w-full h-40 mb-4 flex justify-center items-center">
-//             <p className="text-gray-600">Graph Placeholder</p>
-//           </div>
-//         </section>
-
-//         {/* 아이콘 및 설명 섹션 */}
-//         <section className="grid grid-cols-3 gap-4 text-center mb-8">
-//           <div>
-//             <div className="bg-teal-500 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-//               <i className="fas fa-hand-pointer text-2xl"></i>
-//             </div>
-//             <h3 className="font-bold">Professional Service</h3>
-//             <p className="text-sm text-gray-600">Lorem ipsum dolor sit amet.</p>
-//           </div>
-//           <div>
-//             <div className="bg-teal-500 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-//               <i className="fas fa-heart text-2xl"></i>
-//             </div>
-//             <h3 className="font-bold">Information Technology</h3>
-//             <p className="text-sm text-gray-600">Lorem ipsum dolor sit amet.</p>
-//           </div>
-//           <div>
-//             <div className="bg-teal-500 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-//               <i className="fas fa-chart-bar text-2xl"></i>
-//             </div>
-//             <h3 className="font-bold">Accounting Management</h3>
-//             <p className="text-sm text-gray-600">Lorem ipsum dolor sit amet.</p>
-//           </div>
-//         </section>
-
-//         {/* Challenges 섹션 */}
-//         <section className="mb-8">
-//           <h2 className="text-xl font-bold mb-4">CHALLENGES</h2>
-//           <p className="text-gray-600">
-//             Fight needs two web sites to promote both the magazine and sponsored events. Fight Magazine needs an
-//             e-commerce web site. Fight needs a web site to promote the events.
-//           </p>
-//         </section>
-
-//         {/* Footer */}
-//         <footer className="text-center text-gray-600 mt-12">
-//           <p>© Sample University</p>
-//         </footer>
-
-//         {/* 하단 색상 박스 및 코멘트 섹션 */}
-//         <div className="bg-teal-500 text-white p-6 mt-10">
-//           <h3 className="text-lg font-bold mb-2">Comments</h3>
-//           <textarea
-//             className="w-full h-24 p-2 text-black rounded-md"
-//             placeholder="Add your comments here"
-//           ></textarea>
-//         </div>
-//       </div>
-
-//       {/* 버튼을 가운데로 정렬하는 부분 */}
-//       <div className="flex justify-center">
-//         <button
-//           onClick={handleDownloadPdf}
-//           className="mt-10 px-4 py-2 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[10vw]"
-//         >
-//           PDF 다운로드
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default PdfGenerator;
