@@ -1,9 +1,9 @@
 import React from 'react';
 import { Member } from '@/types/member';
 
-interface ProfileHeaderProps {
-  member: Member;
-}
+type ProfileHeaderProps = {
+  memberDetail: any[]; // Replace `any[]` with the correct type if known
+};
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ memberDetail }) => {
   const member = memberDetail[0]
