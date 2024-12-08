@@ -1,11 +1,11 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import CreateModal from '../organisms/CreateModal';
 import Alert from '../organisms/Alert';
 import Link from 'next/link';
 import { Member } from '@/types/member';
-// import { useRouter } from 'next/router';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const MemberTable = () => {
   const searchParams = useSearchParams();
@@ -22,7 +22,7 @@ const MemberTable = () => {
       router.replace(`?${currentParams.toString()}`);
     }
   }, [searchParams, router]);
-  
+
   const [activeTab, setActiveTab] = useState<string>('회원 목록');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
@@ -30,37 +30,20 @@ const MemberTable = () => {
   const membersPerPage = 10; // Number of members to show per page
   const pageGroupSize = 5; // Number of page buttons to show in pagination
 
-  const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  // const [center, setCenter] = useState('');
-  const [editingId, setEditingId] = useState<number | null>(null);
-  
-    // 멤버 목록 가져오기
-    const fetchMembers = async () => {
-      const res = await fetch('/api/member');
+  // 멤버 목록 가져오기 (center 기준으로 필터링)
+  const fetchMembers = async () => {
+    try {
+      const res = await fetch(`/api/member?center=${center}`);
       const data = await res.json();
       setMembers(data);
-    };
-  
-    useEffect(() => {
-      fetchMembers();
-    }, []);
+    } catch (error) {
+      console.error('Error fetching members:', error);
+    }
+  };
 
-  // // Fetch people data from API on component mount
-  // useEffect(() => {
-  //   // fetch('/api/member-details')
-  //   fetch('/api/people')
-  //     .then((response) => response.json())
-  //     // .then((data) => setMembers(data))
-  //     .catch((error) => console.error('Error fetching members:', error));
-  // }, []);
-
-  // useEffect(() => {
-  //   fetch('/api/member-details')
-  //     .then((response) => response.json())
-  //     .then((data) => setMembers(data))
-  //     .catch((error) => console.error('Error fetching members:', error));
-  // }, []);
+  useEffect(() => {
+    fetchMembers();
+  }, [center]);
 
   // Calculate total pages
   const totalPages = Math.ceil(members.length / membersPerPage);
@@ -95,32 +78,29 @@ const MemberTable = () => {
         >
           회원추가
         </button>
-
       </div>
 
       {/* Table Body */}
       <div className="divide-y">
-      <div className="grid grid-cols-8 bg-blue-100 text-sm text-center font-semibold">
-        <div className="px-4 py-2 whitespace-nowrap">회원번호</div>
-        <div className="px-4 py-2 whitespace-nowrap">이름</div>
-        <div className="px-4 py-2 whitespace-nowrap">생년월일</div>
-        <div className="px-4 py-2 whitespace-nowrap">성별</div>
-        <div className="px-4 py-2 whitespace-nowrap">장기요양등급</div>
-        <div className="px-4 py-2 whitespace-nowrap">보조기</div>
-        <div className="px-4 py-2 whitespace-nowrap">주소</div>
-        <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
-      </div>
-        {members.map((member, index) => (
-          <Link 
-            key={index} 
-            href={
-              {
-                pathname :`/memberInfo-page`,
-                query : {
-                  id : `${member.member_id}`                    
-                }
+        <div className="grid grid-cols-8 bg-blue-100 text-sm text-center font-semibold">
+          <div className="px-4 py-2 whitespace-nowrap">회원번호</div>
+          <div className="px-4 py-2 whitespace-nowrap">이름</div>
+          <div className="px-4 py-2 whitespace-nowrap">생년월일</div>
+          <div className="px-4 py-2 whitespace-nowrap">성별</div>
+          <div className="px-4 py-2 whitespace-nowrap">장기요양등급</div>
+          <div className="px-4 py-2 whitespace-nowrap">보조기</div>
+          <div className="px-4 py-2 whitespace-nowrap">주소</div>
+          <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
+        </div>
+        {currentMembers.map((member, index) => (
+          <Link
+            key={index}
+            href={{
+              pathname: `/memberInfo-page`,
+              query: {
+                id: `${member.member_id}`
               }
-            } 
+            }}
             passHref
           >
             <div
@@ -141,7 +121,6 @@ const MemberTable = () => {
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="mt-4 flex justify-center space-x-2">
         <button
           onClick={() => handlePageChange(1)}
