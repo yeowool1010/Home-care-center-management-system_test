@@ -2,30 +2,65 @@ import React, { useState, useEffect } from 'react';
 import CreateModal from '../organisms/CreateModal';
 import Alert from '../organisms/Alert';
 import Link from 'next/link';
+import { Member } from '@/types/member';
+// import { useRouter } from 'next/router';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
 
 const MemberTable = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // 기본값 설정
+  const center = searchParams?.get('center') || 'GON';
+
+  useEffect(() => {
+    // 쿼리 파라미터에 'center'가 없으면 URL에 추가
+    if (!searchParams?.get('center')) {
+      const currentParams = new URLSearchParams(searchParams?.toString() ?? '');
+      currentParams.set('center', 'GON');
+      router.replace(`?${currentParams.toString()}`);
+    }
+  }, [searchParams, router]);
+  
   const [activeTab, setActiveTab] = useState<string>('회원 목록');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const membersPerPage = 10; // Number of members to show per page
   const pageGroupSize = 5; // Number of page buttons to show in pagination
 
-  // Fetch people data from API on component mount
-  useEffect(() => {
-    // fetch('/api/member-details')
-    fetch('/api/people')
-      .then((response) => response.json())
-      // .then((data) => setMembers(data))
-      .catch((error) => console.error('Error fetching members:', error));
-  }, []);
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  // const [center, setCenter] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  
+    // 멤버 목록 가져오기
+    const fetchMembers = async () => {
+      const res = await fetch('/api/member');
+      const data = await res.json();
+      setMembers(data);
+    };
+  
+    useEffect(() => {
+      fetchMembers();
+    }, []);
 
-  useEffect(() => {
-    fetch('/api/member-details')
-      .then((response) => response.json())
-      .then((data) => setMembers(data))
-      .catch((error) => console.error('Error fetching members:', error));
-  }, []);
+  // // Fetch people data from API on component mount
+  // useEffect(() => {
+  //   // fetch('/api/member-details')
+  //   fetch('/api/people')
+  //     .then((response) => response.json())
+  //     // .then((data) => setMembers(data))
+  //     .catch((error) => console.error('Error fetching members:', error));
+  // }, []);
+
+  // useEffect(() => {
+  //   fetch('/api/member-details')
+  //     .then((response) => response.json())
+  //     .then((data) => setMembers(data))
+  //     .catch((error) => console.error('Error fetching members:', error));
+  // }, []);
 
   // Calculate total pages
   const totalPages = Math.ceil(members.length / membersPerPage);
@@ -75,14 +110,14 @@ const MemberTable = () => {
         <div className="px-4 py-2 whitespace-nowrap">주소</div>
         <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
       </div>
-        {currentMembers.map((member, index) => (
+        {members.map((member, index) => (
           <Link 
-            key={member.memberId} 
+            key={index} 
             href={
               {
                 pathname :`/memberInfo-page`,
                 query : {
-                  id : `${member.userId}`                    
+                  id : `${member.member_id}`                    
                 }
               }
             } 
@@ -93,14 +128,14 @@ const MemberTable = () => {
                 index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
               } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200 cursor-pointer`}
             >
-              <div>{member.userId}</div>
+              <div>{member.member_id}</div>
               <div>{member.name}</div>
-              <div>{member.birthDate}</div>
+              <div>{member.date_of_birth}</div>
               <div>{member.gender}</div>
-              <div>{member.careLevel}</div>
-              <div>{member.assistiveDevice}</div>
+              <div>{member.care_grade}</div>
+              <div>{member.assistive_device}</div>
               <div>{member.address}</div>
-              <div>{member.phoneNumber}</div>
+              <div>{member.phone_number}</div>
             </div>
           </Link>
         ))}

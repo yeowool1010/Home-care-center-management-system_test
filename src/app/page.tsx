@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import MemberTable from '../components/page/MemberTable'
+import MemberPage from '../components/page/MemberPage'
 import Header from '../components/Header'
 
 const Home = () => {
@@ -12,6 +13,7 @@ const Home = () => {
         {undefined}
       </Header>
       <MemberTable />
+      {/* <MemberPage /> */}
     </div>
   );
 };
