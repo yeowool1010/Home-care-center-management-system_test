@@ -28,8 +28,8 @@ const MemberInfo: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6 bg-blue-50 text-black">
-      <ProfileHeader memberDetail={memberDetails} />
-      {/* <MeasurementCategories /> */}
+    <ProfileHeader memberDetail={[memberDetails]} />
+    {/* <MeasurementCategories /> */}
       <FitnessRecordComponent/>
 
     </div>
