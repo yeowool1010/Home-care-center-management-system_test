@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.47.2",
     "autoprefixer": "^10.4.20",
     "chart.js": "^4.4.4",
     "home-care-center-management-system_test": "file:",
