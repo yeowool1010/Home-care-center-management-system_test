@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 // 예제 문서 데이터 (날짜와 문서 이름)
 const documents = [
-  { date: 3, name: '건강검진 보고서' },
-  { date: 5, name: '회의록' },
-  { date: 12, name: '프로젝트 계획서' },
-  { date: 18, name: '결산 보고서' },
-  { date: 24, name: '업무 평가서' },
-  { date: 27, name: '교육 자료' },
+  { date: 3, name: '곽재순님 1회차' },
+  { date: 5, name: '권명택님 2회차' },
+  { date: 12, name: '곽재순님 2회차' },
+  { date: 18, name: '권명택님 2회차' },
+  { date: 24, name: '곽재순님 3회차' },
+  { date: 27, name: '곽재순님 4회차' },
 ];
 
 const Calendar: React.FC = () => {
@@ -60,8 +61,8 @@ const Calendar: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-4">
-      <div className="w-full max-w-xl mx-auto border rounded-lg shadow-lg p-4 bg-white text-black">
+    <div className="flex gap-4 mx-3">
+      <div className="w-full mx-auto border rounded-lg shadow-lg p-4 bg-white text-black">
         <div className="flex justify-between items-center mb-4">
           <button
             className="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400"
@@ -115,7 +116,7 @@ const Calendar: React.FC = () => {
             return (
               <div
                 key={date}
-                className={`border border-gray-200 p-4 text-center rounded-md cursor-pointer transition-all ${
+                className={`border border-gray-200 p-4 text-center rounded-md transition-all ${
                   document ? 'bg-green-200' : 'bg-white'
                 } hover:bg-blue-500 hover:text-white`}
               >
@@ -137,12 +138,22 @@ const Calendar: React.FC = () => {
       </div>
 
       <div className="w-full max-w-xl mx-auto border rounded-lg shadow-lg p-4 bg-white text-black">
-        <h3 className="text-xl font-bold mb-2">문서 목록</h3>
+        <h3 className="text-xl font-bold mb-2">보고서 목록</h3>
         <ul className="list-disc pl-4">
           {documents.map((doc) => (
-            <li key={doc.date} className="mb-1">
-              <span className="font-semibold">{doc.date}일:</span> {doc.name}
-            </li>
+            <Link
+            href={{
+              pathname: `/pdf`,
+              query: {
+                id: `${"GON_001"}`
+              }
+            }}
+            passHref
+            >
+              <li key={doc.date} className="mb-1">
+                <span className="font-semibold">{doc.date}일:</span> {doc.name}
+              </li>
+            </Link>
           ))}
         </ul>
       </div>
