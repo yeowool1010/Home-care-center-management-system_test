@@ -209,7 +209,7 @@ const MemberTable = () => {
                 수정
               </button>
               <button
-                onClick={() => handleDelete(member.id)}
+                onClick={() => handleDelete(member.id.toString())}
                 className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
               >
                 삭제
