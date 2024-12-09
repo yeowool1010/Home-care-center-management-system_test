@@ -19,7 +19,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
         </div>
   
         <div className="flex flex-col space-y-1 text-right">
-          <p className="font-semibold text-sm">장기요양등급: {member.care_grade}</p>
+          <p className="font-semibold text-sm">장기요양등급: {member.care_grade}급</p>
           <p className="text-sm text-gray-600">보조기: {member.assistive_device || "없음"}</p>
           <p className="text-sm">주소: {member.address || "없음"}</p>
           <p className="text-sm">전화번호: {member.phone_number}</p>

@@ -39,7 +39,14 @@ const MemberTable = () => {
     try {
       const res = await fetch(`/api/member?center=${center}`);
       const data = await res.json();
-      setMembers(data);
+
+      const sortedData = data.sort((a: { member_id: string; }, b: { member_id: string; }) => {
+        const numA = parseInt(a.member_id.split('_')[1], 10); // 'GON_025' → 25
+        const numB = parseInt(b.member_id.split('_')[1], 10); // 'GON_026' → 26
+        return numA - numB; // 오름차순 정렬
+      });
+
+      setMembers(sortedData);
     } catch (error) {
       console.error('Error fetching members:', error);
     }
@@ -70,17 +77,28 @@ const MemberTable = () => {
     }
   };
 
+  const refreshMembers = () => {
+    // 회원 목록을 새로고침하는 로직을 여기에 작성
+    fetchMembers(); // 예시로 fetchMembers 함수 호출
+  };
+
   return (
     <div className="flex flex-col items-center p-10 text-bl text-black">
       {/* Modal Component */}
-      <CreateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <CreateModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        refreshMembers={refreshMembers} // 이 prop을 추가
+        lastMenber={members.length > 0 ? members[members.length - 1].member_id : 'GON_000'} // 기본값 설정
+        center={center}
+      />
       {/* Header Tabs */}
       <div className="flex justify-between w-full mb-4">
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600"
         >
-          회원추가
+         {getInstitutionName(center)} 회원추가
         </button>
         <Link
           href={{
