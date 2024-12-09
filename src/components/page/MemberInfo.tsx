@@ -12,7 +12,6 @@ const MemberInfo: React.FC = () => {
   const searchParams = useSearchParams(); // 현재 경로의 쿼리 파라미터를 가져옵니다.
 
   const id = searchParams?.get('id') || '';
-  console.log(id);
 
   useEffect(() => {
     if (id) {

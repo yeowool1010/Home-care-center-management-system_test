@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
@@ -8,6 +8,8 @@ import HexagonalChart from './HexagonalChart'
 import HexagonalChart2 from './HexagonalChart2'
 import IndividualLineCharts from './IndividualLineCharts'
 import LevelTable from './LevelTable'
+import { useSearchParams } from 'next/navigation';
+import { Member } from '@/types/member';
 
 import { Bar } from 'react-chartjs-2';
 import {
@@ -20,68 +22,6 @@ import {
   Legend,
 } from 'chart.js';
 
-// Chart.js 필수 요소 등록
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const data = {
-  labels: ['상체근력', '상체유연성', '하체근력', '하체유연성', 'TUG', '2분제자리걷기'],
-  datasets: [
-    {
-      label: '최초기록',
-      data: [3, 4.5, 2, 3, 2, 3],
-      backgroundColor: '#00bfae', // 차트 색상
-    },
-    {
-      label: '직전기록',
-      data: [5, 3.5, 2.2, 3, 3.2, 4],
-      backgroundColor: '#f39c12', // 차트 색상
-    },
-    {
-      label: '최근기록',
-      data: [3, 2, 4, 2.1, 4.3, 2.5],
-      backgroundColor: '#ff6347', // 차트 색상
-    },
-  ],
-};
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: true,
-      text: '최초 및 최근 기록 level 기준 그래프',
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      max: 5,
-      ticks: {
-        stepSize: 5,
-      },
-    },
-  },
-};
-
-const BarChartComponent = () => {
-  return (
-    <div className="w-full">
-      <div className="bg-amber-50 w-full mb-4">
-        <Bar data={data} options={options} />
-      </div>
-    </div>
-  );
-};
 
 const PdfGenerator = () => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -116,6 +56,22 @@ const PdfGenerator = () => {
         return "";
     }
   }
+
+  const [memberDetails, setMemberDetails] = useState<Member | null>(null);
+  const searchParams = useSearchParams(); // 현재 경로의 쿼리 파라미터를 가져옵니다.
+  const id = searchParams?.get('id') || '';  
+
+  useEffect(() => {
+    if (id) {
+      // Fetch 요청 URL
+      fetch(`/api/member?member_id=${id}`)
+        .then((response) => response.json())
+        .then((data) => setMemberDetails(data[0]))
+        .catch((error) => console.error('Failed to fetch member details:', error));
+    }
+  }, [id]); // Dependency array includes id to refetch when id changes
+
+  if (!memberDetails) return <p>Loading...</p>;
     
   
   const TableComponent = () => {
@@ -230,7 +186,8 @@ const PdfGenerator = () => {
             {/* 제목 */}
             <div className="text-center">
               <div className="absolute left-0 top-0 w-2 h-full bg-amber-400"></div>
-              <h2 className="text-2xl font-bold mb-5 text-amber-700">경덕재 곤지암점</h2>
+              {/* <h2 className="text-2xl font-bold mb-5 text-amber-700">경덕재 곤지암점</h2> */}
+              <h2 className="text-2xl font-bold mb-5 text-amber-700">{getInstitutionName(memberDetails.center)}</h2>
               <h1 className="text-4xl font-bold mb-5 text-black">체력측정 검사 결과지</h1>
               <div className="absolute right-0 top-0 w-2 h-full bg-amber-400"></div>
             </div>
@@ -244,8 +201,8 @@ const PdfGenerator = () => {
                 <p className="text-xl font-bold text-amber-700">2024-12-06</p>
               </div>
               <div className="mb-3">
-                <p className="text-lg font-bold">보고서 작성자</p>
-                <p className="text-xl font-bold text-amber-700">홍길동</p>
+                <p className="text-lg font-bold text-amber-100">보고서 작성자</p>
+                <p className="text-xl font-bold text-amber-100">홍길동</p>
               </div>
             </div>
 
@@ -422,3 +379,90 @@ const PdfGenerator = () => {
 };
 
 export default PdfGenerator;
+
+// Chart.js 필수 요소 등록
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const data = {
+  labels: ['상체근력', '상체유연성', '하체근력', '하체유연성', 'TUG', '2분제자리걷기'],
+  datasets: [
+    {
+      label: '최초기록',
+      data: [3, 4.5, 2, 3, 2, 3],
+      backgroundColor: '#00bfae', // 차트 색상
+    },
+    {
+      label: '직전기록',
+      data: [5, 3.5, 2.2, 3, 3.2, 4],
+      backgroundColor: '#f39c12', // 차트 색상
+    },
+    {
+      label: '최근기록',
+      data: [3, 2, 4, 2.1, 4.3, 2.5],
+      backgroundColor: '#ff6347', // 차트 색상
+    },
+  ],
+};
+
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top' as const,
+    },
+    title: {
+      display: true,
+      text: '최초 및 최근 기록 level 기준 그래프',
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      max: 5,
+      ticks: {
+        stepSize: 5,
+      },
+    },
+  },
+};
+
+const BarChartComponent = () => {
+  return (
+    <div className="w-full">
+      <div className="bg-amber-50 w-full mb-4">
+        <Bar data={data} options={options} />
+      </div>
+    </div>
+  );
+};
+
+
+function getInstitutionName(code: string): string {
+  switch (code) {
+    case 'GON':
+      return '경덕재 곤지암점';
+    case 'YAN':
+      return '경덕재 양벌점';
+    case 'YEO':
+      return '경덕재 여주점';
+    case 'OPO':
+      return '경덕재 오포점';
+    case 'TCH':
+      return '경덕재 퇴촌점';
+    case 'ROA':
+      return '너싱홈 로아점';
+    case 'HAE':
+      return '너싱홈 해원';
+    case 'ROAD':
+      return '로아주간보호';
+    default:
+      return '알 수 없는 기관';
+  }
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Member } from '@/types/member';
+import Link from 'next/link';
 
 type ProfileHeaderProps = {
   member: any; 
@@ -24,11 +24,25 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
           <p className="text-sm">주소: {member.address}</p>
           <p className="text-sm">📞 {member.phone_number}</p>
         </div>
-        <button 
+        {/* <button 
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 max-w-[20vw]"
           >
           {member.name}님 보고서 작성
-        </button>
+        </button> */}
+       <Link
+         href={{
+          pathname: `/pdf`,
+          query: {
+            id: `${member.member_id}`
+          }
+        }}
+       >
+          <button 
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 max-w-[20vw]"
+            >
+            {member.name}님 보고서 작성
+          </button>
+       </Link>
       </div>
 
 </div>
