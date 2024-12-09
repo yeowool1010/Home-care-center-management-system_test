@@ -1,7 +1,4 @@
-// src/types/member.ts
-
 export type Member = {
-  [x: string]: number;
   id: number;
   member_id: string;
   center: string;
