@@ -437,9 +437,9 @@ const FitnessRecordComponent = () => {
       </tbody>
     </table>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+    <Modal isOpen={isModalOpen} onClose={closeModal}>
       <h2 className="text-2xl font-semibold mb-4">
-        {editingRecord?.name || ''}님 {editingRecord?.check_th || ''}회차 기록 수정
+        {editingRecord?.check_th || ''}회차 기록 수정
       </h2>
 
       <div className="grid grid-cols-3 gap-4 mb-4">
@@ -453,28 +453,15 @@ const FitnessRecordComponent = () => {
           <p>{editingRecord?.measurement_date || ''}</p>
         </div>
 
+        {/* 상태 */}
+        <div>
+          <p className="font-semibold">상태</p>
+          <p>{editingRecord?.status || ''}</p>
+        </div>
+
         {/* 하체 유연성 */}
         <div>
-          <p className="font-semibold">하체 유연성 Level</p>
-          <input
-            type="number"
-            placeholder="Lower Body Flexibility Level"
-            value={newRecord.lower_body_flexibility?.level || ''}
-            className="p-2 border rounded-md"
-            onChange={(e) =>
-              setNewRecord({
-                ...newRecord,
-                lower_body_flexibility: {
-                  level: Number(e.target.value),
-                  value: newRecord.lower_body_flexibility?.value ?? 0, // 기본값 설정
-                },
-              })
-            }
-          />
-
-        </div>
-        <div>
-          <p className="font-semibold">하체 유연성 Value</p>
+          <p className="font-semibold">하체 유연성</p>
           <input
             type="number"
             placeholder="Lower Body Flexibility Value"
@@ -493,29 +480,50 @@ const FitnessRecordComponent = () => {
           />
         </div>
 
-        {/* 하체 근력 */}
+        {/* 상체 유연성 */}
         <div>
-          <p className="font-semibold">하체 근력 Level</p>
+          <p className="font-semibold">상체 유연성</p>
           <input
             type="number"
-            placeholder="Lower Body Strength Level"
-            value={editingRecord?.lower_body_strength?.level || ''}
+            placeholder="Upper Body Flexibility Value"
+            value={editingRecord?.upper_body_flexibility?.value || ''}
             className="p-2 border rounded-md"
             onChange={(e) =>
               setEditingRecord({
                 ...editingRecord,
-                lower_body_strength: {
-                  ...editingRecord?.lower_body_strength,
+                upper_body_flexibility: {
+                  ...editingRecord?.upper_body_flexibility,
                   level: Number(e.target.value),
-                  value: newRecord.lower_body_strength?.value ?? 0, // 기본값 설정
-
+                  value: newRecord.upper_body_flexibility?.value ?? 0, // 기본값 설정                  ,
                 },
               })
             }
           />
         </div>
+        {/* tug */}
         <div>
-          <p className="font-semibold">하체 근력 Value</p>
+          <p className="font-semibold">TUG</p>
+          <input
+            type="number"
+            placeholder="TUG Value"
+            value={editingRecord?.tug?.value || ''}
+            className="p-2 border rounded-md"
+            onChange={(e) =>
+              setEditingRecord({
+                ...editingRecord,
+                tug: {
+                  ...editingRecord?.tug,
+                  level: Number(e.target.value),
+                  value: newRecord.tug?.value ?? 0, // 기본값 설정                       ,
+                },
+              })
+            }
+          />
+        </div>
+
+        {/* 하체 근력 */}
+        <div>
+          <p className="font-semibold">하체 근력</p>
           <input
             type="number"
             placeholder="Lower Body Strength Value"
@@ -534,70 +542,9 @@ const FitnessRecordComponent = () => {
           />
         </div>
 
-        {/* 상체 유연성 */}
-        <div>
-          <p className="font-semibold">상체 유연성 Level</p>
-          <input
-            type="number"
-            placeholder="Upper Body Flexibility Level"
-            value={editingRecord?.upper_body_flexibility?.level || ''}
-            className="p-2 border rounded-md"
-            onChange={(e) =>
-              setEditingRecord({
-                ...editingRecord,
-                upper_body_flexibility: {
-                  ...editingRecord?.upper_body_flexibility,
-                  level: Number(e.target.value),
-                  value: newRecord.upper_body_flexibility?.value ?? 0, // 기본값 설정
-
-                },
-              })
-            }
-          />
-        </div>
-        <div>
-          <p className="font-semibold">상체 유연성 Value</p>
-          <input
-            type="number"
-            placeholder="Upper Body Flexibility Value"
-            value={editingRecord?.upper_body_flexibility?.value || ''}
-            className="p-2 border rounded-md"
-            onChange={(e) =>
-              setEditingRecord({
-                ...editingRecord,
-                upper_body_flexibility: {
-                  ...editingRecord?.upper_body_flexibility,
-                  level: Number(e.target.value),
-                  value: newRecord.upper_body_flexibility?.value ?? 0, // 기본값 설정                  ,
-                },
-              })
-            }
-          />
-        </div>
-
         {/* 상체 근력 */}
         <div>
-          <p className="font-semibold">상체 근력 Level</p>
-          <input
-            type="number"
-            placeholder="Upper Body Strength Level"
-            value={editingRecord?.upper_body_strength?.level || ''}
-            className="p-2 border rounded-md"
-            onChange={(e) =>
-              setEditingRecord({
-                ...editingRecord,
-                upper_body_strength: {
-                  ...editingRecord?.upper_body_strength,
-                  level: Number(e.target.value),
-                  value: newRecord.upper_body_strength?.value ?? 0, // 기본값 설정                  ,
-
-                },
-              })
-            }
-          />
-        </div>
-        <div>
-          <p className="font-semibold">상체 근력 Value</p>
+          <p className="font-semibold">상체 근력</p>
           <input
             type="number"
             placeholder="Upper Body Strength Value"
@@ -616,27 +563,30 @@ const FitnessRecordComponent = () => {
           />
         </div>
 
-        {/* 상태 및 내용 */}
+        {/* 2분 제자리 걷기 */}
         <div>
-          <p className="font-semibold">상태</p>
+          <p className="font-semibold">2분 제자리 걷기</p>
           <input
-            type="text"
-            placeholder="Status"
-            value={editingRecord?.status || ''}
+            type="number"
+            placeholder="walking_distance"
+            value={editingRecord?.walking_distance?.value || ''}
             className="p-2 border rounded-md"
-            onChange={(e) => setEditingRecord({ ...editingRecord, status: e.target.value })}
+            onChange={(e) =>
+              setEditingRecord({
+                ...editingRecord,
+                walking_distance: {
+                  ...editingRecord?.walking_distance,
+                  level: Number(e.target.value),
+                  value: newRecord.walking_distance?.value ?? 0, // 기본값 설정                       ,
+                },
+              })
+            }
           />
         </div>
+
       </div>
         <div>
           <p className="font-semibold">Comment</p>
-          {/* <input
-            type="text"
-            placeholder="Comment"
-            value={editingRecord?.comment || ''}
-            className="p-2 border rounded-md"
-            onChange={(e) => setEditingRecord({ ...editingRecord, comment: e.target.value })}
-          /> */}
           <textarea
             placeholder="코멘트를 입력하세요. (추후 입력 가능)"
             className="p-2 border rounded-md w-full resize-y"
