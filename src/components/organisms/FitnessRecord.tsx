@@ -158,21 +158,84 @@ const FitnessRecordComponent = () => {
   };
 
     // Update record
+    // const updateRecord = async () => {
+    //   if (!editingRecord || !editingRecord.id) return;
+    
+    //   try {
+    //     await fetch('/api/fitnessrecord', {
+    //       method: 'PUT',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify(editingRecord),
+    //     });
+    //     fetchRecords();
+    //     closeModal();
+    //   } catch (error) {
+    //     console.error('Failed to update record:', error);
+    //   }
+    // };
+
     const updateRecord = async () => {
       if (!editingRecord || !editingRecord.id) return;
     
       try {
+        // 각 항목의 레벨 계산
+        const lowerBodyFlexibilityLevel = getLevel("하체유연성", editingRecord.lower_body_flexibility?.value ?? 0);
+        const lowerBodyStrengthLevel = getLevel("하체근력", editingRecord.lower_body_strength?.value ?? 0);
+        const upperBodyFlexibilityLevel = getLevel("상체유연성", editingRecord.upper_body_flexibility?.value ?? 0);
+        const upperBodyStrengthLevel = getLevel("상체근력", editingRecord.upper_body_strength?.value ?? 0);
+        const tugLevel = getLevel("TUG", editingRecord.tug?.value ?? 0);
+        const walkingDistanceLevel = getLevel("2분제자리걷기", editingRecord.walking_distance?.value ?? 0);
+    
+        // 평균 레벨 계산
+        const levels = [
+          lowerBodyFlexibilityLevel,
+          lowerBodyStrengthLevel,
+          upperBodyFlexibilityLevel,
+          upperBodyStrengthLevel,
+          tugLevel,
+          walkingDistanceLevel,
+        ];
+        const avgLevel = Math.round(levels.reduce((sum, level) => sum + level, 0) / levels.length);
+    
+        // avgLevel에 따른 status 설정
+        let status = '';
+        if (avgLevel >= 4.5) {
+          status = '양호';
+        } else if (avgLevel >= 3.5) {
+          status = '낙상 주의';
+        } else if (avgLevel >= 2.5) {
+          status = '낙상 경계';
+        } else {
+          status = '낙상 위험';
+        }
+    
+        // 업데이트된 레코드 생성
+        const updatedRecord = {
+          ...editingRecord,
+          lower_body_flexibility: { ...editingRecord.lower_body_flexibility, level: lowerBodyFlexibilityLevel },
+          lower_body_strength: { ...editingRecord.lower_body_strength, level: lowerBodyStrengthLevel },
+          upper_body_flexibility: { ...editingRecord.upper_body_flexibility, level: upperBodyFlexibilityLevel },
+          upper_body_strength: { ...editingRecord.upper_body_strength, level: upperBodyStrengthLevel },
+          tug: { ...editingRecord.tug, level: tugLevel },
+          walking_distance: { ...editingRecord.walking_distance, level: walkingDistanceLevel },
+          avg_level: avgLevel,
+          status: status,
+        };
+    
+        // API 호출로 업데이트
         await fetch('/api/fitnessrecord', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(editingRecord),
+          body: JSON.stringify(updatedRecord),
         });
+    
         fetchRecords();
         closeModal();
       } catch (error) {
         console.error('Failed to update record:', error);
       }
     };
+    
 
     const [isRecording, setIsRecording] = useState(false)
 
@@ -472,8 +535,8 @@ const FitnessRecordComponent = () => {
                 ...editingRecord,
                 lower_body_flexibility: {
                   ...editingRecord?.lower_body_flexibility,
-                  level: Number(e.target.value),
-                  value: newRecord.lower_body_flexibility?.value ?? 0, // 기본값 설정
+                  level: getLevel("하체유연성", newRecord.lower_body_flexibility?.value ?? 0), 
+                  value: Number(e.target.value)
                 },
               })
             }
@@ -493,8 +556,8 @@ const FitnessRecordComponent = () => {
                 ...editingRecord,
                 upper_body_flexibility: {
                   ...editingRecord?.upper_body_flexibility,
-                  level: Number(e.target.value),
-                  value: newRecord.upper_body_flexibility?.value ?? 0, // 기본값 설정                  ,
+                  level: getLevel("상체유연성", newRecord.upper_body_flexibility?.value ?? 0), 
+                  value: Number(e.target.value)                 ,
                 },
               })
             }
@@ -512,9 +575,9 @@ const FitnessRecordComponent = () => {
               setEditingRecord({
                 ...editingRecord,
                 tug: {
-                  ...editingRecord?.tug,
-                  level: Number(e.target.value),
-                  value: newRecord.tug?.value ?? 0, // 기본값 설정                       ,
+                  ...editingRecord?.tug, 
+                  level: getLevel("TUG", newRecord.tug?.value ?? 0), 
+                  value: Number(e.target.value)                        ,
                 },
               })
             }
@@ -534,8 +597,8 @@ const FitnessRecordComponent = () => {
                 ...editingRecord,
                 lower_body_strength: {
                   ...editingRecord?.lower_body_strength,
-                  level: Number(e.target.value),
-                  value: newRecord.lower_body_strength?.value ?? 0, // 기본값 설정
+                  level: getLevel("하체근력", newRecord.lower_body_strength?.value ?? 0), 
+                  value: Number(e.target.value)     
                 },
               })
             }
@@ -554,9 +617,9 @@ const FitnessRecordComponent = () => {
               setEditingRecord({
                 ...editingRecord,
                 upper_body_strength: {
-                  ...editingRecord?.upper_body_strength,
-                  level: Number(e.target.value),
-                  value: newRecord.upper_body_strength?.value ?? 0, // 기본값 설정                       ,
+                  ...editingRecord?.upper_body_strength, 
+                  level: getLevel("상체근력", newRecord.upper_body_strength?.value ?? 0), 
+                  value: Number(e.target.value)                           ,
                 },
               })
             }
@@ -575,9 +638,9 @@ const FitnessRecordComponent = () => {
               setEditingRecord({
                 ...editingRecord,
                 walking_distance: {
-                  ...editingRecord?.walking_distance,
-                  level: Number(e.target.value),
-                  value: newRecord.walking_distance?.value ?? 0, // 기본값 설정                       ,
+                  ...editingRecord?.walking_distance, 
+                  level: getLevel("2분제자리걷기", newRecord.walking_distance?.value ?? 0), 
+                  value: Number(e.target.value)                       ,
                 },
               })
             }
@@ -591,6 +654,7 @@ const FitnessRecordComponent = () => {
             placeholder="코멘트를 입력하세요. (추후 입력 가능)"
             className="p-2 border rounded-md w-full resize-y"
             rows={5} // 기본 줄 수 설정
+            value={editingRecord?.comment ?? ''} // null 또는 undefined일 경우 빈 문자열로 설정
             onChange={(e) => setEditingRecord({ ...editingRecord, comment: e.target.value })}
           />
         </div>
