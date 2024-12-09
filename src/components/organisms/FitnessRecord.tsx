@@ -8,11 +8,18 @@ import DeleteConfirmModal from '../organisms/DeleteConfirmModal';
 import ConfirmButton  from '../organisms/ConfirmButton';
 
 const FitnessRecordComponent = () => {
+  // 라우터 쿼리에서 id 가져오기
+  const searchParams = useSearchParams();
+  const memberId = searchParams?.get('id');
+    
   const [records, setRecords] = useState<FitnessRecord[]>([]);
+  console.log(records.length + 1);
+  
   const [newRecord, setNewRecord] = useState<Partial<FitnessRecord>>({
-    member_id: '',
+    member_id: memberId,
     measurement_date: '',
     check_th: 0,
+    // check_th: records.length + 1,
     lower_body_flexibility: { level: 0, value: 0 },
     lower_body_strength: { level: 0, value: 0 },
     upper_body_flexibility: { level: 0, value: 0 },
@@ -27,10 +34,6 @@ const FitnessRecordComponent = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteRecordId, setDeleteRecordId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // 라우터 쿼리에서 id 가져오기
-  const searchParams = useSearchParams();
-  const memberId = searchParams?.get('id');
 
   // Fetch records
   const fetchRecords = async () => {
@@ -51,17 +54,76 @@ const FitnessRecordComponent = () => {
   }, [memberId]);
 
   const addRecord = async () => {
+    // 필수 입력 값 검증
+    if (
+      !newRecord.measurement_date ||
+      newRecord.lower_body_flexibility?.value === 0 ||
+      newRecord.lower_body_strength?.value === 0 ||
+      newRecord.upper_body_flexibility?.value === 0 ||
+      newRecord.upper_body_strength?.value === 0 ||
+      newRecord.tug?.value === 0 ||
+      newRecord.walking_distance?.value === 0
+    ) {
+      alert('날짜 및 모든 측정값을 입력해주세요. (Comment는 비워도 저장됩니다)');
+      return;
+    }
+    
     try {
+      // 각 항목의 레벨 계산
+      const lowerBodyFlexibilityLevel = getLevel("하체유연성", newRecord.lower_body_flexibility?.value ?? 0);
+      const lowerBodyStrengthLevel = getLevel("하체근력", newRecord.lower_body_strength?.value ?? 0);
+      const upperBodyFlexibilityLevel = getLevel("상체유연성", newRecord.upper_body_flexibility?.value ?? 0);
+      const upperBodyStrengthLevel = getLevel("상체근력", newRecord.upper_body_strength?.value ?? 0);
+      const tugLevel = getLevel("TUG", newRecord.tug?.value ?? 0);
+      const walkingDistanceLevel = getLevel("2분제자리걷기", newRecord.walking_distance?.value ?? 0);
+  
+      // 평균 레벨 계산
+      const levels = [
+        lowerBodyFlexibilityLevel,
+        lowerBodyStrengthLevel,
+        upperBodyFlexibilityLevel,
+        upperBodyStrengthLevel,
+        tugLevel,
+        walkingDistanceLevel,
+      ];
+      const avgLevel = Math.round(levels.reduce((sum, level) => sum + level, 0) / levels.length);
+  
+      // avgLevel에 따른 status 설정
+      let status = '';
+      if (avgLevel >= 4.5) {
+        status = '양호';
+      } else if (avgLevel >= 3.5) {
+        status = '낙상 주의';
+      } else if (avgLevel >= 2.5) {
+        status = '낙상 경계';
+      } else {
+        status = '낙상 위험';
+      }
+  
+      // 새로운 레코드 생성
       await fetch('/api/fitnessrecord', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newRecord),
+        body: JSON.stringify({
+          ...newRecord,
+          check_th: records.length + 1,
+          lower_body_flexibility: { ...newRecord.lower_body_flexibility, level: lowerBodyFlexibilityLevel },
+          lower_body_strength: { ...newRecord.lower_body_strength, level: lowerBodyStrengthLevel },
+          upper_body_flexibility: { ...newRecord.upper_body_flexibility, level: upperBodyFlexibilityLevel },
+          upper_body_strength: { ...newRecord.upper_body_strength, level: upperBodyStrengthLevel },
+          tug: { ...newRecord.tug, level: tugLevel },
+          walking_distance: { ...newRecord.walking_distance, level: walkingDistanceLevel },
+          avg_level: avgLevel,
+          status: status,
+        }),
       });
+  
       fetchRecords();
+  
       setNewRecord({
         member_id: '',
         measurement_date: '',
-        check_th: 0,
+        check_th: records.length + 1,
         lower_body_flexibility: { level: 0, value: 0 },
         lower_body_strength: { level: 0, value: 0 },
         upper_body_flexibility: { level: 0, value: 0 },
@@ -71,9 +133,13 @@ const FitnessRecordComponent = () => {
         status: '',
         comment: '',
       });
+
+      // 화면 리프레시
+    window.location.reload();
     } catch (error) {
       console.error('Failed to add record:', error);
     }
+    
   };
 
   const openDeleteModal = (id: number) => {
@@ -130,23 +196,8 @@ const FitnessRecordComponent = () => {
         </div>
 
         <div className="grid grid-cols-6 gap-4">
-        {/* <input
-          type="number"
-          placeholder="Lower Body Flexibility Level"
-          className="p-2 border rounded-md"
-          onChange={(e) =>
-            setNewRecord({
-              ...newRecord,
-              lower_body_flexibility: { ...newRecord.lower_body_flexibility, 
-                level: Number(e.target.value), 
-                value: newRecord.lower_body_flexibility?.value ?? 0
-              },
-            })
-          }
-        /> */}
-
        <div>
-        <p>하체 유연성</p>
+        <p className='font-bold'>하체 유연성</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -155,30 +206,16 @@ const FitnessRecordComponent = () => {
               setNewRecord({
                 ...newRecord,
                 lower_body_flexibility: { ...newRecord.lower_body_flexibility, 
-                  level: Number(e.target.value), 
-                  value: newRecord.lower_body_flexibility?.value ?? 0
+                  level: getLevel("하체유연성", newRecord.lower_body_flexibility?.value ?? 0), 
+                  value: Number(e.target.value)
                  },
               })
             }
           />
        </div>
       
-        {/* <input
-          type="number"
-          placeholder="Lower Body Strength Level"
-          className="p-2 border rounded-md"
-          onChange={(e) =>
-            setNewRecord({
-              ...newRecord,
-              lower_body_strength: { ...newRecord.lower_body_strength, 
-                level: Number(e.target.value), 
-                value: newRecord.lower_body_strength?.value ?? 0
-               },
-            })
-          }
-        /> */}
        <div>
-       <p>하체 근력</p>
+       <p className='font-bold'>하체 근력</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -187,30 +224,15 @@ const FitnessRecordComponent = () => {
               setNewRecord({
                 ...newRecord,
                 lower_body_strength: { ...newRecord.lower_body_strength, 
-                  level: Number(e.target.value), 
-                  value: newRecord.lower_body_strength?.value ?? 0
+                  level: getLevel("하체근력", newRecord.lower_body_strength?.value ?? 0), 
+                  value: Number(e.target.value)
                  },
               })
             }
           />
        </div>
-      
-        {/* <input
-          type="number"
-          placeholder="Upper Body Flexibility Level"
-          className="p-2 border rounded-md"
-          onChange={(e) =>
-            setNewRecord({
-              ...newRecord,
-              upper_body_flexibility: { ...newRecord.upper_body_flexibility, 
-                level: Number(e.target.value), 
-                value: newRecord.upper_body_flexibility?.value ?? 0
-               },
-            })
-          }
-        /> */}
        <div>
-       <p>상체 유연성</p>
+       <p className='font-bold'>상체 유연성</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -219,30 +241,15 @@ const FitnessRecordComponent = () => {
               setNewRecord({
                 ...newRecord,
                 upper_body_flexibility: { ...newRecord.upper_body_flexibility, 
-                  level: Number(e.target.value), 
-                  value: newRecord.upper_body_flexibility?.value ?? 0
-  
+                  level: getLevel("상체유연성", newRecord.upper_body_flexibility?.value ?? 0), 
+                  value: Number(e.target.value)
                 },
               })
             }
           />
        </div>
-        {/* <input
-          type="number"
-          placeholder="Upper Body Strength Level"
-          className="p-2 border rounded-md"
-          onChange={(e) =>
-            setNewRecord({
-              ...newRecord,
-              upper_body_strength: { ...newRecord.upper_body_strength, 
-                level: Number(e.target.value), 
-                value: newRecord.upper_body_strength?.value ?? 0
-               },
-            })
-          }
-        /> */}
        <div>
-       <p>상체 근력</p>
+       <p className='font-bold'>상체 근력</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -251,29 +258,16 @@ const FitnessRecordComponent = () => {
               setNewRecord({
                 ...newRecord,
                 upper_body_strength: { ...newRecord.upper_body_strength, 
-                  level: Number(e.target.value), 
-                  value: newRecord.upper_body_strength?.value ?? 0
+                  level: getLevel("상체근력", newRecord.upper_body_strength?.value ?? 0), 
+                  value: Number(e.target.value)
                  },
               })
             }
           />
        </div>
-        {/* <input
-          type="number"
-          placeholder="TUG Level"
-          className="p-2 border rounded-md"
-          onChange={(e) =>
-            setNewRecord({
-              ...newRecord,
-              tug: { ...newRecord.tug, 
-                level: Number(e.target.value), 
-                value: newRecord.tug?.value ?? 0
-               },
-            })
-          }
-        /> */}
+
         <div>
-        <p>TUG</p>
+        <p className='font-bold'>TUG</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -282,30 +276,15 @@ const FitnessRecordComponent = () => {
               setNewRecord({
                 ...newRecord,
                 tug: { ...newRecord.tug, 
-                  level: Number(e.target.value), 
-                  value: newRecord.tug?.value ?? 0
+                  level: getLevel("TUG", newRecord.tug?.value ?? 0), 
+                  value: Number(e.target.value)
                 },
               })
             }
           />
         </div>
-       
-        {/* <input
-          type="number"
-          placeholder="Walking Distance Level"
-          className="p-2 border rounded-md"
-          onChange={(e) =>
-            setNewRecord({
-              ...newRecord,
-              walking_distance: { ...newRecord.walking_distance, 
-                level: Number(e.target.value), 
-                value: newRecord.walking_distance?.value ?? 0
-               },
-            })
-          }
-        /> */}
        <div>
-       <p>2분 제자리 걷기</p>
+       <p className='font-bold'>2분 제자리 걷기</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -314,24 +293,17 @@ const FitnessRecordComponent = () => {
               setNewRecord({
                 ...newRecord,
                 walking_distance: { ...newRecord.walking_distance, 
-                  level: Number(e.target.value), 
-                  value: newRecord.walking_distance?.value ?? 0
+                  level: getLevel("TUG", newRecord.walking_distance?.value ?? 0), 
+                  value: Number(e.target.value)
                  },
               })
             }
           />
        </div>
-      
-        {/* <input
-          type="text"
-          placeholder="입력하세요."
-          className="p-2 border rounded-md"
-          onChange={(e) => setNewRecord({ ...newRecord, status: e.target.value })}
-        /> */}
 
       </div>
        <div>
-        <p>Comment</p>
+        <p className='font-bold'>Comment</p>
           <textarea
             placeholder="코멘트를 입력하세요. (추후 입력 가능)"
             className="p-2 border rounded-md w-full resize-y"
@@ -339,13 +311,6 @@ const FitnessRecordComponent = () => {
             onChange={(e) => setNewRecord({ ...newRecord, comment: e.target.value })}
           />
        </div>
-      
-      {/* <button
-        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-        onClick={addRecord}
-      >
-        저장
-      </button> */}
       <ConfirmButton onConfirm={addRecord} buttonLabel="저장" />
     </div>
 
@@ -367,7 +332,9 @@ const FitnessRecordComponent = () => {
         </tr>
       </thead>
       <tbody>
-        {records.map((record) => (
+        {records
+        .sort((a, b) => b.check_th - a.check_th)
+        .map((record) => (
           <React.Fragment key={record.id}>
             <tr className="hover:bg-gray-100">
               <td className="border border-gray-300 px-2 py-2 w-fit">{record.measurement_date}</td>
@@ -687,3 +654,53 @@ const FitnessRecordComponent = () => {
 };
 
 export default FitnessRecordComponent;
+
+function getLevel(id: string, value: number): number {
+  switch (id) {
+    case "상체근력":
+      if (value >= 11) return 5;
+      if (value >= 8) return 4;
+      if (value >= 5) return 3;
+      if (value >= 3) return 2;
+      return 1;
+
+    case "상체유연성":
+      if (value >= 0) return 5;
+      if (value >= -2.5) return 4;
+      if (value >= -5) return 3;
+      if (value >= -8) return 2;
+      return 1;
+
+    case "하체근력":
+      if (value >= 9) return 5;
+      if (value >= 6) return 4;
+      if (value >= 4) return 3;
+      if (value >= 2) return 2;
+      return 1;
+
+    case "하체유연성":
+      if (value >= 0.5) return 5;
+      if (value >= -2) return 4;
+      if (value >= -4) return 3;
+      if (value >= -6) return 2;
+      return 1;
+
+    case "TUG":
+      if (value <= 15) return 5;
+      if (value <= 20) return 4;
+      if (value <= 25) return 3;
+      if (value <= 35) return 2;
+      return 1;
+
+    case "2분제자리걷기":
+      if (value >= 78) return 5;
+      if (value >= 65) return 4;
+      if (value >= 52) return 3;
+      if (value >= 35) return 2;
+      return 1;
+
+    default:
+      throw new Error("Invalid id");
+  }
+}
+

@@ -1,6 +1,6 @@
 export type Member = {
   id: number;
-  member_id: string;
+  member_id: string | undefined;
   center: string;
   name: string;
   date_of_birth: string; // ISO 날짜 문자열 (예: 'YYYY-MM-DD')
