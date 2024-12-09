@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: any; // 수정할 회원 데이터
+  member: any;
   refreshMembers: () => void;
 }
 
@@ -105,7 +105,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, member, refreshM
           </button>
           <h2 className="text-2xl font-bold mb-4 text-gray-800">회원 수정</h2>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div>
               <label className="text-[#707CE6] font-semibold mb-1">이름</label>
               <input
@@ -132,6 +132,21 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, member, refreshM
             </div>
 
             <div>
+              <label className="text-[#707CE6] font-semibold mb-1">노인장기요양등급</label>
+              <select
+                className="w-full p-2 border rounded-md"
+                value={selectedCareLevel}
+                onChange={(e) => setSelectedCareLevel(e.target.value)}
+              >
+                {careLevels.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
               <label className="text-[#707CE6] font-semibold mb-1">생년월일</label>
               <input
                 type="date"
@@ -151,7 +166,43 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, member, refreshM
               />
             </div>
 
-            <div className="col-span-2">
+            {/* 보조기 선택 및 추가 */}
+            <div className="col-span-3">
+              <label className="text-[#707CE6] font-semibold mb-1">보조기</label>
+              <div className="flex space-x-2">
+                <select
+                  className="p-2 border rounded-md"
+                  value={selectedDevice}
+                  onChange={(e) => setSelectedDevice(e.target.value)}
+                >
+                  {assistiveDevices.map((device) => (
+                    <option key={device} value={device}>
+                      {device}
+                    </option>
+                  ))}
+                </select>
+             
+                {deviceList.map((device, index) => (
+                  <div key={index} className="flex items-center space-x-2 mt-1">
+                    <span className="text-sm bg-gray-200 px-2 py-1 rounded-md">{device}</span>
+                    <button onClick={() => handleRemoveDevice(device)} className="text-red-500">
+                      &times;
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={handleAddDevice}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  >
+                  추가
+                </button>
+              </div>
+              <div className="mt-2">
+               
+              </div>
+            </div>
+
+            <div className="col-span-4 mb-4">
               <label className="text-[#707CE6] font-semibold mb-1">주소</label>
               <input
                 type="text"
@@ -160,48 +211,51 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, member, refreshM
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
-
-            {/* 보호자 정보 */}
-            <div>
-              <label className="text-[#707CE6] font-semibold mb-1">보호자 이름</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded-md"
-                value={guardianName}
-                onChange={(e) => setGuardianName(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="text-[#707CE6] font-semibold mb-1">보호자 관계</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded-md"
-                value={guardianRelationship}
-                onChange={(e) => setGuardianRelationship(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="text-[#707CE6] font-semibold mb-1">보호자 연락처</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded-md"
-                value={guardianContact}
-                onChange={(e) => setGuardianContact(e.target.value)}
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="text-[#707CE6] font-semibold mb-1">보호자 주소</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded-md"
-                value={guardianAddress}
-                onChange={(e) => setGuardianAddress(e.target.value)}
-              />
-            </div>
           </div>
+
+       {/* 보호자 정보 입력 필드 */}
+       <div className='grid grid-cols-4 gap-4 w-full'>
+              <div>
+                <label className="text-[#707CE6] font-semibold mb-1">보호자 이름</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded-md"
+                  value={guardianName}
+                  onChange={(e) => setGuardianName(e.target.value)}
+                />
+              </div>
+  
+              <div>
+                <label className="text-[#707CE6] font-semibold mb-1">보호자 관계</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded-md"
+                  value={guardianRelationship}
+                  onChange={(e) => setGuardianRelationship(e.target.value)}
+                />
+              </div>
+  
+              <div>
+                <label className="text-[#707CE6] font-semibold mb-1">보호자 연락처</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded-md"
+                  value={guardianContact}
+                  onChange={(e) => setGuardianContact(e.target.value)}
+                />
+              </div>
+  
+              <div className="col-span-4">
+                <label className="text-[#707CE6] font-semibold mb-1">보호자 주소</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded-md"
+                  value={guardianAddress}
+                  onChange={(e) => setGuardianAddress(e.target.value)}
+                />
+              </div>
+            </div>
+
 
           <div className="mt-6 flex justify-center space-x-4">
             <button onClick={handleSave} className="bg-blue-500 text-white px-6 py-2 rounded-md">

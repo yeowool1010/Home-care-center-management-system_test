@@ -182,7 +182,7 @@ const CreateModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshMembers, la
               />
             </div>
 
-                        {/* 보조기 선택 및 추가 */}
+          {/* 보조기 선택 및 추가 */}
             <div className="col-span-3">
               <label className="text-[#707CE6] font-semibold mb-1">보조기</label>
               <div className="flex space-x-2">
@@ -197,6 +197,7 @@ const CreateModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshMembers, la
                     </option>
                   ))}
                 </select>
+
                 {deviceList.map((device, index) => (
                   <div key={index} className="flex items-center space-x-2 mt-1 w-full">
                     <span className="text-sm bg-gray-200 px-2 py-1 rounded-md">{device}</span>
@@ -212,9 +213,6 @@ const CreateModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshMembers, la
                   추가
                 </button>
               </div>
-              <div className="mt-2">
-               
-              </div>
             </div>
 
             <div className="col-span-4 mb-4">
@@ -226,8 +224,6 @@ const CreateModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshMembers, la
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
-
-
           </div>
 
           {/* 보호자 정보 입력 필드 */}

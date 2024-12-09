@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import CreateModal from '../organisms/CreateModal';
+import EditModal from '../organisms/EditModal';
 import Alert from '../organisms/Alert';
 import Link from 'next/link';
 import { Member } from '@/types/member';
@@ -34,6 +35,14 @@ const MemberTable = () => {
   const membersPerPage = 10; // Number of members to show per page
   const pageGroupSize = 5; // Number of page buttons to show in pagination
 
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
+  // 수정 모달 열기
+  const openUpdateModal = (member: Member) => {
+    setSelectedMember(member);
+    setIsUpdateModalOpen(true);
+  };
   // 멤버 목록 가져오기 (center 기준으로 필터링)
   const fetchMembers = async () => {
     try {
@@ -82,6 +91,31 @@ const MemberTable = () => {
     fetchMembers(); // 예시로 fetchMembers 함수 호출
   };
 
+    // 회원 삭제 기능
+    const handleDelete = async (member_id: string) => {
+      if (confirm('정말로 이 회원을 삭제하시겠습니까?')) {
+        try {
+          const res = await fetch('/api/member', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ deleteId: member_id }),
+          });
+  
+          if (!res.ok) {
+            const error = await res.json();
+            alert(`Error: ${error.message}`);
+            return;
+          }
+  
+          alert('회원이 삭제되었습니다.');
+          refreshMembers();
+        } catch (error) {
+          console.error('Failed to delete member:', error);
+          alert('회원 삭제 중 오류가 발생했습니다.');
+        }
+      }
+    };
+
   return (
     <div className="flex flex-col items-center p-10 text-bl text-black">
       {/* Modal Component */}
@@ -92,6 +126,16 @@ const MemberTable = () => {
         lastMenber={members.length > 0 ? members[members.length - 1].member_id : 'GON_000'} // 기본값 설정
         center={center}
       />
+
+      {selectedMember && (
+        <EditModal
+          isOpen={isUpdateModalOpen}
+          onClose={() => setIsUpdateModalOpen(false)}
+          member={selectedMember}
+          refreshMembers={refreshMembers}
+        />
+      )}
+
       {/* Header Tabs */}
       <div className="flex justify-between w-full mb-4">
         <button
@@ -128,33 +172,50 @@ const MemberTable = () => {
           <div className="px-4 py-2 whitespace-nowrap">보조기</div>
           <div className="px-4 py-2 whitespace-nowrap">주소</div>
           <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
+          <div className="px-4 py-2 whitespace-nowrap">액션</div>
         </div>
         {currentMembers.map((member, index) => (
-          <Link
-            key={index}
-            href={{
-              pathname: `/memberInfo-page`,
-              query: {
-                id: `${member.member_id}`
-              }
-            }}
-            passHref
-          >
-            <div
-              className={`grid grid-cols-8 px-54 py-2 text-center text-s ${
-                index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-              } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200 cursor-pointer`}
+          <>
+            <Link
+              key={index}
+              href={{
+                pathname: `/memberInfo-page`,
+                query: {
+                  id: `${member.member_id}`
+                }
+              }}
+              passHref
             >
-              <div>{member.member_id}</div>
-              <div>{member.name}</div>
-              <div>{member.date_of_birth}</div>
-              <div>{member.gender}</div>
-              <div>{member.care_grade}</div>
-              <div>{member.assistive_device}</div>
-              <div>{member.address}</div>
-              <div>{member.phone_number}</div>
+              <div
+                className={`grid grid-cols-8 px-54 py-2 text-center text-s ${
+                  index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200 cursor-pointer`}
+              >
+                <div>{member.member_id}</div>
+                <div>{member.name}</div>
+                <div>{member.date_of_birth}</div>
+                <div>{member.gender}</div>
+                <div>{member.care_grade}</div>
+                <div>{member.assistive_device}</div>
+                <div>{member.address}</div>
+                <div>{member.phone_number}</div>
+              </div>
+            </Link>
+            <div className="flex gap-2 justify-center">
+              <button
+                onClick={() => openUpdateModal(member)}
+                className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+              >
+                수정
+              </button>
+              <button
+                onClick={() => handleDelete(member.id)}
+                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+              >
+                삭제
+              </button>
             </div>
-          </Link>
+          </>
         ))}
       </div>
 

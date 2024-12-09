@@ -69,15 +69,44 @@ export async function GET(req: NextRequest) {
 
 // UPDATE: 멤버 정보 수정
 export async function PUT(req: NextRequest) {
-  const { id, newName, newPhoneNumber } = await req.json();
+  const {
+    id,
+    name,
+    gender,
+    date_of_birth,
+    phone_number,
+    address,
+    care_grade,
+    assistive_device,
+    guardian_name,
+    guardian_relationship,
+    guardian_contact,
+    guardian_address,
+  } = await req.json();
 
   const { data, error } = await supabase
     .from('member')
-    .update({ name: newName, phone_number: newPhoneNumber })
+    .update({
+      name,
+      gender,
+      date_of_birth,
+      phone_number,
+      address,
+      care_grade,
+      assistive_device,
+      guardian_name,
+      guardian_relationship,
+      guardian_contact,
+      guardian_address,
+    })
     .eq('id', id)
     .select();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    console.error('Update Error:', error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
   return NextResponse.json(data, { status: 200 });
 }
 
