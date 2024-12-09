@@ -183,10 +183,6 @@ const PdfGenerator = () => {
       <Header>
         {undefined}
       </Header>
-      {/* <p className='bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md text-4xl text-center'>{getInstitutionName(memberDetails.center)} 보고서</p>
-      <div className='my-10'>
-        <Calendar/>
-      </div> */}
 
       <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
           {/* Cover Page */}

@@ -157,23 +157,6 @@ const FitnessRecordComponent = () => {
     setIsModalOpen(false);
   };
 
-    // Update record
-    // const updateRecord = async () => {
-    //   if (!editingRecord || !editingRecord.id) return;
-    
-    //   try {
-    //     await fetch('/api/fitnessrecord', {
-    //       method: 'PUT',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify(editingRecord),
-    //     });
-    //     fetchRecords();
-    //     closeModal();
-    //   } catch (error) {
-    //     console.error('Failed to update record:', error);
-    //   }
-    // };
-
     const updateRecord = async () => {
       if (!editingRecord || !editingRecord.id) return;
     
@@ -431,7 +414,6 @@ const FitnessRecordComponent = () => {
               <td className="border border-gray-300 px-4 py-2 w-16">{record.check_th}</td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.lower_body_flexibility.value}{' '}
-                {/* <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white"> */}
                 <span className={`rounded-full bg-${getStatusColor(record.lower_body_flexibility.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.lower_body_flexibility.level}
                 </span>
@@ -492,7 +474,13 @@ const FitnessRecordComponent = () => {
             </tr>
             <tr>
               <td colSpan={10} className="border border-gray-300 px-4 py-2 bg-gray-50">
-                <strong>Comment:</strong> {record.comment || '없음'}
+                <strong>Comment:</strong>
+                <textarea
+                  rows={4} 
+                  className="w-full mt-2 p-2 border rounded-md resize-y whitespace-pre-wrap break-words"
+                  readOnly
+                  value={record.comment || '없음'}
+                />
               </td>
             </tr>
           </React.Fragment>

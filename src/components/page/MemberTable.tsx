@@ -23,6 +23,10 @@ const MemberTable = () => {
     }
   }, [searchParams, router]);
 
+  useEffect(()=>{
+    setCurrentPage(1)
+  },[center])
+
   const [activeTab, setActiveTab] = useState<string>('회원 목록');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
