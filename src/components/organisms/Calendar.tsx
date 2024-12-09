@@ -103,7 +103,7 @@ const Calendar: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-7 gap-1 bg-blue-500 text-white font-semibold rounded-t-lg">
-          {days.map((day) => (
+          {days.map((day,) => (
             <div key={day} className="text-center py-2">
               {day}
             </div>
@@ -140,17 +140,18 @@ const Calendar: React.FC = () => {
       <div className="w-full max-w-xl mx-auto border rounded-lg shadow-lg p-4 bg-white text-black">
         <h3 className="text-xl font-bold mb-2">보고서 목록</h3>
         <ul className="list-disc pl-4">
-          {documents.map((doc) => (
+          {documents.map((doc, index) => (
             <Link
-            href={{
-              pathname: `/pdf`,
-              query: {
-                id: `${"GON_001"}`
-              }
-            }}
-            passHref
+              key={`doc-${index}`} // key 추가
+              href={{
+                pathname: `/pdf`,
+                query: {
+                  id: `GON_001`,
+                },
+              }}
+              passHref
             >
-              <li key={doc.date} className="mb-1">
+              <li className="mb-1 cursor-pointer">
                 <span className="font-semibold">{doc.date}일:</span> {doc.name}
               </li>
             </Link>
