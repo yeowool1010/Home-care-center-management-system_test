@@ -1,9 +1,10 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  experimental: {
-    appDir: true, // App Router 사용 여부 확인
+// next.config.js
+module.exports = {
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      'utf-8-validate': false,
+    };
+    return config;
   },
 };
-
-module.exports = nextConfig;
