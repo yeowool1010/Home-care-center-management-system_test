@@ -1,10 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Center } from '@/types/center';
+import { useSearchParams } from 'next/navigation';
 
 const Header = () => {
-  const [activeMenu, setActiveMenu] = useState<string>('기관명1');
- 
+  const searchParams = useSearchParams();
+  const [activeMenu, setActiveMenu] = useState<string>('곤지암점');
+
+  useEffect(() => {
+    const param = searchParams?.toString() || '';
+
+    if (param.includes('ROAD')) {
+      setActiveMenu('로아주간보호');
+    } else if (param.includes('GON')) {
+      setActiveMenu('곤지암점');
+    } else if (param.includes('YAN')) {
+      setActiveMenu('양벌점');
+    } else if (param.includes('YEO')) {
+      setActiveMenu('여주점');
+    } else if (param.includes('OPO')) {
+      setActiveMenu('오포점');
+    } else if (param.includes('TCH')) {
+      setActiveMenu('퇴촌점');
+    } else if (param.includes('ROA')) {
+      setActiveMenu('로아점');
+    } else if (param.includes('HAE')) {
+      setActiveMenu('해원');
+    } else {
+      setActiveMenu('곤지암점'); // 기본값
+    }
+  }, [searchParams]);
+  
   const [menuItems, serMenuItems] = useState<Center[]>([]);
 
   const [error, setError] = useState<string | null>(null);

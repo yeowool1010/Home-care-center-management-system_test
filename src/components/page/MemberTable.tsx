@@ -78,6 +78,21 @@ const MemberTable = () => {
         >
           회원추가
         </button>
+        <Link
+          href={{
+            pathname: `/report-calendar`,
+            query: {
+              center: `${center}`
+            }
+          }}
+          passHref
+        >
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+          >
+            {getInstitutionName(center)} 보고서
+          </button>
+        </Link>
       </div>
 
       {/* Table Body */}
@@ -167,3 +182,26 @@ const MemberTable = () => {
 };
 
 export default MemberTable;
+
+function getInstitutionName(code: string): string {
+  switch (code) {
+    case 'GON':
+      return '경덕재 곤지암점';
+    case 'YAN':
+      return '경덕재 양벌점';
+    case 'YEO':
+      return '경덕재 여주점';
+    case 'OPO':
+      return '경덕재 오포점';
+    case 'TCH':
+      return '경덕재 퇴촌점';
+    case 'ROA':
+      return '너싱홈 로아점';
+    case 'HAE':
+      return '너싱홈 해원';
+    case 'ROAD':
+      return '로아주간보호';
+    default:
+      return '알 수 없는 기관';
+  }
+}

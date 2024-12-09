@@ -10,6 +10,8 @@ import IndividualLineCharts from './IndividualLineCharts'
 import LevelTable from './LevelTable'
 import { useSearchParams } from 'next/navigation';
 import { Member } from '@/types/member';
+import Calendar from '../../components/organisms/Calendar'
+import Header from '../../components/Header'
 
 import { Bar } from 'react-chartjs-2';
 import {
@@ -177,7 +179,13 @@ const PdfGenerator = () => {
 
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col bg-gray-100'>
+      <Header children={undefined}/>
+      {/* <p className='bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md text-4xl text-center'>{getInstitutionName(memberDetails.center)} 보고서</p>
+      <div className='my-10'>
+        <Calendar/>
+      </div> */}
+
       <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
           {/* Cover Page */}
         <div ref={coverRef} className="bg-white p-14 shadow-lg mx-auto">
@@ -186,7 +194,6 @@ const PdfGenerator = () => {
             {/* 제목 */}
             <div className="text-center">
               <div className="absolute left-0 top-0 w-2 h-full bg-amber-400"></div>
-              {/* <h2 className="text-2xl font-bold mb-5 text-amber-700">경덕재 곤지암점</h2> */}
               <h2 className="text-2xl font-bold mb-5 text-amber-700">{getInstitutionName(memberDetails.center)}</h2>
               <h1 className="text-4xl font-bold mb-5 text-black">체력측정 검사 결과지</h1>
               <div className="absolute right-0 top-0 w-2 h-full bg-amber-400"></div>
@@ -210,11 +217,11 @@ const PdfGenerator = () => {
             <div className="bg-amber-100 p-10 rounded-lg">
               <div className="mb-3">
                 <p className="text-lg font-bold">이름</p>
-                <p className="text-xl font-bold text-amber-700">홍길동</p>
+                <p className="text-xl font-bold text-amber-700">{memberDetails.name}님</p>
               </div>
               <div>
                 <p className="text-lg font-bold">생년월일</p>
-                <p className="text-xl font-bold text-amber-700">1990-01-01</p>
+                <p className="text-xl font-bold text-amber-700">{memberDetails.date_of_birth}</p>
               </div>
             </div>
           </div>
