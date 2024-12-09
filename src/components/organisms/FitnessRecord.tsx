@@ -18,7 +18,8 @@ const FitnessRecordComponent = () => {
   const [newRecord, setNewRecord] = useState<Partial<FitnessRecord>>({
     member_id: memberId || '', // null일 경우 빈 문자열로 설정
     measurement_date: '',
-    check_th: 0,
+    // check_th: 0,
+    check_th: records.length + 1,
     lower_body_flexibility: { level: 0, value: 0 },
     lower_body_strength: { level: 0, value: 0 },
     upper_body_flexibility: { level: 0, value: 0 },
@@ -134,7 +135,7 @@ const FitnessRecordComponent = () => {
       });
 
       // 화면 리프레시
-    window.location.reload();
+    // window.location.reload();
     } catch (error) {
       console.error('Failed to add record:', error);
     }
@@ -173,11 +174,22 @@ const FitnessRecordComponent = () => {
       }
     };
 
+    const [isRecording, setIsRecording] = useState(false)
+
   return (
     <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
 
-      <div className="mb-6 p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">체력측정기록</h2>
+    {isRecording ?
+    <div className="mb-6 p-4 bg-white rounded-lg shadow-md">
+     <div className='flex justify-between'>
+       <h2 className="text-2xl font-semibold mb-4 mt-2">체력측정기록</h2>
+        <button
+          className="font-bold mt-2 mb-4 bg-red-700 text-white px-4 py-2 rounded hover:bg-red-500 transition"
+          onClick={() => setIsRecording(false)}
+        >
+          접기
+        </button>
+     </div>
 
         <div className="grid grid-cols-3 gap-4 mb-2">
           <div className="p-2 border rounded-md">
@@ -190,6 +202,7 @@ const FitnessRecordComponent = () => {
             type="date"
             placeholder="Measurement Date"
             className="p-2 border rounded-md"
+            value={newRecord.measurement_date}
             onChange={(e) => setNewRecord({ ...newRecord, measurement_date: e.target.value })}
           />
         </div>
@@ -201,6 +214,7 @@ const FitnessRecordComponent = () => {
             type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
+            value={newRecord.lower_body_flexibility?.value}
             onChange={(e) =>
               setNewRecord({
                 ...newRecord,
@@ -219,6 +233,7 @@ const FitnessRecordComponent = () => {
             type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
+            value={newRecord.lower_body_strength?.value}
             onChange={(e) =>
               setNewRecord({
                 ...newRecord,
@@ -236,6 +251,7 @@ const FitnessRecordComponent = () => {
             type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
+            value={newRecord.upper_body_flexibility?.value}
             onChange={(e) =>
               setNewRecord({
                 ...newRecord,
@@ -253,6 +269,7 @@ const FitnessRecordComponent = () => {
             type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
+            value={newRecord.upper_body_strength?.value}
             onChange={(e) =>
               setNewRecord({
                 ...newRecord,
@@ -271,6 +288,7 @@ const FitnessRecordComponent = () => {
             type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
+            value={newRecord.tug?.value}
             onChange={(e) =>
               setNewRecord({
                 ...newRecord,
@@ -288,6 +306,7 @@ const FitnessRecordComponent = () => {
             type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
+            value={newRecord.walking_distance?.value}
             onChange={(e) =>
               setNewRecord({
                 ...newRecord,
@@ -306,12 +325,21 @@ const FitnessRecordComponent = () => {
           <textarea
             placeholder="코멘트를 입력하세요. (추후 입력 가능)"
             className="p-2 border rounded-md w-full resize-y"
+            value={newRecord.comment ?? ''}
             rows={5} // 기본 줄 수 설정
             onChange={(e) => setNewRecord({ ...newRecord, comment: e.target.value })}
           />
        </div>
       <ConfirmButton onConfirm={addRecord} buttonLabel="저장" />
     </div>
+    :
+    <button
+      className="font-bold mb-5 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition w-full"
+      onClick={() => setIsRecording(true)}
+    >
+      체력장 기록하기
+    </button>
+    }
 
 
       {loading && <p className="text-center text-gray-500">Loading...</p>}
@@ -340,43 +368,44 @@ const FitnessRecordComponent = () => {
               <td className="border border-gray-300 px-4 py-2 w-16">{record.check_th}</td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.lower_body_flexibility.value}{' '}
-                <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white">
+                {/* <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white"> */}
+                <span className={`rounded-full bg-${getStatusColor(record.lower_body_flexibility.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.lower_body_flexibility.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.lower_body_strength.value}{' '}
-                <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white">
+                <span className={`rounded-full bg-${getStatusColor(record.lower_body_strength.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.lower_body_strength.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.upper_body_flexibility.value}{' '}
-                <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white">
+                <span className={`rounded-full bg-${getStatusColor(record.upper_body_flexibility.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.upper_body_flexibility.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.upper_body_strength.value}{' '}
-                <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white">
+                <span className={`rounded-full bg-${getStatusColor(record.upper_body_strength.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.upper_body_strength.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.tug.value}{' '}
-                <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white">
+                <span className={`rounded-full bg-${getStatusColor(record.tug.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.tug.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.walking_distance.value}{' '}
-                <span className="rounded-full bg-blue-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white">
+                <span className={`rounded-full bg-${getStatusColor(record.walking_distance.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.walking_distance.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.status}
-                <span className="ml-2 rounded-fulluppercase px-2 py-1 text-l font-bold mr-3 text-white bg-orange-600 rounded-full">
+                <span className={`bg-${getStatusColor(record.avg_level)}-500 ml-2 rounded-fulluppercase px-2 py-1 text-l font-bold mr-3 text-white rounded-full`}>
                   Lv.{record.avg_level}
                 </span>
               </td>
@@ -703,3 +732,9 @@ function getLevel(id: string, value: number): number {
   }
 }
 
+function getStatusColor(value: number) {
+  if (value >= 4.5) return 'green';
+  if (value >= 3.5) return 'yellow';
+  if (value >= 2.5) return 'orange';
+  return 'red';
+}
