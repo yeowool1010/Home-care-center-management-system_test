@@ -27,7 +27,7 @@ const MemberInfo: React.FC = () => {
   if (!memberDetails) return <p>Loading...</p>;
 
   return (
-    <div className="container mx-auto p-6 bg-blue-50 text-black">
+    <div className="container mx-auto p-6 bg-blue-50 text-black mt-16">
     <ProfileHeader member={memberDetails} />
     {/* <MeasurementCategories /> */}
       <FitnessRecordComponent/>

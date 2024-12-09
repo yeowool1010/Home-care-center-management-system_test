@@ -16,7 +16,7 @@ const FitnessRecordComponent = () => {
   console.log(records.length + 1);
   
   const [newRecord, setNewRecord] = useState<Partial<FitnessRecord>>({
-    member_id: memberId,
+    member_id: memberId || '', // null일 경우 빈 문자열로 설정
     measurement_date: '',
     check_th: 0,
     // check_th: records.length + 1,
