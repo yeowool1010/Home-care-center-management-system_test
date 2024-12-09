@@ -2,11 +2,10 @@ import React from 'react';
 import { Member } from '@/types/member';
 
 type ProfileHeaderProps = {
-  memberDetail: any[]; // Replace `any[]` with the correct type if known
+  member: any; 
 };
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ memberDetail }) => {
-  const member = memberDetail[0]
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
   
   return (
 <div className='flex flex-col'>

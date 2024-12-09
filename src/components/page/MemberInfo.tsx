@@ -19,7 +19,7 @@ const MemberInfo: React.FC = () => {
       // Fetch 요청 URL
       fetch(`/api/member?member_id=${id}`)
         .then((response) => response.json())
-        .then((data) => setMemberDetails(data))
+        .then((data) => setMemberDetails(data[0]))
         .catch((error) => console.error('Failed to fetch member details:', error));
     }
   }, [id]); // Dependency array includes id to refetch when id changes
@@ -28,7 +28,7 @@ const MemberInfo: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6 bg-blue-50 text-black">
-    <ProfileHeader memberDetail={[memberDetails]} />
+    <ProfileHeader member={memberDetails} />
     {/* <MeasurementCategories /> */}
       <FitnessRecordComponent/>
 
