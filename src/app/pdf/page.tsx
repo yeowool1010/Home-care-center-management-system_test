@@ -180,7 +180,9 @@ const PdfGenerator = () => {
 
   return (
     <div className='flex flex-col bg-gray-100'>
-      <Header children={undefined}/>
+      <Header>
+        {undefined}
+      </Header>
       {/* <p className='bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md text-4xl text-center'>{getInstitutionName(memberDetails.center)} 보고서</p>
       <div className='my-10'>
         <Calendar/>
