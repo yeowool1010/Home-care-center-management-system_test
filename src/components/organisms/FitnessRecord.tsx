@@ -19,7 +19,6 @@ const FitnessRecordComponent = () => {
     member_id: memberId || '', // null일 경우 빈 문자열로 설정
     measurement_date: '',
     check_th: 0,
-    // check_th: records.length + 1,
     lower_body_flexibility: { level: 0, value: 0 },
     lower_body_strength: { level: 0, value: 0 },
     upper_body_flexibility: { level: 0, value: 0 },
