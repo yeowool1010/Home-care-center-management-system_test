@@ -163,7 +163,7 @@ const MemberTable = () => {
 
       {/* Table Body */}
       <div className="divide-y">
-        <div className="grid grid-cols-8 bg-blue-100 text-sm text-center font-semibold">
+        <div className="grid grid-cols-9 bg-blue-100 text-sm text-center font-semibold">
           <div className="px-4 py-2 whitespace-nowrap">회원번호</div>
           <div className="px-4 py-2 whitespace-nowrap">이름</div>
           <div className="px-4 py-2 whitespace-nowrap">생년월일</div>
@@ -172,10 +172,9 @@ const MemberTable = () => {
           <div className="px-4 py-2 whitespace-nowrap">보조기</div>
           <div className="px-4 py-2 whitespace-nowrap">주소</div>
           <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
-          <div className="px-4 py-2 whitespace-nowrap">액션</div>
+          <div className="px-4 py-2 whitespace-nowrap"></div>
         </div>
         {currentMembers.map((member, index) => (
-          <>
             <Link
               key={index}
               href={{
@@ -187,7 +186,7 @@ const MemberTable = () => {
               passHref
             >
               <div
-                className={`grid grid-cols-8 px-54 py-2 text-center text-s ${
+                className={`grid grid-cols-9 px-54 py-2 text-center text-s ${
                   index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                 } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200 cursor-pointer`}
               >
@@ -199,23 +198,28 @@ const MemberTable = () => {
                 <div>{member.assistive_device}</div>
                 <div>{member.address}</div>
                 <div>{member.phone_number}</div>
-              </div>
-            </Link>
             <div className="flex gap-2 justify-center">
               <button
-                onClick={() => openUpdateModal(member)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  openUpdateModal(member);
+                }}
                 className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
               >
                 수정
               </button>
               <button
-                onClick={() => handleDelete(member.id.toString())}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDelete(member.id.toString());
+                }}
                 className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
               >
                 삭제
               </button>
             </div>
-          </>
+              </div>
+            </Link>
         ))}
       </div>
 
