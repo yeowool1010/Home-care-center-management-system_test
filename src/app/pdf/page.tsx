@@ -165,7 +165,8 @@ const PdfGenerator = () => {
       await captureAndAddPage(additionalPageRef);
   
       // Save the PDF
-      pdf.save("generated.pdf");
+      // pdf.save("generated.pdf");
+      pdf.save(`${memberDetails.name}님 보고서.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
@@ -236,7 +237,7 @@ const PdfGenerator = () => {
           {/* 체력장 상태 */}
           <section className="m-2">
              <div className="flex items-center text-lg my-4">
-               <p className="font-bold mb-2 text-black">체력장 측정 결과 홍길동 어르신의 상태는&nbsp;</p>
+               <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 상태는&nbsp;</p>
                <p className="text-red-600 mb-2 font-bold underline">양호</p>
                <p className="font-bold mb-2 text-black">&nbsp;입니다.</p>
              </div>
@@ -270,14 +271,15 @@ const PdfGenerator = () => {
           {/* 상단 로고 및 선 추가 */}
           <header className="flex items-center mb-8 relative">
             <div className="flex items-center">
-              <span className="text-lg font-bold text-black">경덕재 곤지암점</span>
+              {/* <span className="text-lg font-bold text-black">경덕재 곤지암점</span> */}
+              <span className="text-lg font-bold text-black">{getInstitutionName(memberDetails.center)}</span>
             </div>
             <div className="flex-grow ml-4 border-t-2 border-amber-400"></div>
             <div className="w-6 h-6 bg-amber-400 absolute right-0 top-0"></div>
           </header>
   
           {/* 제목 */}
-          <h1 className="text-3xl font-bold text-center mb-8 text-black">홍길동님 세부 측정 결과</h1>
+          <h1 className="text-3xl font-bold text-center mb-8 text-black">{memberDetails.name}님 세부 측정 결과</h1>
   
           {/* 그래프 섹션 */}
           <section className="mb-8">
@@ -341,14 +343,15 @@ const PdfGenerator = () => {
           {/* 상단 로고 및 선 추가 */}
           <header className="flex items-center mb-8 relative">
             <div className="flex items-center">
-              <span className="text-lg font-bold text-black">경덕재 곤지암점</span>
+              {/* <span className="text-lg font-bold text-black">경덕재 곤지암점</span> */}
+              <span className="text-lg font-bold text-black">{getInstitutionName(memberDetails.center)}</span>
             </div>
             <div className="flex-grow ml-4 border-t-2 border-amber-400"></div>
             <div className="w-6 h-6 bg-amber-400 absolute right-0 top-0"></div>
           </header>
   
           {/* 제목 */}
-          <h1 className="text-3xl font-bold text-center mb-8 text-black">홍길동님 최근 5회차 기록</h1>
+          <h1 className="text-3xl font-bold text-center mb-8 text-black">{memberDetails.name}님 최근 5회차 기록</h1>
   
           {/* 그래프 섹션 */}
           <section className="">

@@ -415,43 +415,43 @@ const FitnessRecordComponent = () => {
               <td className="border border-gray-300 px-4 py-2 w-16">{record.check_th}</td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.lower_body_flexibility.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.lower_body_flexibility.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.lower_body_flexibility.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.lower_body_flexibility.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.lower_body_strength.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.lower_body_strength.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.lower_body_strength.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.lower_body_strength.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.upper_body_flexibility.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.upper_body_flexibility.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.upper_body_flexibility.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.upper_body_flexibility.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.upper_body_strength.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.upper_body_strength.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.upper_body_strength.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.upper_body_strength.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.tug.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.tug.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.tug.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.tug.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.walking_distance.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.walking_distance.level)}-500 uppercase px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.walking_distance.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.walking_distance.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.status}
-                <span className={`bg-${getStatusColor(record.avg_level)}-500 ml-2 rounded-fulluppercase px-2 py-1 text-l font-bold mr-3 text-white rounded-full`}>
+                <span className={`bg-${getStatusColor(record.avg_level)}-500 ml-2 px-2 py-1 text-lg font-bold mr-3 text-white rounded-full`}>
                   Lv.{record.avg_level}
                 </span>
               </td>
