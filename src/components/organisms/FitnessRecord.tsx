@@ -451,7 +451,7 @@ const FitnessRecordComponent = () => {
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.status}
-                <span className={`bg-${getStatusColor(record.avg_level)}-500 ml-2 px-2 py-1 text-lg font-bold mr-3 text-white rounded-full`}>
+                <span className={`bg-${getStatusColor(record.avg_level)}-500 !bg-${getStatusColor(record.avg_level)}-500 ml-2 px-2 py-1 text-lg font-bold mr-3 text-white rounded-full`}>
                   Lv.{record.avg_level}
                 </span>
               </td>
