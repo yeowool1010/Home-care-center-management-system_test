@@ -389,7 +389,8 @@ const FitnessRecordComponent = () => {
 
 
       {loading && <p className="text-center text-gray-500">Loading...</p>}
-      <table className="min-w-full table-auto border-collapse border border-gray-200 bg-white rounded-lg shadow-md">
+  {records.length !== 0 ?  
+   <table className="min-w-full table-auto border-collapse border border-gray-200 bg-white rounded-lg shadow-md">
       <thead className="bg-blue-100">
         <tr>
           <th className="border border-gray-300 px-4 py-2">날짜</th>
@@ -487,6 +488,12 @@ const FitnessRecordComponent = () => {
         ))}
       </tbody>
     </table>
+    :
+    <div className="flex items-center justify-center h-full">
+      체력 기록이 없습니다.
+    </div>
+
+    }
 
     <Modal isOpen={isModalOpen} onClose={closeModal}>
       <h2 className="text-2xl font-semibold mb-4">
