@@ -43,11 +43,15 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
+    const member_id = searchParams.get('member_id');
 
     let query = supabase.from('report').select('*');
 
     if (id) {
       query = query.eq('id', Number(id));
+    } 
+    if (member_id) {
+      query = query.eq('member_id', member_id );
     } 
     const { data, error } = await query;
 

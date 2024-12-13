@@ -145,7 +145,8 @@ const MemberTable = () => {
         >
          {getInstitutionName(center)} 회원추가
         </button>
-        <Link
+
+        {/* <Link
           href={{
             pathname: `/report-calendar`,
             query: {
@@ -159,7 +160,8 @@ const MemberTable = () => {
           >
             {getInstitutionName(center)} 보고서
           </button>
-        </Link>
+        </Link> */}
+
       </div>
 
       {/* Table Body */}

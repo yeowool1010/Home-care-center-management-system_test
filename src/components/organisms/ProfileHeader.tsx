@@ -33,9 +33,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
         </div>
        <Link
          href={{
-          pathname: `/pdf`,
+          pathname: `/report`,
           query: {
-            id: `${member.member_id}`
+            member_id: `${member.member_id}`
           }
         }}
        >
