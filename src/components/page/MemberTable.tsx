@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import CreateModal from '../organisms/CreateModal';
 import EditModal from '../organisms/EditModal';
+import SkeletonBanner from '../organisms/SkeletonBanner';
 import Alert from '../organisms/Alert';
 import Link from 'next/link';
 import { Member } from '@/types/member';
@@ -162,108 +163,114 @@ const MemberTable = () => {
       </div>
 
       {/* Table Body */}
-      <div className="divide-y">
-        <div className="grid grid-cols-9 bg-blue-100 text-sm text-center font-semibold">
-          <div className="px-4 py-2 whitespace-nowrap">회원번호</div>
-          <div className="px-4 py-2 whitespace-nowrap">이름</div>
-          <div className="px-4 py-2 whitespace-nowrap">생년월일</div>
-          <div className="px-4 py-2 whitespace-nowrap">성별</div>
-          <div className="px-4 py-2 whitespace-nowrap">장기요양등급</div>
-          <div className="px-4 py-2 whitespace-nowrap">보조기</div>
-          <div className="px-4 py-2 whitespace-nowrap">주소</div>
-          <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
-          <div className="px-4 py-2 whitespace-nowrap"></div>
-        </div>
-        {currentMembers.map((member, index) => (
-            <Link
-              key={index}
-              href={{
-                pathname: `/memberInfo-page`,
-                query: {
-                  id: `${member.member_id}`
-                }
-              }}
-              passHref
-            >
-              <div
-                className={`grid grid-cols-9 px-54 py-2 text-center text-s ${
-                  index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200 cursor-pointer`}
-              >
-                <div>{member.member_id}</div>
-                <div>{member.name}</div>
-                <div>{member.date_of_birth}</div>
-                <div>{member.gender}</div>
-                <div>{member.care_grade}</div>
-                <div>{member.assistive_device}</div>
-                <div>{member.address}</div>
-                <div>{member.phone_number}</div>
-            <div className="flex gap-2 justify-center">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  openUpdateModal(member);
+      {currentMembers.length !== 0 ?
+      <>
+        <div className="divide-y">
+          <div className="grid grid-cols-9 bg-blue-100 text-sm text-center font-semibold">
+            <div className="px-4 py-2 whitespace-nowrap">회원번호</div>
+            <div className="px-4 py-2 whitespace-nowrap">이름</div>
+            <div className="px-4 py-2 whitespace-nowrap">생년월일</div>
+            <div className="px-4 py-2 whitespace-nowrap">성별</div>
+            <div className="px-4 py-2 whitespace-nowrap">장기요양등급</div>
+            <div className="px-4 py-2 whitespace-nowrap">보조기</div>
+            <div className="px-4 py-2 whitespace-nowrap">주소</div>
+            <div className="px-4 py-2 whitespace-nowrap">전화번호</div>
+            <div className="px-4 py-2 whitespace-nowrap"></div>
+          </div>
+          {currentMembers.map((member, index) => (
+              <Link
+                key={index}
+                href={{
+                  pathname: `/memberInfo-page`,
+                  query: {
+                    id: `${member.member_id}`
+                  }
                 }}
-                className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                passHref
               >
-                수정
-              </button>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleDelete(member.id.toString());
-                }}
-                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-              >
-                삭제
-              </button>
-            </div>
+                <div
+                  className={`grid grid-cols-9 px-54 py-2 text-center text-s ${
+                    index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                  } border-t transition-all duration-200 ease-in-out transform hover:shadow-lg hover:bg-gradient-to-r from-blue-100 to-blue-200 cursor-pointer`}
+                >
+                  <div>{member.member_id}</div>
+                  <div>{member.name}</div>
+                  <div>{member.date_of_birth}</div>
+                  <div>{member.gender}</div>
+                  <div>{member.care_grade}</div>
+                  <div>{member.assistive_device}</div>
+                  <div>{member.address}</div>
+                  <div>{member.phone_number}</div>
+              <div className="flex gap-2 justify-center">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openUpdateModal(member);
+                  }}
+                  className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                >
+                  수정
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDelete(member.id.toString());
+                  }}
+                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                >
+                  삭제
+                </button>
               </div>
-            </Link>
-        ))}
-      </div>
-
-      <div className="mt-4 flex justify-center space-x-2">
-        <button
-          onClick={() => handlePageChange(1)}
-          disabled={currentPage === 1}
-          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
-        >
-          처음
-        </button>
-        <button
-          onClick={() => handlePageChange(startPage - 1)}
-          disabled={startPage === 1}
-          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
-        >
-          ◀
-        </button>
-        {Array.from({ length: endPage - startPage + 1 }, (_, i) => (
+                </div>
+              </Link>
+          ))}
+        </div>
+  
+        <div className="mt-4 flex justify-center space-x-2">
           <button
-            key={i}
-            onClick={() => handlePageChange(startPage + i)}
-            className={`px-3 py-1 rounded-lg ${
-              currentPage === startPage + i ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-gray-400'
-            }`}
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
           >
-            {startPage + i}
+            처음
           </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(endPage + 1)}
-          disabled={endPage === totalPages}
-          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
-        >
-          ▶
-        </button>
-        <button
-          onClick={() => handlePageChange(totalPages)}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
-        >
-          마지막
-        </button>
-      </div>
+          <button
+            onClick={() => handlePageChange(startPage - 1)}
+            disabled={startPage === 1}
+            className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+          >
+            ◀
+          </button>
+          {Array.from({ length: endPage - startPage + 1 }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => handlePageChange(startPage + i)}
+              className={`px-3 py-1 rounded-lg ${
+                currentPage === startPage + i ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+            >
+              {startPage + i}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(endPage + 1)}
+            disabled={endPage === totalPages}
+            className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+          >
+            ▶
+          </button>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+          >
+            마지막
+          </button>
+        </div>
+      </>
+      :
+      <SkeletonBanner />
+      }
     </div>
   );
 };

@@ -11,7 +11,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
 <div className='flex flex-col'>
       <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
-          <img src="/img/profile.svg" alt="Profile" className="w-16 h-16 rounded-full" />
+          {/* <img src="/img/profile.svg" alt="Profile" className="w-16 h-16 rounded-full" /> */}
           <div>
             <p className="font-semibold text-lg">{member.name} ({member.member_id})</p>
             <p className="text-sm text-gray-600">{member.date_of_birth} {member.gender}</p>

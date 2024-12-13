@@ -13,13 +13,14 @@ const FitnessRecordComponent = () => {
   const memberId = searchParams?.get('id');
     
   const [records, setRecords] = useState<FitnessRecord[]>([]);
-  console.log(records.length + 1);
+
+  const check_th = records.reduce((max, record) => 
+    (record.check_th > max.check_th ? record : max), records[0])?.check_th + 1
   
   const [newRecord, setNewRecord] = useState<Partial<FitnessRecord>>({
     member_id: memberId || '', // null일 경우 빈 문자열로 설정
     measurement_date: '',
-    // check_th: 0,
-    check_th: records.length + 1,
+    check_th: 1,
     lower_body_flexibility: { level: 0, value: 0 },
     lower_body_strength: { level: 0, value: 0 },
     upper_body_flexibility: { level: 0, value: 0 },
@@ -29,6 +30,7 @@ const FitnessRecordComponent = () => {
     status: '',
     comment: '',
   });
+  
   const [editingRecord, setEditingRecord] = useState<Partial<FitnessRecord> | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -106,7 +108,7 @@ const FitnessRecordComponent = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newRecord,
-          check_th: records.length + 1,
+          check_th: isNaN(check_th) ? 1:check_th,
           lower_body_flexibility: { ...newRecord.lower_body_flexibility, level: lowerBodyFlexibilityLevel },
           lower_body_strength: { ...newRecord.lower_body_strength, level: lowerBodyStrengthLevel },
           upper_body_flexibility: { ...newRecord.upper_body_flexibility, level: upperBodyFlexibilityLevel },
@@ -123,7 +125,8 @@ const FitnessRecordComponent = () => {
       setNewRecord({
         member_id: '',
         measurement_date: '',
-        check_th: records.length + 1,
+        // check_th: records.length + 1,
+        check_th: check_th,
         lower_body_flexibility: { level: 0, value: 0 },
         lower_body_strength: { level: 0, value: 0 },
         upper_body_flexibility: { level: 0, value: 0 },
@@ -239,7 +242,8 @@ const FitnessRecordComponent = () => {
 
         <div className="grid grid-cols-3 gap-4 mb-2">
           <div className="p-2 border rounded-md">
-            {records.length + 1}회차
+            {/* {records.length + 1}회차 */}
+            {isNaN(check_th) ? 1:check_th}회차
           </div>
           <div className="p-2 border rounded-md">
             {memberId}
