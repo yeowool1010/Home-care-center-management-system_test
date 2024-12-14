@@ -10,6 +10,9 @@ import { Member } from '@/types/member';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const MemberTable = () => {
+  const [isOn, setIsOn] = useState(false);
+  const toggle = () => setIsOn((prev) => !prev);
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -161,8 +164,24 @@ const MemberTable = () => {
             {getInstitutionName(center)} 보고서
           </button>
         </Link> */}
+        <div className="flex items-center justify-center">
+            <button
+              onClick={toggle}
+              className={`font-bold relative w-20 h-8 rounded-full transition-colors duration-300 text-white flex items-start py-1 pl-2 ${
+                isOn ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            >
+              {isOn ? "수정":""}
+              <span
+                className={`absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${
+                  isOn ? 'translate-x-11' : 'translate-x-0'
+                }`}
+              ></span>
+            </button>
+          </div>
 
       </div>
+
 
       {/* Table Body */}
       {currentMembers.length !== 0 ?
@@ -203,7 +222,9 @@ const MemberTable = () => {
                   <div>{member.assistive_device}</div>
                   <div>{member.address}</div>
                   <div>{member.phone_number}</div>
-              <div className="flex gap-2 justify-center">
+
+              {isOn ?
+                <div className="flex gap-2 justify-center">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -223,6 +244,29 @@ const MemberTable = () => {
                   삭제
                 </button>
               </div>
+            : 
+            <div className="flex gap-2 justify-center">
+            <button
+              // onClick={(e) => {
+              //   e.preventDefault();
+              //   openUpdateModal(member);
+              // }}
+              className="bg-gray-400 text-white px-2 py-1 rounded"
+            >
+              수정
+            </button>
+            <button
+              // onClick={(e) => {
+              //   e.preventDefault();
+              //   handleDelete(member.id.toString());
+              // }}
+              className="bg-gray-400 text-white px-2 py-1 rounded"
+            >
+              삭제
+            </button>
+          </div>
+            }
+
                 </div>
               </Link>
           ))}

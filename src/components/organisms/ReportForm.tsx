@@ -6,30 +6,36 @@ interface Report {
   id?: number;
   member_id: string;
   record_date: string;
-  record_5th: object;
-  first_record: object;
   comment: string;
 }
 
 interface ReportFormProps {
   report: Report | null;
   onClose: () => void;
+  member_id: string;
 }
 
-export default function ReportForm({ report, onClose }: ReportFormProps) {
+export default function ReportForm({ report, onClose, member_id }: ReportFormProps) {
+  const getCurrentDate = (): string => new Date().toISOString().split('T')[0];
+  
   const [formData, setFormData] = useState<Report>({
-    member_id: '',
+    member_id: member_id,
+    // record_date: getCurrentDate(),
     record_date: '',
-    record_5th: {},
-    first_record: {},
     comment: '',
   });
-
+  
   useEffect(() => {
     if (report) {
       setFormData(report);
+    } else {
+      // record_date가 없으면 현재 날짜로 설정
+      setFormData((prev) => ({
+        ...prev,
+        record_date: new Date().toISOString().split('T')[0],
+      }));
     }
-  }, [report]);
+  }, [report, member_id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -52,17 +58,10 @@ export default function ReportForm({ report, onClose }: ReportFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="border p-4 mb-4">
-      <h2 className="text-xl font-bold mb-2">{report ? 'Edit Report' : 'Create Report'}</h2>
+    <form onSubmit={handleSubmit} className="border p-4 mb-4 sticky top-28 bg-white">
+      <h2 className="text-xl font-bold mb-2">{report ? '보고서 수정' : '보고서 신규 작성'}</h2>
 
-      <input
-        type="text"
-        name="member_id"
-        placeholder="Member ID"
-        value={formData.member_id}
-        onChange={handleChange}
-        className="border p-2 mb-2 w-full"
-      />
+      <div className="border p-2 mb-2 w-full">{member_id}</div>
 
       <input
         type="date"
@@ -72,21 +71,21 @@ export default function ReportForm({ report, onClose }: ReportFormProps) {
         className="border p-2 mb-2 w-full"
       />
 
-
       <textarea
         name="comment"
         placeholder="Comment"
         value={formData.comment}
         onChange={handleChange}
         className="border p-2 mb-2 w-full"
+        rows={6} // 기본 줄 수 설정
       ></textarea>
 
       <div className="flex justify-end">
         <button type="button" onClick={onClose} className="bg-gray-500 text-white px-4 py-2 mr-2">
-          Cancel
+          접기
         </button>
         <button type="submit" className="bg-blue-500 text-white px-4 py-2">
-          {report ? 'Update' : 'Create'}
+          {report ? '수정' : '저장'}
         </button>
       </div>
     </form>

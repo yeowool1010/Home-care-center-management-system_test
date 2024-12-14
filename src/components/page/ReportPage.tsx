@@ -32,7 +32,6 @@ export default function ReportPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  console.log(selectedReport?.id);
   
   // 보고서 목록 가져오기
   const fetchReports = async () => {
@@ -47,8 +46,7 @@ export default function ReportPage() {
   const getReports = async (id:number) => {
     const response = await fetch(`/api/report/?id=${id}`);
     const data = await response.json();
-    console.log(data[0]);
-    
+      
   }
 
   // 컴포넌트 마운트 시 데이터 불러오기
@@ -86,28 +84,30 @@ export default function ReportPage() {
   
         <div className='flex flex-col mt-14'>
               <h1 className="text-2xl font-bold mb-4">{memberDetails.name}님 보고서 목록({memberDetails.member_id})</h1>
-          
-                {/* <button
+
+              <button
                   className="bg-blue-500 text-white px-4 py-2 mb-4"
                   onClick={() => {
                     setSelectedReport(null);
                     setIsFormOpen(true);
                   }}
                 >
-                  Create New Report
-                </button> */}
+                  신규 보고서 생성
+                </button>
           
-                {/* {isFormOpen && (
+                {isFormOpen && (
                   <ReportForm
+                    member_id={member_id}
                     report={selectedReport}
                     onClose={() => {
                       setIsFormOpen(false);
                       fetchReports();
                     }}
                   />
-                )} */}
+                )}
           
-          <ul className="w-full border border-gray-200 rounded-lg overflow-hidden">
+          {reports.length !== 0 ?
+            <ul className="w-full border border-gray-200 rounded-lg overflow-hidden">
             {/* 헤더 */}
             <li className="grid grid-cols-4 bg-blue-100 text-sm font-semibold text-center py-2">
               <div className="px-4">작성일</div>
@@ -117,7 +117,10 @@ export default function ReportPage() {
             </li>
   
             {/* 보고서 목록 */}
-            {reports.map((report, index) => (
+            {reports
+            // .sort((a, b) => b.id - a.id)
+            .sort((a, b) => new Date(b.record_date).getTime() - new Date(a.record_date).getTime())
+            .map((report, index) => (
               <li
                 key={report.id}
                 className={`cursor-pointer hover:bg-gradient-to-r from-blue-100 to-blue-200 grid grid-cols-4 items-center text-center text-sm py-2 ${
@@ -126,7 +129,7 @@ export default function ReportPage() {
                 onClick={() => {
                   // setSelectedReport(report);
                   changePickReport(report);
-                  // setIsFormOpen(true);
+                  setIsFormOpen(true);
                 }}
               >
                 <div className="px-4">{report.record_date}</div>
@@ -159,6 +162,9 @@ export default function ReportPage() {
               </li>
             ))}
           </ul>
+          :
+          <p>보고서 기록이 없습니다.</p>
+          }
   
         </div>
   

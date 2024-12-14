@@ -9,19 +9,19 @@ export async function POST(req: NextRequest) {
     const {
       member_id,
       record_date,
-      record_5th,
-      first_record,
-      comment,
+      commentProps,
     } = await req.json();
+
+    // record_date가 없으면 현재 날짜로 설정
+    const date = record_date || new Date().toISOString().split('T')[0];
+    const comment = commentProps || "없음"
 
     const { data, error } = await supabase
       .from('report')
       .insert([
         {
           member_id,
-          record_date,
-          record_5th,
-          first_record,
+          record_date: date,
           comment,
         },
       ])
@@ -63,6 +63,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
 //////////////////////////////
 // UPDATE: 보고서 정보 수정
 //////////////////////////////
@@ -72,18 +73,17 @@ export async function PUT(req: NextRequest) {
       id,
       member_id,
       record_date,
-      record_5th,
-      first_record,
-      comment,
+      comment = '기록이 업데이트되었습니다.',
     } = await req.json();
+
+    // record_date가 없으면 현재 날짜로 설정
+    const date = record_date || new Date().toISOString().split('T')[0];
 
     const { data, error } = await supabase
       .from('report')
       .update({
         member_id,
-        record_date,
-        record_5th,
-        first_record,
+        record_date: date,
         comment,
       })
       .eq('id', id)
