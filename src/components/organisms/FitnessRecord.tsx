@@ -257,7 +257,7 @@ const FitnessRecordComponent = () => {
           />
         </div>
 
-        <div className="grid grid-cols-6 gap-4">
+    <div className="grid grid-cols-6 gap-4">
        <div>
         <p className='font-bold'>하체 유연성</p>
           <input
@@ -395,7 +395,7 @@ const FitnessRecordComponent = () => {
       {loading && <p className="text-center text-gray-500">Loading...</p>}
   {records.length !== 0 ?  
    <table className="min-w-full table-auto border-collapse border border-gray-200 bg-white rounded-lg shadow-md">
-      <thead className="bg-blue-100">
+      <thead className="bg-blue-100 sticky top-20">
         <tr>
           <th className="border border-gray-300 px-4 py-2">날짜</th>
           <th className="border border-gray-300 px-4 py-2">회차</th>
