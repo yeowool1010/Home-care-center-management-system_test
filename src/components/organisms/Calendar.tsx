@@ -144,9 +144,9 @@ const Calendar: React.FC = () => {
             <Link
               key={`doc-${index}`} // key 추가
               href={{
-                pathname: `/pdf`,
+                pathname: `/report`,
                 query: {
-                  id: `GON_001`,
+                  member_id: `GON_001`,
                 },
               }}
               passHref

@@ -4,10 +4,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
-import HexagonalChart from '../../app/pdf/HexagonalChart'
-import HexagonalChart2 from '../../app/pdf/HexagonalChart2'
-import IndividualLineCharts from '../../app/pdf/IndividualLineCharts'
-import LevelTable from '../../app/pdf/LevelTable'
+import HexagonalChart from './chart/HexagonalChart'
+import HexagonalChart2 from './chart/HexagonalChart2'
+import IndividualLineCharts from './chart/IndividualLineCharts'
+import LevelTable from './chart/LevelTable'
 import { useSearchParams } from 'next/navigation';
 import { Member } from '@/types/member';
 import { Report, DataItem, FirstRecord  } from '@/types/report';
