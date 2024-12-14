@@ -419,55 +419,55 @@ const FitnessRecordComponent = () => {
               <td className="border border-gray-300 px-4 py-2 w-16">{record.check_th}</td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.lower_body_flexibility.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.lower_body_flexibility.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.lower_body_flexibility.level)}-${getStatusColorNum(record.lower_body_flexibility.level)} px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.lower_body_flexibility.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.lower_body_strength.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.lower_body_strength.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.lower_body_strength.level)}-${getStatusColorNum(record.lower_body_strength.level)} px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.lower_body_strength.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.upper_body_flexibility.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.upper_body_flexibility.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.upper_body_flexibility.level)}-${getStatusColorNum(record.upper_body_flexibility.level)} px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.upper_body_flexibility.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.upper_body_strength.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.upper_body_strength.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.upper_body_strength.level)}-${getStatusColorNum(record.upper_body_strength.level)} px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.upper_body_strength.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.tug.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.tug.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.tug.level)}-${getStatusColorNum(record.tug.level)} px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.tug.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.walking_distance.value}{' '}
-                <span className={`rounded-full bg-${getStatusColor(record.walking_distance.level)}-500 px-2 py-1 text-xs font-bold mr-3 text-white`}>
+                <span className={`rounded-full bg-${getStatusColor(record.walking_distance.level)}-${getStatusColorNum(record.walking_distance.level)} px-2 py-1 text-xs font-bold mr-3 text-white`}>
                   Lv.{record.walking_distance.level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {record.status}
-                <span className={`bg-${getStatusColor(record.avg_level)}-500 !bg-${getStatusColor(record.avg_level)}-500 ml-2 px-2 py-1 text-lg font-bold mr-3 text-white rounded-full`}>
+                <span className={`bg-${getStatusColor(record.avg_level)}-${getStatusColorNum(record.avg_level)} ml-2 px-2 py-1 text-lg font-bold mr-3 text-white rounded-full`}>
                   Lv.{record.avg_level}
                 </span>
               </td>
               <td className="border border-gray-300 px-4 py-1 flex flex-row">
                 <button
-                  className="bg-blue-500 hover:bg-red-400 text-white font-bold py-1 px-2 rounded-full mr-1"
+                  className="bg-cyan-500 hover:bg-red-400 text-white font-bold py-1 px-2 rounded-full mr-1"
                   onClick={() => openDeleteModal(record.id)}
                 >
                   삭제
                 </button>
                 <button
-                  className="bg-blue-500 hover:bg-red-400 text-white font-bold py-1 px-2 rounded-full"
+                  className="bg-cyan-500 hover:bg-red-400 text-white font-bold py-1 px-2 rounded-full"
                   onClick={() => {
                     setEditingRecord(record);
                     setIsModalOpen(true);
@@ -746,8 +746,17 @@ function getLevel(id: string, value: number): number {
 }
 
 function getStatusColor(value: number) {
-  if (value >= 4.5) return 'green';
-  if (value >= 3.5) return 'yellow';
-  if (value >= 2.5) return 'orange';
-  return 'red';
+  if (value >= 4.5) return 'blue';   // value가 4.5 이상일 경우 'green' 반환
+  if (value >= 3.5) return 'green';  // value가 3.5 이상일 경우 'yellow' 반환
+  if (value >= 2.5) return 'yellow';   // value가 2.5 이상일 경우 'amber' 반환
+  if (value >= 1.5) return 'red'; 
+  return 'red';  
+}
+
+function getStatusColorNum(value: number) {
+  if (value >= 4.5) return '500'; 
+  if (value >= 3.5) return '500'; 
+  if (value >= 2.5) return '500';   
+  if (value >= 1.5) return '500';   
+  return '700';  
 }
