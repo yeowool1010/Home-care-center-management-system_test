@@ -27,8 +27,6 @@ ChartJS.register(
 
 const IndividualLineCharts = ({ reportArr }: { reportArr: Report[]; }) => {
 const { individualData, labels } = processReportData(reportArr);
-console.log(individualData);
-console.log(labels);
 
   // const individualData = [
   //   {

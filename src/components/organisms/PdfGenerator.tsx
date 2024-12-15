@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
 import HexagonalChart from './chart/HexagonalChart'
+import BarChartComponent from './chart/BarChartComponent'
 import HexagonalChart2 from './chart/HexagonalChart2'
 import IndividualLineCharts from './chart/IndividualLineCharts'
 import LevelTable from './chart/LevelTable'
@@ -36,21 +37,21 @@ const dummyData: DataItem[] = [
 ];
 
 const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDetail: Member, reportArr: Report[], selectedReport: Report | null } ) => {
-  // console.log(reportArr);
-  // console.log(selectedReport);
-  
   const contentRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
   const additionalPageRef = useRef<HTMLDivElement>(null);
 
+  const [recordDataArr, setRecordDataArr] = useState(dummyData)
  
   useEffect(()=>{
     if(selectedReport){
-      console.log(transformData(selectedReport.first_record))
+      // console.log(transformData(selectedReport.first_record, reportArr))
+      setRecordDataArr(transformData(selectedReport.first_record, reportArr))
     }
   },[selectedReport])
 
-
+  console.log(recordDataArr);
+  
 
   const getUnit =(string: String) => {
     switch (string) {
@@ -106,7 +107,8 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             </tr>
           </thead>
           <tbody>
-            {dummyData.map((item, index) => (
+            {/* {dummyData.map((item, index) => ( */}
+            {recordDataArr.map((item, index) => (
               <tr
                 key={item.id}
                 className={index % 2 === 0 ? 'bg-white' : 'bg-amber-50'} // 홀짝 줄 배경색
@@ -300,7 +302,8 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
   
           {/* 그래프 섹션 */}
           <section className="mb-8">
-            <BarChartComponent />
+            {/* <BarChartComponent dataItems={dummyData} /> */}
+            <BarChartComponent dataItems={recordDataArr} />
           </section>
   
          <h2 className="text-sm font-bold text-black my-4">최초 및 최근 기록 상세 내용</h2>
@@ -458,15 +461,15 @@ const options = {
   },
 };
 
-const BarChartComponent = () => {
-  return (
-    <div className="w-full">
-      <div className="bg-amber-50 w-full mb-4">
-        <Bar data={data} options={options} />
-      </div>
-    </div>
-  );
-};
+// const BarChartComponent = () => {
+//   return (
+//     <div className="w-full">
+//       <div className="bg-amber-50 w-full mb-4">
+//         <Bar data={data} options={options} />
+//       </div>
+//     </div>
+//   );
+// };
 
 
 function getInstitutionName(code: string): string {
@@ -492,54 +495,81 @@ function getInstitutionName(code: string): string {
   }
 }
 
+interface Score {
+  level: number;
+  value: number;
+}
 
-// 데이터를 변환하는 함수
-const transformData =(first_record: FirstRecord | null): DataItem[] => {
+interface DataItem {
+  id: number;
+  name: string;
+  score1: Score;
+  score2: Score;
+  score3: Score;
+}
+
+const transformData = (first_record: FirstRecord | null, reportArr: Report[]): DataItem[] => {
   if (!first_record) return dummyData;
+  if (!reportArr || reportArr.length === 0) return dummyData;
+
+  // 가장 최근 기록과 직전 기록 설정
+  const recentRecord = reportArr[0].record_5th[0] || {};
+  const previousRecord = reportArr[0].record_5th[1] || {};
+
+  // 안전하게 값 파싱하는 함수
+  const parseScore = (field: { level: string; value: string }): Score => {
+    try {
+      const level = JSON.parse(field.level).level || 0;
+      const value = JSON.parse(field.value).value || 0;
+      return { level, value };
+    } catch {
+      return { level: 0, value: 0 };
+    }
+  };
 
   try {
     return [
       {
         id: 1,
         name: '상체근력',
-        score1: JSON.parse(first_record.upper_body_strength.level),
-        score2: JSON.parse(first_record.upper_body_strength.value),
-        score3: { value: 24, level: 3.2 },
+        score1: parseScore(first_record.upper_body_strength),
+        score2: parseScore(previousRecord.upper_body_strength),
+        score3: parseScore(recentRecord.upper_body_strength),
       },
       {
         id: 2,
         name: '상체유연성',
-        score1: JSON.parse(first_record.upper_body_flexibility.level),
-        score2: JSON.parse(first_record.upper_body_flexibility.value),
-        score3: { value: -10, level: 5 },
+        score1: parseScore(first_record.upper_body_flexibility),
+        score2: parseScore(previousRecord.upper_body_flexibility),
+        score3: parseScore(recentRecord.upper_body_flexibility),
       },
       {
         id: 3,
         name: '하체근력',
-        score1: JSON.parse(first_record.lower_body_strength.level),
-        score2: JSON.parse(first_record.lower_body_strength.value),
-        score3: { value: 20, level: 3.5 },
+        score1: parseScore(first_record.lower_body_strength),
+        score2: parseScore(previousRecord.lower_body_strength),
+        score3: parseScore(recentRecord.lower_body_strength),
       },
       {
         id: 4,
         name: '하체유연성',
-        score1: JSON.parse(first_record.lower_body_flexibility.level),
-        score2: JSON.parse(first_record.lower_body_flexibility.value),
-        score3: { value: 4, level: 4 },
+        score1: parseScore(first_record.lower_body_flexibility),
+        score2: parseScore(previousRecord.lower_body_flexibility),
+        score3: parseScore(recentRecord.lower_body_flexibility),
       },
       {
         id: 5,
         name: '2분제자리걷기',
-        score1: JSON.parse(first_record.walking_distance.level),
-        score2: JSON.parse(first_record.walking_distance.value),
-        score3: { value: 220, level: 3.6 },
+        score1: parseScore(first_record.walking_distance),
+        score2: parseScore(previousRecord.walking_distance),
+        score3: parseScore(recentRecord.walking_distance),
       },
       {
         id: 6,
         name: 'TUG',
-        score1: JSON.parse(first_record.tug.level),
-        score2: JSON.parse(first_record.tug.value),
-        score3: { value: 22, level: 3.8 },
+        score1: parseScore(first_record.tug),
+        score2: parseScore(previousRecord.tug),
+        score3: parseScore(recentRecord.tug),
       },
     ];
   } catch (error) {
@@ -547,3 +577,122 @@ const transformData =(first_record: FirstRecord | null): DataItem[] => {
     return dummyData;
   }
 };
+
+// // 데이터를 변환하는 함수
+// const transformData = (first_record: FirstRecord | null, reportArr: Report[]): DataItem[] => {
+//   if (!first_record) return dummyData;
+//   if (!reportArr) return dummyData;
+
+//   // 가장 최근 기록이 0번째 인덱스
+//   const recentRecord = reportArr[0].record_5th[0]
+//   // 직전 회차 기록이 1번째 인덱스
+//   const previousRecord = reportArr[0].record_5th[1]
+
+//   // score1 최초 측정기록
+//   // score2 직전회차 측정기록
+//   // score3 가장최근 측정기록
+  
+//   try {
+//     return [
+//       {
+//         id: 1,
+//         name: '상체근력',
+//         score1: { 
+//           value: JSON.parse(first_record.upper_body_strength.value), 
+//           level: JSON.parse(first_record.upper_body_strength.level) 
+//         },
+//         score2: { 
+//           value: JSON.parse(previousRecord.upper_body_strength.value), 
+//           level: JSON.parse(previousRecord.upper_body_strength.level) 
+//         },
+//         score3: { 
+//           value: JSON.parse(recentRecord.upper_body_strength.value), 
+//           level: JSON.parse(recentRecord.upper_body_strength.level) 
+//         },
+//       },
+//       {
+//         id: 2,
+//         name: '상체유연성',
+//         score1: { 
+//           value: JSON.parse(first_record.upper_body_flexibility.value), 
+//           level: JSON.parse(first_record.upper_body_flexibility.level) 
+//         },
+//         score2: { 
+//           value: JSON.parse(previousRecord.upper_body_flexibility.value), 
+//           level: JSON.parse(previousRecord.upper_body_flexibility.level) 
+//         },
+//         score3: { 
+//           value: JSON.parse(recentRecord.upper_body_flexibility.value), 
+//           level: JSON.parse(recentRecord.upper_body_flexibility.level) 
+//         },
+//       },
+//       {
+//         id: 3,
+//         name: '하체근력',
+//         score1: { 
+//           value: JSON.parse(first_record.lower_body_strength.value), 
+//           level: JSON.parse(first_record.lower_body_strength.level) 
+//         },
+//         score2: { 
+//           value: JSON.parse(previousRecord.lower_body_strength.value), 
+//           level: JSON.parse(previousRecord.lower_body_strength.level) 
+//         },
+//         score3: { 
+//           value: JSON.parse(recentRecord.lower_body_strength.value), 
+//           level: JSON.parse(recentRecord.lower_body_strength.level) 
+//         },
+//       },
+//       {
+//         id: 4,
+//         name: '하체유연성',
+//         score1: { 
+//           value: JSON.parse(first_record.lower_body_flexibility.value), 
+//           level: JSON.parse(first_record.lower_body_flexibility.level) 
+//         },
+//         score2: { 
+//           value: JSON.parse(previousRecord.lower_body_flexibility.value), 
+//           level: JSON.parse(previousRecord.lower_body_flexibility.level) 
+//         },
+//         score3: { 
+//           value: JSON.parse(recentRecord.lower_body_flexibility.value), 
+//           level: JSON.parse(recentRecord.lower_body_flexibility.level) 
+//         },
+//       },
+//       {
+//         id: 5,
+//         name: '2분제자리걷기',
+//         score1: { 
+//           value: JSON.parse(first_record.walking_distance.value), 
+//           level: JSON.parse(first_record.walking_distance.level) 
+//         },
+//         score2: { 
+//           value: JSON.parse(previousRecord.walking_distance.value), 
+//           level: JSON.parse(previousRecord.walking_distance.level) 
+//         },
+//         score3: { 
+//           value: JSON.parse(recentRecord.walking_distance.value), 
+//           level: JSON.parse(recentRecord.walking_distance.level) 
+//         },
+//       },
+//       {
+//         id: 6,
+//         name: 'TUG',
+//         score1: { 
+//           value: JSON.parse(first_record.tug.value), 
+//           level: JSON.parse(first_record.tug.level) 
+//         },
+//         score2: { 
+//           value: JSON.parse(previousRecord.tug.value), 
+//           level: JSON.parse(previousRecord.tug.level) 
+//         },
+//         score3: { 
+//           value: JSON.parse(recentRecord.tug.value), 
+//           level: JSON.parse(recentRecord.tug.level) 
+//         },
+//       },
+//     ];
+//   } catch (error) {
+//     console.error('Data transformation error:', error);
+//     return dummyData;
+//   }
+// };
