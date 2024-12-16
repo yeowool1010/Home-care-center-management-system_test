@@ -107,7 +107,6 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             </tr>
           </thead>
           <tbody>
-            {/* {dummyData.map((item, index) => ( */}
             {recordDataArr.map((item, index) => (
               <tr
                 key={item.id}
@@ -248,8 +247,10 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 
           {/* 그래프 섹션 */}
           <section className="mb-8 flex flex-row">
-            <HexagonalChart dummyData={dummyData} />
-            <HexagonalChart2 dummyData={dummyData}/>
+            {/* 최초기록 */}
+            <HexagonalChart dummyData={recordDataArr} />
+            {/* 최근기록 */}
+            <HexagonalChart2 dummyData={recordDataArr}/>
 
           </section>
   
