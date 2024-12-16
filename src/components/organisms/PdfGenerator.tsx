@@ -3,7 +3,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import Image from 'next/image';
 import HexagonalChart from './chart/HexagonalChart'
 import BarChartComponent from './chart/BarChartComponent'
 import HexagonalChart2 from './chart/HexagonalChart2'
@@ -11,12 +10,8 @@ import IndividualLineCharts from './chart/IndividualLineCharts'
 import LevelTable from './chart/LevelTable'
 import { useSearchParams } from 'next/navigation';
 import { Member } from '@/types/member';
-import { Report, DataItem, FirstRecord  } from '@/types/report';
-import Calendar from '../../components/organisms/Calendar'
-import Header from '../../components/Header'
+import { Report, DataItem, FirstRecord, Score  } from '@/types/report';
 import SkeletonReport from '../organisms/SkeletonReport'
-
-import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -37,6 +32,7 @@ const dummyData: DataItem[] = [
 ];
 
 const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDetail: Member, reportArr: Report[], selectedReport: Report | null } ) => {
+  const today = new Date().toISOString().split('T')[0]; 
   const contentRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
   const additionalPageRef = useRef<HTMLDivElement>(null);
@@ -222,7 +218,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             <div className="bg-amber-100 p-10 rounded-lg">
               <div className="mb-3">
                 <p className="text-lg font-bold">보고서 작성일</p>
-                <p className="text-xl font-bold text-amber-700">2024-12-06</p>
+                <p className="text-xl font-bold text-amber-700">{today}</p>
               </div>
               <div className="mb-3">
                 <p className="text-lg font-bold text-amber-100">보고서 작성자</p>
@@ -496,18 +492,18 @@ function getInstitutionName(code: string): string {
   }
 }
 
-interface Score {
-  level: number;
-  value: number;
-}
+// interface Score {
+//   level: number;
+//   value: number;
+// }
 
-interface DataItem {
-  id: number;
-  name: string;
-  score1: Score;
-  score2: Score;
-  score3: Score;
-}
+// interface DataItem {
+//   id: number;
+//   name: string;
+//   score1: Score;
+//   score2: Score;
+//   score3: Score;
+// }
 
 const transformData = (first_record: FirstRecord | null, reportArr: Report[]): DataItem[] => {
   if (!first_record) return dummyData;

@@ -11,7 +11,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { Report, DataItem, FirstRecord  } from '@/types/report';
+import { Report, DataItem, FirstRecord, ReportDate  } from '@/types/report';
 
 // Chart.js에 필요한 요소 등록
 ChartJS.register(
@@ -25,7 +25,7 @@ ChartJS.register(
   Filler
 );
 
-const IndividualLineCharts = ({ reportArr }: { reportArr: Report[]; }) => {
+const IndividualLineCharts = ({ reportArr }: { reportArr: ReportDate[]; }) => {
 const { individualData, labels } = processReportData(reportArr);
 
   // const individualData = [
@@ -122,16 +122,18 @@ const initialIndividualData: IndividualDataItem[] = [
   { label: "2분제자리걷기", data: [], borderColor: "#3498db", backgroundColor: "rgba(52, 152, 219, 0.5)" },
 ];
 
-const processReportData = (reportArr: Report[]) => {
-  // 초기 labels 배열 생성
-  // const labels = reportArr.map((report) => report.record_date);
-  const recentReports = reportArr.slice(0, 5);
-
+const processReportData = (reportArr: ReportDate[]) => {
+    // 초기 labels 배열 생성
+  const recentReport = reportArr[0]?.record_5th;
+  
   // labels 배열 생성
-  let labels = recentReports.map((report) => report.record_date);
+  let labels = recentReport?.map((report) => report.measurement_date);
 
   // 5개 이하일 경우 나머지 자리를 '0'으로 채움
-  while (labels.length < 5) {
+  // while (labels.length < 5) {
+  //   labels.push("기록없음");
+  // }
+  while (recentReport?.length < 5) {
     labels.push("기록없음");
   }
 
@@ -146,15 +148,13 @@ const processReportData = (reportArr: Report[]) => {
   ];
 
   // 데이터 채우기
-  reportArr.forEach((report) => {
-    const record = report.record_5th[0] || {};
-
-    individualData[0].data.push(parseJsonValue(record.upper_body_strength));
-    individualData[1].data.push(parseJsonValue(record.upper_body_flexibility));
-    individualData[2].data.push(parseJsonValue(record.lower_body_strength));
-    individualData[3].data.push(parseJsonValue(record.lower_body_flexibility));
-    individualData[4].data.push(parseJsonValue(record.tug));
-    individualData[5].data.push(parseJsonValue(record.walking_distance));
+  recentReport?.forEach((report) => {
+    individualData[0].data.push(parseJsonValue(report.upper_body_strength));
+    individualData[1].data.push(parseJsonValue(report.upper_body_flexibility));
+    individualData[2].data.push(parseJsonValue(report.lower_body_strength));
+    individualData[3].data.push(parseJsonValue(report.lower_body_flexibility));
+    individualData[4].data.push(parseJsonValue(report.tug));
+    individualData[5].data.push(parseJsonValue(report.walking_distance));
   });
 
   // 각 data 배열을 길이 5로 맞추기 (부족한 부분은 0으로 채움)

@@ -17,6 +17,26 @@ export interface Report {
   status: string;
   center: string;
 }
+
+export interface ReportDate {
+  id: number;
+  member_id: string;
+  birth: string;
+  record_date: string;
+  record_5th: Array<{
+    measurement_date: string;
+    upper_body_strength: { level: string; value: string; };
+    upper_body_flexibility: { level: string; value: string };
+    lower_body_strength: { level: string; value: string };
+    lower_body_flexibility: { level: string; value: string };
+    tug: { level: string; value: string };
+    walking_distance: { level: string; value: string };
+  }>;
+   first_record: FirstRecord;
+  comment: string;
+  status: string;
+  center: string;
+}
 // // Report 타입 정의
 // export interface Report {
 //   id: number;
@@ -51,4 +71,13 @@ export interface FirstRecord {
   lower_body_flexibility: { level: string; value: string };
   walking_distance: { level: string; value: string };
   tug: { level: string; value: string };
+}
+
+export interface FirstRecordDate {
+  upper_body_strength: { level: string; value: string; measurement_date:string };
+  upper_body_flexibility: { level: string; value: string; measurement_date:string };
+  lower_body_strength: { level: string; value: string; measurement_date:string };
+  lower_body_flexibility: { level: string; value: string; measurement_date:string };
+  walking_distance: { level: string; value: string; measurement_date:string };
+  tug: { level: string; value: string; measurement_date:string };
 }
