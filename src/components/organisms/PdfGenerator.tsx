@@ -10,7 +10,7 @@ import IndividualLineCharts from './chart/IndividualLineCharts'
 import LevelTable from './chart/LevelTable'
 import { useSearchParams } from 'next/navigation';
 import { Member } from '@/types/member';
-import { Report, DataItem, FirstRecord, Score  } from '@/types/report';
+import { Report, DataItem, FirstRecord, Score, ReportDate  } from '@/types/report';
 import SkeletonReport from '../organisms/SkeletonReport'
 import {
   Chart as ChartJS,
@@ -31,7 +31,7 @@ const dummyData: DataItem[] = [
   { id: 6, name: 'TUG', score1: { value: 16, level: 3 }, score2: { value: 20, level: 3.6 }, score3: { value: 22, level: 3.8 } },
 ];
 
-const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDetail: Member, reportArr: Report[], selectedReport: Report | null } ) => {
+const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDetail: Member, reportArr: ReportDate[], selectedReport: Report | null } ) => {
   const today = new Date().toISOString().split('T')[0]; 
   const contentRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);

@@ -5,6 +5,7 @@ export interface Report {
   birth: string;
   record_date: string;
   record_5th: Array<{
+    measurement_date: string;
     upper_body_strength: { level: string; value: string };
     upper_body_flexibility: { level: string; value: string };
     lower_body_strength: { level: string; value: string };

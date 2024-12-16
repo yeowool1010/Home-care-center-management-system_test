@@ -1,11 +1,31 @@
-import React from 'react';
+import React, { useState , useEffect } from 'react';
 import Link from 'next/link';
+import MessageModal from '../organisms/MessageModal'
 
 type ProfileHeaderProps = {
   member: any; 
 };
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
+  const [reports, setReports] = useState<Report[]>([]);
+  const fetchReports = async () => {
+    const response = await fetch(`/api/fitnessrecord/?member_id=${member.member_id}`);
+    const data = await response.json();
+    setReports(data);
+  };
+
+    // 컴포넌트 마운트 시 데이터 불러오기
+    useEffect(() => {
+      fetchReports();
+    }, []);
+
+    console.log(reports.length);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+    
 
   return (
 <div className='flex flex-col'>
@@ -31,22 +51,36 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
           <p className="text-sm">보호자전화: {member.guardian_contact || "없음"}</p>
           <p className="text-sm">보호자주소: {member.guardian_address || "없음"}</p>
         </div>
-       <Link
-         href={{
-          pathname: `/report`,
-          query: {
-            member_id: `${member.member_id}`
-          }
-        }}
-       >
+       {reports.length !== 0 ? 
+        <Link
+            href={{
+              pathname: `/report`,
+              query: {
+                member_id: `${member.member_id}`
+              }
+            }}
+          >
           <button 
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 max-w-[20vw]"
             >
             {member.name}님 보고서 작성
           </button>
        </Link>
+       :
+       <button 
+          className="bg-gray-400 text-white px-4 py-2 rounded-lg max-w-[20vw]"
+          onClick={openModal}
+          >
+          {member.name}님 보고서 작성
+        </button>
+       }
       </div>
 
+      <MessageModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        message="체력기록이 없을 경우 보고서를 작성 할 수 없습니다다."
+      />
 </div>
   );
 };
