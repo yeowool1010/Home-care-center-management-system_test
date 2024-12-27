@@ -58,17 +58,17 @@ const FitnessRecordComponent = () => {
   const addRecord = async () => {
     // 필수 입력 값 검증
     if (
-      !newRecord.measurement_date ||
-      newRecord.lower_body_flexibility?.value === 0 ||
-      newRecord.lower_body_strength?.value === 0 ||
-      newRecord.upper_body_flexibility?.value === 0 ||
-      newRecord.upper_body_strength?.value === 0 ||
-      newRecord.tug?.value === 0 ||
-      newRecord.walking_distance?.value === 0
-    ) {
-      alert('날짜 및 모든 측정값을 입력해주세요. (Comment는 비워도 저장됩니다)');
-      return;
-    }
+  !newRecord.measurement_date || // 날짜가 비어 있는 경우
+  newRecord.lower_body_flexibility?.value == null || // null 또는 undefined인 경우
+  newRecord.lower_body_strength?.value == null ||
+  newRecord.upper_body_flexibility?.value == null ||
+  newRecord.upper_body_strength?.value == null ||
+  newRecord.tug?.value == null ||
+  newRecord.walking_distance?.value == null
+) {
+  alert('날짜 및 모든 측정값을 입력해주세요. (Comment는 비워도 저장됩니다)');
+  return;
+}
     
     try {
       // 각 항목의 레벨 계산
@@ -92,15 +92,16 @@ const FitnessRecordComponent = () => {
   
       // avgLevel에 따른 status 설정
       let status = '';
-      if (avgLevel >= 4.5) {
+      if (avgLevel >= 5.1) {
         status = '양호';
-      } else if (avgLevel >= 3.5) {
-        status = '낙상 주의';
-      } else if (avgLevel >= 2.5) {
+      } else if (avgLevel >= 4.1) {
         status = '낙상 경계';
+      } else if (avgLevel >= 2.6) {
+        status = '낙상 주의';
       } else {
         status = '낙상 위험';
       }
+
   
       // 새로운 레코드 생성
       await fetch('/api/fitnessrecord', {
@@ -204,8 +205,10 @@ const FitnessRecordComponent = () => {
           upper_body_strength: { ...editingRecord.upper_body_strength, level: upperBodyStrengthLevel },
           tug: { ...editingRecord.tug, level: tugLevel },
           walking_distance: { ...editingRecord.walking_distance, level: walkingDistanceLevel },
-          avg_level: avgLevel,
-          status: status,
+          // avg_level: avgLevel,
+          avg_level: editingRecord.avg_level,
+          // status: status,
+          status: getStatusFromLevel(editingRecord.avg_level || 0),
         };
     
         // API 호출로 업데이트
@@ -260,25 +263,25 @@ const FitnessRecordComponent = () => {
     <div className="grid grid-cols-6 gap-4">
        <div>
         <p className='font-bold'>하체 유연성</p>
-          <input
-            type="number"
+        <input
+          type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
             value={newRecord.lower_body_flexibility?.value}
             onChange={(e) =>
-              setNewRecord({
-                ...newRecord,
+                setNewRecord({
+                  ...newRecord,
                 lower_body_flexibility: { ...newRecord.lower_body_flexibility, 
                   level: getLevel("하체유연성", newRecord.lower_body_flexibility?.value ?? 0), 
                   value: Number(e.target.value)
-                 },
+                  },
               })
-            }
+              }
           />
        </div>
       
        <div>
-       <p className='font-bold'>하체 근력</p>
+        <p className='font-bold'>하체 근력</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -295,8 +298,9 @@ const FitnessRecordComponent = () => {
             }
           />
        </div>
+
        <div>
-       <p className='font-bold'>상체 유연성</p>
+        <p className='font-bold'>상체 유연성</p>
           <input
             type="number"
             placeholder="입력하세요."
@@ -313,6 +317,7 @@ const FitnessRecordComponent = () => {
             }
           />
        </div>
+
        <div>
        <p className='font-bold'>상체 근력</p>
           <input
@@ -515,10 +520,29 @@ const FitnessRecordComponent = () => {
           <p>{editingRecord?.measurement_date || ''}</p>
         </div>
 
-        {/* 상태 */}
+        {/* 평균 레벨 */}
         <div>
-          <p className="font-semibold">상태</p>
-          <p>{editingRecord?.status || ''}</p>
+          <p className="font-semibold">평균 레벨</p>
+          <select
+            className="p-2 border rounded-md w-full"
+            value={editingRecord?.avg_level || ''} // 현재 평균 레벨 값 표시
+            onChange={(e) => {
+              const selectedLevel = parseFloat(e.target.value);
+
+              // 평균 레벨 선택에 따라 상태를 계산하고 업데이트
+              setEditingRecord({
+                ...editingRecord,
+                avg_level: selectedLevel, // 평균 레벨 업데이트
+                status: getStatusFromLevel(selectedLevel), // 상태 자동 계산 및 업데이트
+              });
+            }}
+          >
+            <option value="">선택하세요</option>
+            <option value="6">양호</option>
+            <option value="5">낙상 경계</option>
+            <option value="4">낙상 주의</option>
+            <option value="2">낙상 위험</option>
+          </select>
         </div>
 
         {/* 하체 유연성 */}
@@ -526,8 +550,8 @@ const FitnessRecordComponent = () => {
           <p className="font-semibold">하체 유연성</p>
           <input
             type="number"
-            placeholder="Lower Body Flexibility Value"
-            value={editingRecord?.lower_body_flexibility?.value || ''}
+            placeholder="입력하세요."
+            value={editingRecord?.lower_body_flexibility?.value || 0}
             className="p-2 border rounded-md"
             onChange={(e) =>
               setEditingRecord({
@@ -547,28 +571,32 @@ const FitnessRecordComponent = () => {
           <p className="font-semibold">상체 유연성</p>
           <input
             type="number"
-            placeholder="Upper Body Flexibility Value"
-            value={editingRecord?.upper_body_flexibility?.value || ''}
+            placeholder="입력하세요."
+            value={editingRecord?.upper_body_flexibility?.value ?? ''} // `0`을 유지하고, null/undefined만 빈 문자열로 처리
             className="p-2 border rounded-md"
-            onChange={(e) =>
+            onChange={(e) => {
+              const numericValue = parseFloat(e.target.value);
+
+              // 입력값을 숫자로 변환하여 상태 업데이트
               setEditingRecord({
                 ...editingRecord,
                 upper_body_flexibility: {
                   ...editingRecord?.upper_body_flexibility,
-                  level: getLevel("상체유연성", newRecord.upper_body_flexibility?.value ?? 0), 
-                  value: Number(e.target.value)                 ,
+                  level: getLevel('상체유연성', numericValue || 0), // 숫자 값으로 레벨 계산
+                  value: numericValue, // 숫자 값으로 설정
                 },
-              })
-            }
+              });
+            }}
           />
         </div>
+
         {/* tug */}
         <div>
           <p className="font-semibold">TUG</p>
           <input
             type="number"
-            placeholder="TUG Value"
-            value={editingRecord?.tug?.value || ''}
+            placeholder="입력하세요."
+            value={editingRecord?.tug?.value || 0}
             className="p-2 border rounded-md"
             onChange={(e) =>
               setEditingRecord({
@@ -588,8 +616,8 @@ const FitnessRecordComponent = () => {
           <p className="font-semibold">하체 근력</p>
           <input
             type="number"
-            placeholder="Lower Body Strength Value"
-            value={editingRecord?.lower_body_strength?.value || ''}
+            placeholder="입력하세요."
+            value={editingRecord?.lower_body_strength?.value || 0}
             className="p-2 border rounded-md"
             onChange={(e) =>
               setEditingRecord({
@@ -609,8 +637,8 @@ const FitnessRecordComponent = () => {
           <p className="font-semibold">상체 근력</p>
           <input
             type="number"
-            placeholder="Upper Body Strength Value"
-            value={editingRecord?.upper_body_strength?.value || ''}
+            placeholder="입력하세요."
+            value={editingRecord?.upper_body_strength?.value || 0}
             className="p-2 border rounded-md"
             onChange={(e) =>
               setEditingRecord({
@@ -630,8 +658,8 @@ const FitnessRecordComponent = () => {
           <p className="font-semibold">2분 제자리 걷기</p>
           <input
             type="number"
-            placeholder="walking_distance"
-            value={editingRecord?.walking_distance?.value || ''}
+            placeholder="입력하세요."
+            value={editingRecord?.walking_distance?.value || 0}
             className="p-2 border rounded-md"
             onChange={(e) =>
               setEditingRecord({
@@ -746,17 +774,25 @@ function getLevel(id: string, value: number): number {
 }
 
 function getStatusColor(value: number) {
-  if (value >= 4.5) return 'blue';   // value가 4.5 이상일 경우 'green' 반환
-  if (value >= 3.5) return 'green';  // value가 3.5 이상일 경우 'yellow' 반환
-  if (value >= 2.5) return 'yellow';   // value가 2.5 이상일 경우 'amber' 반환
-  if (value >= 1.5) return 'red'; 
-  return 'red';  
+  if (value >= 5.1) return 'blue';   // value가 5.1 이상일 경우 'blue' 반환
+  if (value >= 4.1) return 'green';  // value가 4.1 이상일 경우 'green' 반환
+  if (value >= 2.6) return 'yellow'; // value가 2.6 이상일 경우 'yellow' 반환
+  if (value <= 2.5) return 'red';    // value가 2.5 이하일 경우 'red' 반환
+  return 'red';
 }
 
 function getStatusColorNum(value: number) {
-  if (value >= 4.5) return '500'; 
-  if (value >= 3.5) return '500'; 
-  if (value >= 2.5) return '500';   
-  if (value >= 1.5) return '500';   
-  return '700';  
+  if (value >= 5.1) return '500'; // value가 5.1 이상일 경우 '500' 반환
+  if (value >= 4.1) return '500'; // value가 4.1 이상일 경우 '500' 반환
+  if (value >= 2.6) return '500'; // value가 2.6 이상일 경우 '500' 반환
+  if (value <= 2.5) return '700'; // value가 2.5 이하일 경우 '700' 반환
+  return '700';
+}
+
+function getStatusFromLevel(value: number): string {
+  if (value >= 5.1) return '양호';      // value가 5.1 이상일 경우 '양호'
+  if (value >= 4.1) return '낙상 경계'; // value가 4.1 이상일 경우 '낙상 경계'
+  if (value >= 2.6) return '낙상 주의'; // value가 2.6 이상일 경우 '낙상 주의'
+  if (value <= 2.5) return '낙상 위험'; // value가 2.5 이하일 경우 '낙상 위험'
+  return '낙상 위험';
 }

@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 const ReportCalendarPage = () => {
   const searchParams = useSearchParams();
-  const center = searchParams?.get('center') || 'GON';
+  const center = searchParams?.get('center') || 'HAE';
 
   return (
     <div className="mt-12 min-h-screen bg-gray-100 flex items-center justify-center">

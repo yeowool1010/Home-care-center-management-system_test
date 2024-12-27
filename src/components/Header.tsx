@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 const Header = () => {
   const searchParams = useSearchParams();
-  const [activeMenu, setActiveMenu] = useState<string>('곤지암점');
+  const [activeMenu, setActiveMenu] = useState<string>('해원');
 
   useEffect(() => {
     const param = searchParams?.toString() || '';
@@ -30,9 +30,8 @@ const Header = () => {
       setActiveMenu('곤지암점'); // 기본값
     }
   }, [searchParams]);
-  
-  const [menuItems, serMenuItems] = useState<Center[]>([]);
 
+  const [menuItems, setMenuItems] = useState<Center[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,7 +42,23 @@ const Header = () => {
           throw new Error(`Error: ${res.statusText}`);
         }
         const data: Center[] = await res.json();
-        serMenuItems(data);
+
+        // 지정된 순서대로 정렬
+        const orderedNames = [
+          '해원',
+          '로아점',
+          '퇴촌점',
+          '오포점',
+          '곤지암점',
+          '로아주간보호',
+          '여주점',
+          '양벌점',
+        ];
+        const orderedData = orderedNames.map((name) =>
+          data.find((item) => item.name === name)
+        ).filter(Boolean); // null/undefined 제거
+
+        setMenuItems(orderedData as Center[]);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
       }
@@ -62,7 +77,6 @@ const Header = () => {
           </div>
         </Link>
 
-
         {/* Menu */}
         <nav className="flex space-x-8">
           {menuItems.map((item, idx) => (
@@ -71,8 +85,8 @@ const Header = () => {
               href={{
                 pathname: `/`,
                 query: {
-                  center: `${item.center_code}`
-                }
+                  center: `${item.center_code}`,
+                },
               }}
               passHref
             >

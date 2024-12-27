@@ -17,13 +17,13 @@ const MemberTable = () => {
   const router = useRouter();
 
   // 기본값 설정
-  const center = searchParams?.get('center') || 'GON';
+  const center = searchParams?.get('center') || 'HAE';
 
   useEffect(() => {
     // 쿼리 파라미터에 'center'가 없으면 URL에 추가
     if (!searchParams?.get('center')) {
       const currentParams = new URLSearchParams(searchParams?.toString() ?? '');
-      currentParams.set('center', 'GON');
+      currentParams.set('center', 'HAE');
       router.replace(`?${currentParams.toString()}`);
     }
   }, [searchParams, router]);
