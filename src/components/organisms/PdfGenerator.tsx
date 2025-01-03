@@ -79,9 +79,8 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
       .then((response) => response.json())
       .then((data) => setMemberDetails(data[0]))
       .catch((error) => console.error('Failed to fetch member details:', error));
-  }, [id]); // Dependency array includes id to refetch when id changes
+  }, [id]); 
 
-  // if (!memberDetails) return <></>;
   if (!memberDetails) return <SkeletonReport />;
     
   
@@ -104,11 +103,13 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
                 className={index % 2 === 0 ? 'bg-white' : 'bg-amber-50'} // 홀짝 줄 배경색
               >
                 <td className="py-1 px-2 border-b font-bold">{item.name}</td>
+                {/* 1차 측정 */}
                 <td className="py-1 px-2 border-b font-bold">
                   {item.score1.value}
                   {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
                   <span className="font-bold text-teal-500">{"Lv_" + item.score1.level}</span>
                 </td>
+                {/* 직전회차측정 */}
                 <td className="py-1 px-2 border-b font-bold">
                   {item.score2.value}
                   {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
@@ -177,18 +178,11 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
       await captureAndAddPage(additionalPageRef);
   
       // Save the PDF
-      pdf.save(`${memberDetails.name}님 보고서_${reportArr[0].record_date}.pdf`);
+      pdf.save(`${memberDetails.name}님 보고서_${selectedReport?.record_date}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
   };
-
-  // const handlereportSubmit = () => {
-  //   console.log("보고서저장")
-  //   // 코멘트 문구 상태 만들어서 이 지점 최종 저장
-
-  // }
-
 
   return (
     <div className='flex flex-col bg-gray-100'>
@@ -255,7 +249,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           <section className="m-2">
              <div className="flex items-center text-lg my-4">
                {/* <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 상태는&nbsp;</p> */}
-               <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 <span className="text-red-600 mb-2 font-bold underline">{reportArr[0]?.status}</span>상태는&nbsp;</p>
+               <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 <span className="text-red-600 mb-2 font-bold underline">{selectedReport?.status}</span>상태는&nbsp;</p>
                {/* <p className="text-red-600 mb-2 font-bold underline">{reportArr[0]?.status}</p> */}
                {/* <p className="font-bold mb-2 text-black">&nbsp;입니다.</p> */}
              </div>
@@ -265,7 +259,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             <h2 className="text-white font-bold text-lg mb-2">Comments</h2>
             <textarea
               className="w-full h-40 p-2 border rounded-md text-black"
-              value={reportArr[0]?.comment}
+              value={selectedReport?.comment}
             ></textarea>
           </div>
 
@@ -550,9 +544,11 @@ const transformData = (first_record: FirstRecord | null, reportArr: Report[]): D
   if (!first_record) return dummyData;
   if (!reportArr || reportArr.length === 0) return dummyData;
 
+  const selectedReport = reportArr.reduce((max:any, item:any) => (item.id > max.id ? item : max), reportArr[0]);
+  
   // 가장 최근 기록과 직전 기록 설정
-  const recentRecord = reportArr[0].record_5th[0] || {};
-  const previousRecord = reportArr[0].record_5th[1] || {};
+  const recentRecord = selectedReport?.record_5th[0] || {};
+  const previousRecord = selectedReport?.record_5th[1] || {};
 
   // 안전하게 값 파싱하는 함수
   const parseScore = (field: { level: string; value: string }): Score => {
@@ -615,122 +611,3 @@ const transformData = (first_record: FirstRecord | null, reportArr: Report[]): D
     return dummyData;
   }
 };
-
-// // 데이터를 변환하는 함수
-// const transformData = (first_record: FirstRecord | null, reportArr: Report[]): DataItem[] => {
-//   if (!first_record) return dummyData;
-//   if (!reportArr) return dummyData;
-
-//   // 가장 최근 기록이 0번째 인덱스
-//   const recentRecord = reportArr[0].record_5th[0]
-//   // 직전 회차 기록이 1번째 인덱스
-//   const previousRecord = reportArr[0].record_5th[1]
-
-//   // score1 최초 측정기록
-//   // score2 직전회차 측정기록
-//   // score3 가장최근 측정기록
-  
-//   try {
-//     return [
-//       {
-//         id: 1,
-//         name: '상체근력',
-//         score1: { 
-//           value: JSON.parse(first_record.upper_body_strength.value), 
-//           level: JSON.parse(first_record.upper_body_strength.level) 
-//         },
-//         score2: { 
-//           value: JSON.parse(previousRecord.upper_body_strength.value), 
-//           level: JSON.parse(previousRecord.upper_body_strength.level) 
-//         },
-//         score3: { 
-//           value: JSON.parse(recentRecord.upper_body_strength.value), 
-//           level: JSON.parse(recentRecord.upper_body_strength.level) 
-//         },
-//       },
-//       {
-//         id: 2,
-//         name: '상체유연성',
-//         score1: { 
-//           value: JSON.parse(first_record.upper_body_flexibility.value), 
-//           level: JSON.parse(first_record.upper_body_flexibility.level) 
-//         },
-//         score2: { 
-//           value: JSON.parse(previousRecord.upper_body_flexibility.value), 
-//           level: JSON.parse(previousRecord.upper_body_flexibility.level) 
-//         },
-//         score3: { 
-//           value: JSON.parse(recentRecord.upper_body_flexibility.value), 
-//           level: JSON.parse(recentRecord.upper_body_flexibility.level) 
-//         },
-//       },
-//       {
-//         id: 3,
-//         name: '하체근력',
-//         score1: { 
-//           value: JSON.parse(first_record.lower_body_strength.value), 
-//           level: JSON.parse(first_record.lower_body_strength.level) 
-//         },
-//         score2: { 
-//           value: JSON.parse(previousRecord.lower_body_strength.value), 
-//           level: JSON.parse(previousRecord.lower_body_strength.level) 
-//         },
-//         score3: { 
-//           value: JSON.parse(recentRecord.lower_body_strength.value), 
-//           level: JSON.parse(recentRecord.lower_body_strength.level) 
-//         },
-//       },
-//       {
-//         id: 4,
-//         name: '하체유연성',
-//         score1: { 
-//           value: JSON.parse(first_record.lower_body_flexibility.value), 
-//           level: JSON.parse(first_record.lower_body_flexibility.level) 
-//         },
-//         score2: { 
-//           value: JSON.parse(previousRecord.lower_body_flexibility.value), 
-//           level: JSON.parse(previousRecord.lower_body_flexibility.level) 
-//         },
-//         score3: { 
-//           value: JSON.parse(recentRecord.lower_body_flexibility.value), 
-//           level: JSON.parse(recentRecord.lower_body_flexibility.level) 
-//         },
-//       },
-//       {
-//         id: 5,
-//         name: '2분제자리걷기',
-//         score1: { 
-//           value: JSON.parse(first_record.walking_distance.value), 
-//           level: JSON.parse(first_record.walking_distance.level) 
-//         },
-//         score2: { 
-//           value: JSON.parse(previousRecord.walking_distance.value), 
-//           level: JSON.parse(previousRecord.walking_distance.level) 
-//         },
-//         score3: { 
-//           value: JSON.parse(recentRecord.walking_distance.value), 
-//           level: JSON.parse(recentRecord.walking_distance.level) 
-//         },
-//       },
-//       {
-//         id: 6,
-//         name: 'TUG',
-//         score1: { 
-//           value: JSON.parse(first_record.tug.value), 
-//           level: JSON.parse(first_record.tug.level) 
-//         },
-//         score2: { 
-//           value: JSON.parse(previousRecord.tug.value), 
-//           level: JSON.parse(previousRecord.tug.level) 
-//         },
-//         score3: { 
-//           value: JSON.parse(recentRecord.tug.value), 
-//           level: JSON.parse(recentRecord.tug.level) 
-//         },
-//       },
-//     ];
-//   } catch (error) {
-//     console.error('Data transformation error:', error);
-//     return dummyData;
-//   }
-// };

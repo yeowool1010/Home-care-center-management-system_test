@@ -35,12 +35,13 @@ export default function ReportPage() {
   
   // 보고서 목록 가져오기
   const fetchReports = async () => {
-    // const response = await fetch('/api/report');
-    // const response = await fetch('/api/report/?member_id=GON_001');
     const response = await fetch(`/api/report/?member_id=${member_id}`);
     const data = await response.json();
+    
     setReports(data);
-    setSelectedReport(data[0])
+
+    const maxIdItem = data.reduce((max:any, item:any) => (item.id > max.id ? item : max), data[0]);
+    setSelectedReport(maxIdItem)
   };
 
   const getReports = async (id:number) => {

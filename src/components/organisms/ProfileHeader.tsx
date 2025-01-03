@@ -91,21 +91,37 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
           <p className="text-sm">보호자주소: {member.guardian_address || "없음"}</p>
         </div>
        {reports.length !== 0 ? 
-        <Link
-            href={{
-              pathname: `/report`,
-              query: {
-                member_id: `${member.member_id}`
-              }
-            }}
-            onClick={handleSubmit}
-          >
-          <button 
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 max-w-[20vw]"
+        <div className='flex flex-col'>
+          <Link
+              href={{
+                pathname: `/report`,
+                query: {
+                  member_id: `${member.member_id}`
+                }
+              }}
+              onClick={handleSubmit}
             >
-            {member.name}님 보고서 작성
-          </button>
-       </Link>
+            <button 
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 max-w-[20vw]"
+              >
+              {member.name}님 보고서 작성
+            </button>
+         </Link>
+          <Link
+              href={{
+                pathname: `/report`,
+                query: {
+                  member_id: `${member.member_id}`
+                }
+              }}
+            >
+            <button 
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 max-w-[20vw] mt-1"
+              >
+              {member.name}님 보고서 목록
+            </button>
+         </Link>
+        </div>
        :
        <button 
           className="bg-gray-400 text-white px-4 py-2 rounded-lg max-w-[20vw]"
