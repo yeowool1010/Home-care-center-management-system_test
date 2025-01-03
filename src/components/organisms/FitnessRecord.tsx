@@ -58,17 +58,17 @@ const FitnessRecordComponent = () => {
   const addRecord = async () => {
     // 필수 입력 값 검증
     if (
-  !newRecord.measurement_date || // 날짜가 비어 있는 경우
-  newRecord.lower_body_flexibility?.value == null || // null 또는 undefined인 경우
-  newRecord.lower_body_strength?.value == null ||
-  newRecord.upper_body_flexibility?.value == null ||
-  newRecord.upper_body_strength?.value == null ||
-  newRecord.tug?.value == null ||
-  newRecord.walking_distance?.value == null
-) {
-  alert('날짜 및 모든 측정값을 입력해주세요. (Comment는 비워도 저장됩니다)');
-  return;
-}
+        !newRecord.measurement_date || // 날짜가 비어 있는 경우
+        newRecord.lower_body_flexibility?.value == null || // null 또는 undefined인 경우
+        newRecord.lower_body_strength?.value == null ||
+        newRecord.upper_body_flexibility?.value == null ||
+        newRecord.upper_body_strength?.value == null ||
+        newRecord.tug?.value == null ||
+        newRecord.walking_distance?.value == null
+    ) {
+      alert('날짜 및 모든 측정값을 입력해주세요. (Comment는 비워도 저장됩니다)');
+      return;
+    }
     
     try {
       // 각 항목의 레벨 계산
@@ -245,7 +245,6 @@ const FitnessRecordComponent = () => {
 
         <div className="grid grid-cols-3 gap-4 mb-2">
           <div className="p-2 border rounded-md">
-            {/* {records.length + 1}회차 */}
             {isNaN(check_th) ? 1:check_th}회차
           </div>
           <div className="p-2 border rounded-md">
@@ -261,9 +260,9 @@ const FitnessRecordComponent = () => {
         </div>
 
     <div className="grid grid-cols-6 gap-4">
-       <div>
-        <p className='font-bold'>하체 유연성</p>
-        <input
+      <div>
+          <p className='font-bold'>하체 유연성</p>
+          <input 
           type="number"
             placeholder="입력하세요."
             className="p-2 border rounded-md w-32"
@@ -488,7 +487,7 @@ const FitnessRecordComponent = () => {
                 <textarea
                   rows={4} 
                   className="w-full mt-2 p-2 border rounded-md resize-y whitespace-pre-wrap break-words"
-                  readOnly
+                  readOnly  
                   value={record.comment || '없음'}
                 />
               </td>
@@ -727,6 +726,7 @@ export default FitnessRecordComponent;
 function getLevel(id: string, value: number): number {
   switch (id) {
     case "상체근력":
+      if (value >= 15) return 6;
       if (value >= 11) return 5;
       if (value >= 8) return 4;
       if (value >= 5) return 3;
@@ -734,6 +734,7 @@ function getLevel(id: string, value: number): number {
       return 1;
 
     case "상체유연성":
+      if (value >= 1.5) return 6;
       if (value >= 0) return 5;
       if (value >= -2.5) return 4;
       if (value >= -5) return 3;
@@ -741,6 +742,7 @@ function getLevel(id: string, value: number): number {
       return 1;
 
     case "하체근력":
+      if (value >= 12) return 6;
       if (value >= 9) return 5;
       if (value >= 6) return 4;
       if (value >= 4) return 3;
@@ -748,6 +750,7 @@ function getLevel(id: string, value: number): number {
       return 1;
 
     case "하체유연성":
+      if (value >= 2.5) return 6;
       if (value >= 0.5) return 5;
       if (value >= -2) return 4;
       if (value >= -4) return 3;
@@ -755,17 +758,19 @@ function getLevel(id: string, value: number): number {
       return 1;
 
     case "TUG":
-      if (value <= 15) return 5;
-      if (value <= 20) return 4;
-      if (value <= 25) return 3;
-      if (value <= 35) return 2;
+      if (value <= 10.9) return 6;
+      if (value <= 15.9) return 5;
+      if (value <= 20.9) return 4;
+      if (value <= 25.9) return 3;
+      if (value <= 35.9) return 2;
       return 1;
 
     case "2분제자리걷기":
-      if (value >= 78) return 5;
-      if (value >= 65) return 4;
-      if (value >= 52) return 3;
-      if (value >= 35) return 2;
+      if (value >= 200) return 6;
+      if (value >= 171) return 5;
+      if (value >= 131) return 4;
+      if (value >= 91) return 3;
+      if (value >= 50) return 2;
       return 1;
 
     default:
