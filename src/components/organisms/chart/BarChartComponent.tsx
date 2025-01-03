@@ -80,7 +80,7 @@ const BarChartComponent = ({ dataItems }: BarChartComponentProps) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-[210mm]">
       <div className="bg-amber-50 w-full mb-4">
         <Bar data={data} options={options} />
       </div>

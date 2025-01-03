@@ -102,8 +102,8 @@ const processReportData = (reportArr: ReportDate[]) => {
     { label: "상체유연성", data: [], borderColor: "#1A237E", backgroundColor: "rgba(26, 35, 126, 0.5)" },
     { label: "하체근력", data: [], borderColor: "#ff6347", backgroundColor: "rgba(255, 99, 71, 0.5)" },
     { label: "하체유연성", data: [], borderColor: "#f39c12", backgroundColor: "rgba(243, 156, 18, 0.5)" },
-    { label: "TUG", data: [], borderColor: "#9b59b6", backgroundColor: "rgba(155, 89, 182, 0.5)" },
     { label: "2분제자리걷기", data: [], borderColor: "#3498db", backgroundColor: "rgba(52, 152, 219, 0.5)" },
+    { label: "TUG", data: [], borderColor: "#9b59b6", backgroundColor: "rgba(155, 89, 182, 0.5)" },
   ];
 
   // 데이터 채우기

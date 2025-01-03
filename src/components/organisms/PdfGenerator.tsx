@@ -106,15 +106,18 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
                 <td className="py-1 px-2 border-b font-bold">{item.name}</td>
                 <td className="py-1 px-2 border-b font-bold">
                   {item.score1.value}
-                  {getUnit(item.name)} <span className="font-bold text-teal-500">{"Lv_" + item.score1.level}</span>
+                  {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
+                  <span className="font-bold text-teal-500">{"Lv_" + item.score1.level}</span>
                 </td>
                 <td className="py-1 px-2 border-b font-bold">
                   {item.score2.value}
-                  {getUnit(item.name)} <span className="font-bold text-teal-500">{"Lv_" + item.score2.level}</span>
+                  {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
+                  <span className="font-bold text-teal-500">{"Lv_" + item.score2.level}</span>
                 </td>
                 <td className="py-1 px-2 border-b font-bold">
-                  {item.score3.value}
-                  {getUnit(item.name)} <span className="font-bold text-teal-500">{"Lv_" + item.score3.level}</span>
+                  {item.score3.value} 
+                  {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
+                  <span className="font-bold text-teal-500">{"Lv_" + item.score3.level}</span>
                 </td>
               </tr>
             ))}
@@ -155,9 +158,9 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           pdf.addImage(imageData, "PNG", 0, 0, imgWidth, imgHeight);
   
           // 페이지 높이가 A4를 초과하면 다음 페이지로 이동
-          if (imgHeight > pageHeight) {
-            pdf.addPage();
-          }
+          // if (imgHeight > pageHeight) {
+          //   pdf.addPage();
+          // }
         }
       };
   
@@ -174,18 +177,17 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
       await captureAndAddPage(additionalPageRef);
   
       // Save the PDF
-      // pdf.save("generated.pdf");
       pdf.save(`${memberDetails.name}님 보고서.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
   };
 
-  const handlereportSubmit = () => {
-    console.log("보고서저장")
-    // 코멘트 문구 상태 만들어서 이 지점 최종 저장
+  // const handlereportSubmit = () => {
+  //   console.log("보고서저장")
+  //   // 코멘트 문구 상태 만들어서 이 지점 최종 저장
 
-  }
+  // }
 
 
   return (
@@ -196,7 +198,15 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 
       <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
           {/* Cover Page */}
-        <div ref={coverRef} className="bg-white p-14 shadow-lg mx-auto">
+        <div ref={coverRef} 
+             className="bg-white p-14 shadow-lg mx-auto"
+            //  style={{
+            //   width: '210mm', // A4 너비
+            //   height: '297mm', // A4 높이
+            //   maxWidth: '100%', // 화면 크기 초과 시 반응형 처리
+            //   overflow: 'hidden', // 콘텐츠가 넘칠 경우 숨김 처리 (필요에 따라 변경 가능)
+            // }}
+             >
 
           <header className="relative">
             {/* 제목 */}
@@ -210,26 +220,22 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 
           <div className="grid grid-cols-2 gap-10 text-black mt-20">
             {/* 측정일 */}
-            <div className="bg-amber-100 p-10 rounded-lg">
-              <div className="mb-3">
-                <p className="text-lg font-bold">보고서 작성일</p>
-                <p className="text-xl font-bold text-amber-700">{today}</p>
-              </div>
-              <div className="mb-3">
-                <p className="text-lg font-bold text-amber-100">보고서 작성자</p>
-                <p className="text-xl font-bold text-amber-100">홍길동</p>
+            <div className="bg-amber-100 rounded-lg flex flex-col items-center justify-center">
+              <div className="mb-3 flex flex-col items-center justify-center">
+                <p className="text-2xl font-bold">보고서 작성일</p>
+                <p className="text-3xl font-bold text-amber-700">{today}</p>
               </div>
             </div>
 
             {/* 센터명, 이름, 생년월일 */}
-            <div className="bg-amber-100 p-10 rounded-lg">
-              <div className="mb-3">
-                <p className="text-lg font-bold">이름</p>
-                <p className="text-xl font-bold text-amber-700">{memberDetails.name}님</p>
+            <div className="bg-amber-100 p-10 rounded-lg flex flex-col items-center justify-center">
+              <div className="mb-3 flex flex-col items-center justify-center">
+                <p className="text-2xl font-bold">이름</p>
+                <p className="text-3xl font-bold text-amber-700">{memberDetails.name} 님</p>
               </div>
               <div>
-                <p className="text-lg font-bold">생년월일</p>
-                <p className="text-xl font-bold text-amber-700">{memberDetails.date_of_birth}</p>
+                <p className="text-2xl font-bold flex flex-col items-center justify-center">생년월일</p>
+                <p className="text-3xl font-bold text-amber-700">{memberDetails.date_of_birth}</p>
               </div>
             </div>
           </div>
@@ -248,9 +254,10 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           {/* 체력장 상태 */}
           <section className="m-2">
              <div className="flex items-center text-lg my-4">
-               <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 상태는&nbsp;</p>
-               <p className="text-red-600 mb-2 font-bold underline">{reportArr[0]?.status}</p>
-               <p className="font-bold mb-2 text-black">&nbsp;입니다.</p>
+               {/* <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 상태는&nbsp;</p> */}
+               <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 <span className="text-red-600 mb-2 font-bold underline">{reportArr[0]?.status}</span>상태는&nbsp;</p>
+               {/* <p className="text-red-600 mb-2 font-bold underline">{reportArr[0]?.status}</p> */}
+               {/* <p className="font-bold mb-2 text-black">&nbsp;입니다.</p> */}
              </div>
           </section>
 
@@ -277,7 +284,15 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 {/* 두 번째 페이지 */}
       <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
         
-        <div ref={contentRef} className="bg-white p-14 shadow-lg mx-auto">
+        <div ref={contentRef} 
+            // style={{
+            //   width: '210mm', // A4 너비
+            //   height: '297mm', // A4 높이
+            //   maxWidth: '100%', // 화면 크기 초과 시 반응형 처리
+            //   overflow: 'hidden', // 콘텐츠가 넘칠 경우 숨김 처리 (필요에 따라 변경 가능)
+            // }}
+          className="bg-white p-14 shadow-lg mx-auto"
+          >
        
           {/* 상단 로고 및 선 추가 */}
           <header className="flex items-center mb-8 relative">
@@ -294,7 +309,6 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
   
           {/* 그래프 섹션 */}
           <section className="mb-8">
-            {/* <BarChartComponent dataItems={dummyData} /> */}
             <BarChartComponent dataItems={recordDataArr} />
           </section>
   
@@ -373,7 +387,16 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 
   {/* 세 번째 페이지 */}
       <div className="flex flex-col p-10 bg-gray-100 min-h-screen">
-        <div ref={additionalPageRef} className="bg-white p-14 shadow-lg mx-auto">
+        <div 
+          ref={additionalPageRef} 
+          className="bg-white p-14 shadow-lg mx-auto"
+          // style={{
+          //   width: '210mm', // A4 너비
+          //   height: '297mm', // A4 높이
+          //   maxWidth: '100%', // 화면 크기 초과 시 반응형 처리
+          //   overflow: 'hidden', // 콘텐츠가 넘칠 경우 숨김 처리 (필요에 따라 변경 가능)
+          // }}
+          >
        
           {/* 상단 로고 및 선 추가 */}
           <header className="flex items-center mb-8 relative">
@@ -408,12 +431,12 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           >
             PDF 다운로드
           </button>
-          <button
+          {/* <button
             onClick={handlereportSubmit}
             className="font-bold px-4 py-2 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[11vw] mx-5"
           >
             보고서 저장
-          </button>
+          </button> */}
         </div>
 
       </div>
