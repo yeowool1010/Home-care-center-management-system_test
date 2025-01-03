@@ -6,6 +6,21 @@ type ProfileHeaderProps = {
   member: any; 
 };
 
+interface Report {
+  id?: number;
+  member_id: string;
+  record_date: string;
+  comment: string;
+  check_th:number;
+  status: string;
+}
+
+interface ReportFormProps {
+  report: Report | null;
+  onClose: () => void;
+  member_id: string;
+}
+
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
   const [reports, setReports] = useState<Report[]>([]);
   const fetchReports = async () => {
@@ -19,14 +34,38 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
       fetchReports();
     }, []);
 
-    console.log(reports.length);
-
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-    
 
+  const getCurrentDate = (): string => new Date().toISOString().split('T')[0];
+  
+  const saveReport = reports.reduce<Report | null>(
+    (max, obj) => (max === null || obj.check_th > max.check_th ? obj : max),
+    null // 초기값 설정
+  );
+  
+
+  const handleSubmit = async () => {
+
+    const formData = {
+      member_id: saveReport?.member_id,
+      record_date: getCurrentDate() || "",
+      comment: saveReport?.comment || "",
+      status: saveReport?.status || "",
+    }
+
+    const method = 'POST';
+    await fetch('/api/report', {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+  };  
   return (
 <div className='flex flex-col'>
       <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between mb-6">
@@ -59,6 +98,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ member }) => {
                 member_id: `${member.member_id}`
               }
             }}
+            onClick={handleSubmit}
           >
           <button 
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 max-w-[20vw]"

@@ -41,12 +41,9 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
  
   useEffect(()=>{
     if(selectedReport){
-      // console.log(transformData(selectedReport.first_record, reportArr))
       setRecordDataArr(transformData(selectedReport.first_record, reportArr))
     }
   },[selectedReport])
-
-  console.log(recordDataArr);
   
 
   const getUnit =(string: String) => {
@@ -70,16 +67,14 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 
   const [memberDetails, setMemberDetails] = useState<Member | null>(memberDetail);
   const searchParams = useSearchParams(); // 현재 경로의 쿼리 파라미터를 가져옵니다.
-  const id = searchParams?.get('id') || '';  
-
+  const id = searchParams?.get('member_id') || '';  
+  
   useEffect(() => {
     let searchParamsId = ""
     if (id) {
       searchParamsId = id
       // Fetch 요청 URL
-    } else {
-      searchParamsId = "GON_001"
-    }
+    } 
     fetch(`/api/member?member_id=${searchParamsId}`)
       .then((response) => response.json())
       .then((data) => setMemberDetails(data[0]))
@@ -254,7 +249,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           <section className="m-2">
              <div className="flex items-center text-lg my-4">
                <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 상태는&nbsp;</p>
-               <p className="text-red-600 mb-2 font-bold underline">양호</p>
+               <p className="text-red-600 mb-2 font-bold underline">{reportArr[0]?.status}</p>
                <p className="font-bold mb-2 text-black">&nbsp;입니다.</p>
              </div>
           </section>
@@ -263,7 +258,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             <h2 className="text-white font-bold text-lg mb-2">Comments</h2>
             <textarea
               className="w-full h-40 p-2 border rounded-md text-black"
-              placeholder="코멘트를 입력하세요."
+              value={reportArr[0]?.comment}
             ></textarea>
           </div>
 
@@ -309,46 +304,69 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           {/* 아이콘 및 설명 섹션 */}
           <section className="grid grid-cols-3 gap-4 text-center m-8">
             <div>
-              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-                <i className="fas fa-hand-pointer text-2xl"></i>
+              <div className="mx-auto mb-4 flex justify-center items-center">
+                <img 
+                  src="/img/아령.png" // 퍼블릭 위치에 있는 이미지 경로
+                  className="bg-amber-300 rounded-full h-16 w-16" 
+                />
               </div>
               <h3 className="font-bold text-teal-500">상체근력</h3>
-              <p className="text-sm text-gray-600">n분동안 윗몸일으키기</p>
+              <p className="text-sm text-gray-600">30초동안 아령 들기</p>
             </div>
             <div>
-              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-                <i className="fas fa-heart text-2xl"></i>
+              <div className="mx-auto mb-4 flex justify-center items-center">
+                <img 
+                  src="/img/등뒤로손잡기.png" 
+                  className="bg-amber-300 rounded-full h-16 w-16" 
+                />
               </div>
               <h3 className="font-bold text-teal-500">상체유연성</h3>
-              <p className="text-sm text-gray-600">설명 필요</p>
+              <p className="text-sm text-gray-600">등 뒤로 손 맞닿기</p>
             </div>
             <div>
-              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-                <i className="fas fa-chart-bar text-2xl"></i>
+              <div className="mx-auto mb-4 flex justify-center items-center">
+                <img 
+                  src="/img/앉았다 일어나기.png" 
+                  className="bg-amber-300 rounded-full h-16 w-16" 
+                />
               </div>
               <h3 className="font-bold text-teal-500">하체근력</h3>
-              <p className="text-sm text-gray-600">설명 필요</p>
+              <p className="text-sm text-gray-600">30초동안 앉았다 일어서기</p>
             </div>
             <div>
-              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-                <i className="fas fa-chart-bar text-2xl"></i>
+              <div className="mx-auto mb-4 flex justify-center items-center">
+                <img 
+                  src="/img/앉아서손뻗기.png" 
+                  className="bg-amber-300 rounded-full h-16 w-16" 
+                />
               </div>
               <h3 className="font-bold text-teal-500">하체유연성</h3>
-              <p className="text-sm text-gray-600">설명 필요</p>
+              <p className="text-sm text-gray-600">발 뻗고 발에 손 닿기</p>
             </div>
             <div>
-              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-                <i className="fas fa-chart-bar text-2xl"></i>
+              <div className="mx-auto mb-4 flex justify-center items-center">
+                <img 
+                  src="/img/제자리걷기.png" 
+                  className="bg-amber-300 rounded-full h-16 w-16" 
+                />
               </div>
-              <h3 className="font-bold text-teal-500">TUG</h3>
-              <p className="text-sm text-gray-600">일어서기▶3m걷기▶회전▶3m걷기▶앉기</p>
-            </div>
-            <div>
-              <div className="bg-amber-300 text-white rounded-full h-16 w-16 mx-auto mb-4 flex justify-center items-center">
-                <i className="fas fa-chart-bar text-2xl"></i>
-              </div>
-              <h3 className="font-bold text-teal-500">2분제자리걷기</h3>
+              <h3 className="font-bold text-teal-500">2분제자리</h3>
               <p className="text-sm text-gray-600">2분동안 제자리 걷기 횟수</p>
+            </div>
+            <div>
+              <div className="mx-auto mb-4 flex justify-center items-center flex-row">
+                <img 
+                  src="/img/앉아있는 사람.png" 
+                  className="bg-amber-300 rounded-full h-16 w-16" 
+                />
+                <img 
+                  src="/img/걷는사람.png" 
+                  className="bg-amber-300 rounded-full h-16 w-16" 
+                />
+              </div>
+             
+              <h3 className="font-bold text-teal-500">TUG</h3>
+              <p className="text-sm text-gray-600">3m 반환점 돌아와 앉기</p>
             </div>
           </section>
         </div>

@@ -9,12 +9,12 @@ export async function POST(req: NextRequest) {
     const {
       member_id,
       record_date,
-      commentProps,
+      comment,
+      status
     } = await req.json();
 
     // record_date가 없으면 현재 날짜로 설정
     const date = record_date || new Date().toISOString().split('T')[0];
-    const comment = commentProps || "없음"
 
     const { data, error } = await supabase
       .from('report')
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
           member_id,
           record_date: date,
           comment,
+          status,
         },
       ])
       .select();

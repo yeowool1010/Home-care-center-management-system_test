@@ -41,17 +41,18 @@ const BarChartComponent = ({ dataItems }: BarChartComponentProps) => {
       {
         label: '최초기록',
         data: dataItems.map((item) => item.score1.level),
-        backgroundColor: '#00bfae',
+        backgroundColor: '#6DB1E6',
+        // barThickness: 20, // 막대 굵기
       },
       {
         label: '직전기록',
         data: dataItems.map((item) => item.score2.level),
-        backgroundColor: '#f39c12',
+        backgroundColor: '#86D2A5',
       },
       {
         label: '최근기록',
         data: dataItems.map((item) => item.score3.level),
-        backgroundColor: '#ff6347',
+        backgroundColor: '#E68A9E',
       },
     ],
   };
@@ -70,7 +71,7 @@ const BarChartComponent = ({ dataItems }: BarChartComponentProps) => {
     scales: {
       y: {
         beginAtZero: true,
-        max: 5,
+        max: 7,
         ticks: {
           stepSize: 1,
         },

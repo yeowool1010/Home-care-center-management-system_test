@@ -28,47 +28,6 @@ ChartJS.register(
 const IndividualLineCharts = ({ reportArr }: { reportArr: ReportDate[]; }) => {
 const { individualData, labels } = processReportData(reportArr);
 
-  // const individualData = [
-  //   {
-  //     label: "상체근력",
-  //     data: [20, 21, 19, 23, 25],
-  //     borderColor: "#00bfae",
-  //     backgroundColor: "rgba(0, 191, 174, 0.5)",
-  //   },
-  //   {
-  //     label: "상체유연성",
-  //     data: [-10, -8, -12, -14, -13],
-  //     borderColor: "#999999",
-  //     backgroundColor: "rgba(153, 153, 153, 0.5)",
-  //   },
-  //   {
-  //     label: "하체근력",
-  //     data: [12, 11, 10, 15, 18],
-  //     borderColor: "#ff6347",
-  //     backgroundColor: "rgba(255, 99, 71, 0.5)",
-  //   },
-  //   {
-  //     label: "하체유연성",
-  //     data: [4, 3, -2, 4, 3],
-  //     borderColor: "#f39c12",
-  //     backgroundColor: "rgba(243, 156, 18, 0.5)",
-  //   },
-  //   {
-  //     label: "TUG",
-  //     data: [15, 13, 12, 11, 14],
-  //     borderColor: "#9b59b6",
-  //     backgroundColor: "rgba(155, 89, 182, 0.5)",
-  //   },
-  //   {
-  //     label: "2분제자리걷기",
-  //     data: [200, 210, 180, 200, 223],
-  //     borderColor: "#3498db",
-  //     backgroundColor: "rgba(52, 152, 219, 0.5)",
-  //   },
-  // ];
-  
-  // const labels = ["2024-05-01", "2024-06-01", "2024-07-01", "2024-08-01", "2024-09-01"];
-
   return (
     <div className="grid grid-cols-2 gap-3 ">
       {individualData.map((dataset, index) => (
@@ -115,7 +74,7 @@ type IndividualDataItem = {
 
 const initialIndividualData: IndividualDataItem[] = [
   { label: "상체근력", data: [], borderColor: "#00bfae", backgroundColor: "rgba(0, 191, 174, 0.5)" },
-  { label: "상체유연성", data: [], borderColor: "#999999", backgroundColor: "rgba(153, 153, 153, 0.5)" },
+  { label: "상체유연성", data: [], borderColor: "#1A237E", backgroundColor: "rgba(26, 35, 126, 0.5)" },
   { label: "하체근력", data: [], borderColor: "#ff6347", backgroundColor: "rgba(255, 99, 71, 0.5)" },
   { label: "하체유연성", data: [], borderColor: "#f39c12", backgroundColor: "rgba(243, 156, 18, 0.5)" },
   { label: "TUG", data: [], borderColor: "#9b59b6", backgroundColor: "rgba(155, 89, 182, 0.5)" },
@@ -140,7 +99,7 @@ const processReportData = (reportArr: ReportDate[]) => {
   // 데이터 초기화 (타입 명시)
   const individualData: IndividualDataItem[] = [
     { label: "상체근력", data: [], borderColor: "#00bfae", backgroundColor: "rgba(0, 191, 174, 0.5)" },
-    { label: "상체유연성", data: [], borderColor: "#999999", backgroundColor: "rgba(153, 153, 153, 0.5)" },
+    { label: "상체유연성", data: [], borderColor: "#1A237E", backgroundColor: "rgba(26, 35, 126, 0.5)" },
     { label: "하체근력", data: [], borderColor: "#ff6347", backgroundColor: "rgba(255, 99, 71, 0.5)" },
     { label: "하체유연성", data: [], borderColor: "#f39c12", backgroundColor: "rgba(243, 156, 18, 0.5)" },
     { label: "TUG", data: [], borderColor: "#9b59b6", backgroundColor: "rgba(155, 89, 182, 0.5)" },
