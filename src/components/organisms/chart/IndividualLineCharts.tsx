@@ -29,7 +29,7 @@ const IndividualLineCharts = ({ reportArr }: { reportArr: ReportDate[]; }) => {
 const { individualData, labels } = processReportData(reportArr);
 
   return (
-    <div className="grid grid-cols-2 gap-3 ">
+    <div className="grid grid-cols-2 gap-3 w-[210mm]">
       {individualData.map((dataset, index) => (
         <div key={index} className="bg-gray-50 shadow-lg p-4 rounded-lg">
           <h2 className="text-lg font-bold text-center mb-4 text-black">{dataset.label}</h2>

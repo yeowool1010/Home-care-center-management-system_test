@@ -177,7 +177,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
       await captureAndAddPage(additionalPageRef);
   
       // Save the PDF
-      pdf.save(`${memberDetails.name}님 보고서.pdf`);
+      pdf.save(`${memberDetails.name}님 보고서_${reportArr[0].record_date}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
@@ -243,7 +243,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           <div className="border-t-2 border-amber-400 my-5"></div>
 
           {/* 그래프 섹션 */}
-          <section className="mb-8 flex flex-row">
+          <section className="mb-8 flex flex-row w-[210mm]">
             {/* 최초기록 */}
             <HexagonalChart dummyData={recordDataArr} />
             {/* 최근기록 */}
