@@ -23,12 +23,12 @@ import {
 } from 'chart.js';
 
 const dummyData: DataItem[] = [
-  { id: 1, name: '상체근력', score1: { value: 20, level: 3 }, score2: { value: 20, level: 3 }, score3: { value: 24, level: 3.2 } },
-  { id: 2, name: '상체유연성', score1: { value: -28, level: 3 }, score2: { value: -30, level: 3.2 }, score3: { value: -10, level: 5 } },
-  { id: 3, name: '하체근력', score1: { value: 11, level: 3 }, score2: { value: 17, level: 4 }, score3: { value: 20, level: 3.5 } },
-  { id: 4, name: '하체유연성', score1: { value: 2.5, level: 3 }, score2: { value: 3.2, level: 2 }, score3: { value: 4, level: 4 } },
-  { id: 5, name: '2분제자리걷기', score1: { value: 218, level: 3 }, score2: { value: 200, level: 3.2 }, score3: { value: 220, level: 3.6 } },
-  { id: 6, name: 'TUG', score1: { value: 16, level: 3 }, score2: { value: 20, level: 3.6 }, score3: { value: 22, level: 3.8 } },
+  { id: 1, name: '상체근력', score1: { value: 0, level: 0 }, score2: { value: 0, level: 0 }, score3: { value: 0, level: 0 } },
+  { id: 2, name: '상체유연성', score1: { value: 0, level: 0 }, score2: { value: 0, level: 0 }, score3: { value: 0, level: 0 } },
+  { id: 3, name: '하체근력', score1: { value: 0, level: 0 }, score2: { value: 0, level: 0 }, score3: { value: 0, level: 0 } },
+  { id: 4, name: '하체유연성', score1: { value: 0, level: 0 }, score2: { value: 0, level: 0 }, score3: { value: 0, level: 0 } },
+  { id: 5, name: '2분제자리걷기', score1: { value: 0, level: 0 }, score2: { value: 0, level: 0 }, score3: { value: 0, level: 0 } },
+  { id: 6, name: 'TUG', score1: { value: 0, level: 0 }, score2: { value: 0, level: 0 }, score3: { value: 0, level: 0 } },
 ];
 
 const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDetail: Member, reportArr: ReportDate[], selectedReport: Report | null } ) => {
@@ -176,9 +176,11 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
       // 2. Additional Page
       pdf.addPage();
       await captureAndAddPage(additionalPageRef);
+
+      const date = selectedReport?.record_date ? `_${selectedReport?.record_date}` : ""
   
       // Save the PDF
-      pdf.save(`${memberDetails.name}님 보고서_${selectedReport?.record_date}.pdf`);
+      pdf.save(`${memberDetails.name}님 보고서${date}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
