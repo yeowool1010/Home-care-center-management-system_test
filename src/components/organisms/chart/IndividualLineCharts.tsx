@@ -25,8 +25,8 @@ ChartJS.register(
   Filler
 );
 
-const IndividualLineCharts = ({ reportArr }: { reportArr: ReportDate[]; }) => {
-const { individualData, labels } = processReportData(reportArr);
+const IndividualLineCharts = ({ reportArr, selectedReport }: { reportArr: ReportDate[], selectedReport: Report | null  }) => {
+const { individualData, labels } = processReportData(reportArr, selectedReport);
 
   return (
     <div className="grid grid-cols-2 gap-3 w-[210mm]">
@@ -81,9 +81,10 @@ const initialIndividualData: IndividualDataItem[] = [
   { label: "2분제자리걷기", data: [], borderColor: "#3498db", backgroundColor: "rgba(52, 152, 219, 0.5)" },
 ];
 
-const processReportData = (reportArr: ReportDate[]) => {
+const processReportData = (reportArr: ReportDate[], selectedReport: Report | null ) => {
     // 초기 labels 배열 생성
-  const recentReport = reportArr[0]?.record_5th;
+  // const recentReport = reportArr[0]?.record_5th;
+  const recentReport = selectedReport?.record_5th;
   
   // labels 배열 생성
   let labels = recentReport?.map((report) => report.measurement_date);

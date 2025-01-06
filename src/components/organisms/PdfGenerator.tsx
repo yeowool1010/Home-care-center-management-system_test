@@ -409,7 +409,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
   
           {/* 그래프 섹션 */}
           <section className="">
-            <IndividualLineCharts reportArr={reportArr}/>
+            <IndividualLineCharts reportArr={reportArr} selectedReport={selectedReport}/>
           </section>
   
          <h2 className="text-lg font-bold text-black mt-2">측정검사 별 구간(Level)기준</h2>

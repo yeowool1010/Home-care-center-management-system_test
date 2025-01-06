@@ -48,8 +48,8 @@ export default function ReportPage() {
       alert('보고서가 없습니다. 체력기록 페이지로 이동합니다.');
       router.push(`/memberInfo-page?id=${member_id}`);
     } else {
-      // setReports([...data].sort((a, b) => b.id - a.id));
-      setReports(data)
+      setReports([...data].sort((a, b) => b.id - a.id));
+      // setReports(data)
       
       const maxIdItem = data.reduce((max:any, item:any) => (item.id > max.id ? item : max), data[0]);
       setSelectedReport(maxIdItem)
@@ -90,7 +90,7 @@ export default function ReportPage() {
         <div className='flex flex-col mt-14'>
               <h1 className="text-2xl font-bold mb-4">{memberDetails.name}님 보고서 목록({memberDetails.member_id})</h1>
 
-              <button
+              {/* <button
                   className="bg-blue-500 text-white px-4 py-2 mb-4"
                   onClick={() => {
                     setSelectedReport(null);
@@ -98,7 +98,7 @@ export default function ReportPage() {
                   }}
                 >
                   신규 보고서 생성
-                </button>
+                </button> */}
           
                 {isFormOpen && (
                   <ReportForm
@@ -112,7 +112,7 @@ export default function ReportPage() {
                 )}
           
           {reports.length !== 0 ?
-            <ul className="w-full border border-gray-200 rounded-lg overflow-hidden">
+            <ul className="w-full border border-gray-200 rounded-lg overflow-hidden sticky top-28">
             {/* 헤더 */}
             <li className="grid grid-cols-4 bg-blue-100 text-sm font-semibold text-center py-2">
               <div className="px-4">작성일</div>
