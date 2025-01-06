@@ -8,9 +8,11 @@ import SkeletonReport from '../organisms/SkeletonReport';
 import { useSearchParams } from 'next/navigation';
 import { Member } from '@/types/member';
 import { Report } from '@/types/report';
-
+import { useRouter } from 'next/navigation';
 
 export default function ReportPage() {
+  const router = useRouter();
+
   const [memberDetails, setMemberDetails] = useState<Member | null>(null);
   const searchParams = useSearchParams(); // 현재 경로의 쿼리 파라미터를 가져옵니다.
   const member_id = searchParams?.get('member_id') || '';  
@@ -32,31 +34,33 @@ export default function ReportPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  
+  const [selectedReportId, setSelectedReportId] = useState(0);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteRecordId, setDeleteRecordId] = useState<number | null>(null);
+
   // 보고서 목록 가져오기
   const fetchReports = async () => {
     const response = await fetch(`/api/report/?member_id=${member_id}`);
     const data = await response.json();
-    
-    setReports(data);
 
-    const maxIdItem = data.reduce((max:any, item:any) => (item.id > max.id ? item : max), data[0]);
-    setSelectedReport(maxIdItem)
-  };
-
-  const getReports = async (id:number) => {
-    const response = await fetch(`/api/report/?id=${id}`);
-    const data = await response.json();
+    if(data.length === 0) {
+      alert('보고서가 없습니다. 체력기록 페이지로 이동합니다.');
+      router.push(`/memberInfo-page?id=${member_id}`);
+    } else {
+      // setReports([...data].sort((a, b) => b.id - a.id));
+      setReports(data)
       
-  }
+      const maxIdItem = data.reduce((max:any, item:any) => (item.id > max.id ? item : max), data[0]);
+      setSelectedReport(maxIdItem)
+      // setSelectedReportId(maxIdItem.id)
+    }
+  };
 
   // 컴포넌트 마운트 시 데이터 불러오기
   useEffect(() => {
     fetchReports();
   }, []);
-  
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deleteRecordId, setDeleteRecordId] = useState<number | null>(null);
 
   const openDeleteModal = (id: number) => {
     setDeleteRecordId(id);
@@ -119,7 +123,6 @@ export default function ReportPage() {
   
             {/* 보고서 목록 */}
             {reports
-            // .sort((a, b) => b.id - a.id)
             .sort((a, b) => new Date(b.record_date).getTime() - new Date(a.record_date).getTime())
             .map((report, index) => (
               <li
@@ -128,9 +131,10 @@ export default function ReportPage() {
                   index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                 } border-b last:border-b-0`}
                 onClick={() => {
-                  // setSelectedReport(report);
+                  setSelectedReport(report);
                   changePickReport(report);
-                  setIsFormOpen(true);
+                  // setIsFormOpen(true);
+                  setSelectedReportId(report.id)
                 }}
               >
                 <div className="px-4">{report.record_date}</div>

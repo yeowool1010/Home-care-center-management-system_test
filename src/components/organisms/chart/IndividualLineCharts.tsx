@@ -90,11 +90,11 @@ const processReportData = (reportArr: ReportDate[]) => {
 
   // 5개 이하일 경우 나머지 자리를 '0'으로 채움
   // while (labels.length < 5) {
-  //   labels.push("기록없음");
+  //   labels.push("0");
   // }
-  while (recentReport?.length < 5) {
-    labels.push("기록없음");
-  }
+  // while (recentReport?.length < 5) {
+  //   labels.push("0");
+  // }
 
   // 데이터 초기화 (타입 명시)
   const individualData: IndividualDataItem[] = [
