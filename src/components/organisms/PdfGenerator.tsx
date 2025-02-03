@@ -90,10 +90,10 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
         <table className="min-w-full bg-white border border-gray-300 text-sm"> {/* 테이블 폰트 크기 줄임 */}
           <thead>
             <tr>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left">항목</th>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left">1차 측정</th>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left">직전회차측정</th>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left">최근회차측정</th>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">항목</th>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">1차 측정</th>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">직전회차측정</th>
+              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">최근회차측정</th>
             </tr>
           </thead>
           <tbody>
