@@ -105,20 +105,32 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
                 <td className="py-1 px-2 border-b font-bold">{item.name}</td>
                 {/* 1차 측정 */}
                 <td className="py-1 px-2 border-b font-bold">
-                  {item.score1.value}
-                  {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
-                  <span className="font-bold text-teal-500">{"Lv_" + item.score1.level}</span>
+                  <div className='flex'>
+                    <div className='w-16'>
+                      {item.score1.value}
+                      {getUnit(item.name)}
+                    </div>
+                    <span className="font-bold text-teal-500">{"Lv_" + item.score1.level}</span>
+                  </div>
                 </td>
                 {/* 직전회차측정 */}
                 <td className="py-1 px-2 border-b font-bold">
-                  {item.score2.value}
-                  {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
-                  <span className="font-bold text-teal-500">{"Lv_" + item.score2.level}</span>
+                 <div className='flex'>
+                   <div className='w-16'>
+                      {item.score2.value}
+                      {getUnit(item.name)} 
+                   </div>
+                    <span className="font-bold text-teal-500">{"Lv_" + item.score2.level}</span>
+                 </div>
                 </td>
                 <td className="py-1 px-2 border-b font-bold">
-                  {item.score3.value} 
-                  {getUnit(item.name)} &nbsp;&nbsp;&nbsp;
-                  <span className="font-bold text-teal-500">{"Lv_" + item.score3.level}</span>
+                 <div className='flex'>
+                    <div className='w-16'>
+                      {item.score3.value} 
+                      {getUnit(item.name)}
+                    </div> 
+                    <span className="font-bold text-teal-500">{"Lv_" + item.score3.level}</span>
+                 </div>
                 </td>
               </tr>
             ))}
