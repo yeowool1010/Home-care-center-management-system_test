@@ -251,7 +251,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           <section className="m-2">
              <div className="flex items-center text-lg my-4">
                {/* <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 상태는&nbsp;</p> */}
-               <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 <span className="text-red-600 mb-2 font-bold underline">{selectedReport?.status}</span>상태는&nbsp;</p>
+               <p className="font-bold mb-2 text-black">체력장 측정 결과 {memberDetails.name} 어르신의 상태는&nbsp;<span className="text-red-600 mb-2 font-bold underline">{selectedReport?.status}</span></p>
                {/* <p className="text-red-600 mb-2 font-bold underline">{reportArr[0]?.status}</p> */}
                {/* <p className="font-bold mb-2 text-black">&nbsp;입니다.</p> */}
              </div>
