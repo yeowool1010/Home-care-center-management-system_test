@@ -90,10 +90,10 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
         <table className="min-w-full bg-white border border-gray-300 text-sm"> {/* 테이블 폰트 크기 줄임 */}
           <thead>
             <tr>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">항목</th>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">1차 측정</th>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">직전회차측정</th>
-              <th className="py-1 px-2 border-b bg-amber-200 text-left w-28">최근회차측정</th>
+              <th className="pb-2 px-2 border-b bg-amber-200 text-left w-28">항목</th>
+              <th className="pb-2  px-2 border-b bg-amber-200 text-left w-28">1차 측정</th>
+              <th className="pb-2  px-2 border-b bg-amber-200 text-left w-28">직전회차측정</th>
+              <th className="pb-2  px-2 border-b bg-amber-200 text-left w-28">최근회차측정</th>
             </tr>
           </thead>
           <tbody>
@@ -102,9 +102,9 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
                 key={item.id}
                 className={index % 2 === 0 ? 'bg-white' : 'bg-amber-50'} // 홀짝 줄 배경색
               >
-                <td className="py-1 px-2 border-b font-bold">{item.name}</td>
+                <td className=" pb-3 px-2 border-b font-bold">{item.name}</td>
                 {/* 1차 측정 */}
-                <td className="py-1 px-2 border-b font-bold">
+                <td className="pb-3 px-2 border-b font-bold">
                   <div className='flex'>
                     <div className='w-16'>
                       {item.score1.value}
@@ -114,7 +114,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
                   </div>
                 </td>
                 {/* 직전회차측정 */}
-                <td className="py-1 px-2 border-b font-bold">
+                <td className="pb-3 px-2 border-b font-bold">
                  <div className='flex'>
                    <div className='w-16'>
                       {item.score2.value}
@@ -123,7 +123,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
                     <span className="font-bold text-teal-500">{"Lv_" + item.score2.level}</span>
                  </div>
                 </td>
-                <td className="py-1 px-2 border-b font-bold">
+                <td className="pb-3 px-2 border-b font-bold">
                  <div className='flex'>
                     <div className='w-16'>
                       {item.score3.value} 
