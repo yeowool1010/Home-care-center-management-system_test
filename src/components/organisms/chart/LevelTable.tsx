@@ -66,7 +66,7 @@ const LevelTable: React.FC = () => {
             <th className="border border-amber-300 px-4 pt-1 text-center font-bold pb-2">
               측정검사 별 구간(Level)기준
             </th>
-            <th className="border border-amber-300 px-4 pt-1 text-center font-bold pb-2">
+            <th className="borde px-4 pt-1 text-center font-bold pb-2">
               상체근력
             </th>
             <th className="border border-amber-300 px-4 pt-1 text-center font-bold pb-2">
@@ -92,7 +92,7 @@ const LevelTable: React.FC = () => {
               key={index}
               className={index % 2 === 0 ? "bg-white" : "bg-amber-100"}
             >
-              <td className="border border-amber-300 px-4 pt-1 text-center pb-3">
+              <td className="border px-4 pt-1 text-center pb-3">
                 {row.level}
               </td>
               <td className="border border-amber-300 px-4 pt-1 text-center pb-3">

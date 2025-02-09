@@ -329,66 +329,63 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
               <div className="mx-auto mb-4 flex justify-center items-center">
                 <img 
                   src="/img/아령.png" // 퍼블릭 위치에 있는 이미지 경로
-                  className="bg-amber-300 rounded-full h-16 w-16" 
+                  // className=" rounded-full h-16 w-16" 
+                  className=" rounded-full h-44 w-36" 
                 />
               </div>
-              <h3 className="font-bold text-teal-500">상체근력</h3>
-              <p className="text-sm text-gray-600">30초동안 아령 들기</p>
+              {/* <h3 className="font-bold text-teal-500">상체근력</h3>
+              <p className="text-sm text-gray-600">30초동안 아령 들기</p> */}
             </div>
             <div>
               <div className="mx-auto mb-4 flex justify-center items-center">
                 <img 
                   src="/img/등뒤로손잡기.png" 
-                  className="bg-amber-300 rounded-full h-16 w-16" 
+                  className="h-44 w-36" 
                 />
               </div>
-              <h3 className="font-bold text-teal-500">상체유연성</h3>
-              <p className="text-sm text-gray-600">등 뒤로 손 맞닿기</p>
+              {/* <h3 className="font-bold text-teal-500">상체유연성</h3>
+              <p className="text-sm text-gray-600">등 뒤로 손 맞닿기</p> */}
             </div>
             <div>
               <div className="mx-auto mb-4 flex justify-center items-center">
                 <img 
                   src="/img/앉았다 일어나기.png" 
-                  className="bg-amber-300 rounded-full h-16 w-16" 
+                  className="h-44 w-36" 
                 />
               </div>
-              <h3 className="font-bold text-teal-500">하체근력</h3>
-              <p className="text-sm text-gray-600">30초동안 앉았다 일어서기</p>
+              {/* <h3 className="font-bold text-teal-500">하체근력</h3>
+              <p className="text-sm text-gray-600">30초동안 앉았다 일어서기</p> */}
             </div>
             <div>
               <div className="mx-auto mb-4 flex justify-center items-center">
                 <img 
                   src="/img/앉아서손뻗기.png" 
-                  className="bg-amber-300 rounded-full h-16 w-16" 
+                  className="h-44 w-36" 
                 />
               </div>
-              <h3 className="font-bold text-teal-500">하체유연성</h3>
-              <p className="text-sm text-gray-600">발 뻗고 발에 손 닿기</p>
+              {/* <h3 className="font-bold text-teal-500">하체유연성</h3>
+              <p className="text-sm text-gray-600">발 뻗고 발에 손 닿기</p> */}
             </div>
             <div>
               <div className="mx-auto mb-4 flex justify-center items-center">
                 <img 
                   src="/img/제자리걷기.png" 
-                  className="bg-amber-300 rounded-full h-16 w-16" 
+                  className="h-44 w-36" 
                 />
               </div>
-              <h3 className="font-bold text-teal-500">2분제자리</h3>
-              <p className="text-sm text-gray-600">2분동안 제자리 걷기 횟수</p>
+              {/* <h3 className="font-bold text-teal-500">2분제자리</h3>
+              <p className="text-sm text-gray-600">2분동안 제자리 걷기 횟수</p> */}
             </div>
             <div>
               <div className="mx-auto mb-4 flex justify-center items-center flex-row">
                 <img 
                   src="/img/앉아있는 사람.png" 
-                  className="bg-amber-300 rounded-full h-16 w-16" 
-                />
-                <img 
-                  src="/img/걷는사람.png" 
-                  className="bg-amber-300 rounded-full h-16 w-16" 
+                  className="h-44 w-36" 
                 />
               </div>
              
-              <h3 className="font-bold text-teal-500">TUG</h3>
-              <p className="text-sm text-gray-600">3m 반환점 돌아와 앉기</p>
+              {/* <h3 className="font-bold text-teal-500">TUG</h3>
+              <p className="text-sm text-gray-600">3m 반환점 돌아와 앉기</p> */}
             </div>
           </section>
         </div>

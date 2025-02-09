@@ -148,7 +148,7 @@ export default function ReportPage() {
   
                 {/* 버튼 그룹 */}
                 <div className="px-4 flex justify-center gap-2">
-                  {/* <button
+                  <button
                     className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                     onClick={() => {
                       setSelectedReport(report);
@@ -156,7 +156,7 @@ export default function ReportPage() {
                     }}
                   >
                     수정
-                  </button> */}
+                  </button>
                   <button
                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     onClick={() => openDeleteModal(report.id)}
