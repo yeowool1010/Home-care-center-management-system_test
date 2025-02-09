@@ -77,6 +77,7 @@ export default function ReportPage() {
   }
 
   if (!memberDetails) return <SkeletonReport />;
+console.log(reports);
 
   return (
 
@@ -123,7 +124,8 @@ export default function ReportPage() {
   
             {/* 보고서 목록 */}
             {reports
-            .sort((a, b) => new Date(b.record_date).getTime() - new Date(a.record_date).getTime())
+            // .sort((a, b) => new Date(b.record_date).getTime() - new Date(a.record_date).getTime())
+            .sort((a, b) => b.id - a.id)
             .map((report, index) => (
               <li
                 key={report.id}
@@ -148,7 +150,7 @@ export default function ReportPage() {
   
                 {/* 버튼 그룹 */}
                 <div className="px-4 flex justify-center gap-2">
-                  <button
+                  {/* <button
                     className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                     onClick={() => {
                       setSelectedReport(report);
@@ -156,7 +158,7 @@ export default function ReportPage() {
                     }}
                   >
                     수정
-                  </button>
+                  </button> */}
                   <button
                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     onClick={() => openDeleteModal(report.id)}

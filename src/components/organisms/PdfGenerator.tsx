@@ -36,13 +36,17 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
   const contentRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
   const additionalPageRef = useRef<HTMLDivElement>(null);
+  const commentsRef = useRef<HTMLDivElement>(null);
 
   const [recordDataArr, setRecordDataArr] = useState(dummyData)
+  const [comment, setComment] = useState(selectedReport?.comment || '');
 
   useEffect(()=>{
     if(selectedReport){
 
       setRecordDataArr(transformData(selectedReport.first_record, reportArr, selectedReport))
+      setComment(selectedReport.comment || '');
+
     }
   },[selectedReport])
   
@@ -151,6 +155,13 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 
   const handleDownloadPdf = async () => {
     try {
+      // 1. 변경된 코멘트를 먼저 저장
+      await fetch('/api/report', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selectedReport?.id, comment })
+      });
+
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
@@ -194,7 +205,15 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
       await captureAndAddPage(additionalPageRef);
 
       const date = selectedReport?.record_date ? `_${selectedReport?.record_date}` : ""
-  
+
+      // Comments 영역 캡처하여 PDF에 추가
+      // if (commentsRef.current) {
+      //   const canvas = await html2canvas(commentsRef.current, { scale: 2, useCORS: true, backgroundColor: null });
+      //   const imgWidth = 180;
+      //   const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      //   pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 100, imgWidth, imgHeight);
+      // }
+
       // Save the PDF
       pdf.save(`${memberDetails.name}님 보고서${date}.pdf`);
     } catch (error) {
@@ -274,12 +293,15 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
              </div>
           </section>
 
-          <div className="bg-yellow-400 p-4 rounded-lg">
+          <div ref={commentsRef}  className="bg-yellow-400 p-4 rounded-lg">
             <h2 className="text-white font-bold text-lg mb-2">Comments</h2>
-            <textarea
-              className="w-full h-40 p-2 border rounded-md text-black"
-              value={selectedReport?.comment}
-            ></textarea>
+              <textarea
+                name="comment"
+                placeholder="Comment"
+                value={comment} 
+                onChange={(e) => setComment(e.target.value)}
+               className="w-full h-40 p-2 border rounded-md text-black"
+              ></textarea>
           </div>
 
           {/* 아이콘 및 설명 섹션 */}
@@ -440,7 +462,8 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             onClick={handleDownloadPdf}
             className="font-bold px-4 py-2 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[11vw] mx-5"
           >
-            PDF 다운로드
+            {/* PDF 다운로드 */}
+            PDF 다운로드 & 저장
           </button>
           {/* <button
             onClick={handlereportSubmit}
@@ -561,17 +584,18 @@ const transformData = (first_record: FirstRecord | null, reportArr: Report[], se
   if (!first_record) return dummyData;
   if (!reportArr || reportArr.length === 0) return dummyData;
 
-  const selectedReport = reportArr.reduce((max:any, item:any) => (item.id > max.id ? item : max), reportArr[0]);
-  
+  const selectedReport = reportArr.reduce((max: any, item: any) => (item.id > max.id ? item : max), reportArr[0]);
+
   // 가장 최근 기록과 직전 기록 설정
-  const recentRecord = selected?.record_5th[0] || {};
-  const previousRecord = selected?.record_5th[1] || {};
+  const recentRecord = (selected?.record_5th?.[0] as Record<string, any>) || {};
+  const previousRecord = (selected?.record_5th?.[1] as Record<string, any>) || {};
 
   // 안전하게 값 파싱하는 함수
-  const parseScore = (field: { level: string; value: string }): Score => {
+  const parseScore = (field?: { level?: string; value?: string }): Score => {
+    if (!field) return { level: 0, value: 0 };
     try {
-      const level = JSON.parse(field.level).level || 0;
-      const value = JSON.parse(field.value).value || 0;
+      const level = field.level ? JSON.parse(field.level).level || 0 : 0;
+      const value = field.value ? JSON.parse(field.value).value || 0 : 0;
       return { level, value };
     } catch {
       return { level: 0, value: 0 };
@@ -583,44 +607,44 @@ const transformData = (first_record: FirstRecord | null, reportArr: Report[], se
       {
         id: 1,
         name: '상체근력',
-        score1: parseScore(first_record.upper_body_strength),
-        score2: parseScore(previousRecord.upper_body_strength),
-        score3: parseScore(recentRecord.upper_body_strength),
+        score1: parseScore(first_record?.upper_body_strength),
+        score2: parseScore(previousRecord?.upper_body_strength),
+        score3: parseScore(recentRecord?.upper_body_strength),
       },
       {
         id: 2,
         name: '상체유연성',
-        score1: parseScore(first_record.upper_body_flexibility),
-        score2: parseScore(previousRecord.upper_body_flexibility),
-        score3: parseScore(recentRecord.upper_body_flexibility),
+        score1: parseScore(first_record?.upper_body_flexibility),
+        score2: parseScore(previousRecord?.upper_body_flexibility),
+        score3: parseScore(recentRecord?.upper_body_flexibility),
       },
       {
         id: 3,
         name: '하체근력',
-        score1: parseScore(first_record.lower_body_strength),
-        score2: parseScore(previousRecord.lower_body_strength),
-        score3: parseScore(recentRecord.lower_body_strength),
+        score1: parseScore(first_record?.lower_body_strength),
+        score2: parseScore(previousRecord?.lower_body_strength),
+        score3: parseScore(recentRecord?.lower_body_strength),
       },
       {
         id: 4,
         name: '하체유연성',
-        score1: parseScore(first_record.lower_body_flexibility),
-        score2: parseScore(previousRecord.lower_body_flexibility),
-        score3: parseScore(recentRecord.lower_body_flexibility),
+        score1: parseScore(first_record?.lower_body_flexibility),
+        score2: parseScore(previousRecord?.lower_body_flexibility),
+        score3: parseScore(recentRecord?.lower_body_flexibility),
       },
       {
         id: 5,
         name: '2분제자리걷기',
-        score1: parseScore(first_record.walking_distance),
-        score2: parseScore(previousRecord.walking_distance),
-        score3: parseScore(recentRecord.walking_distance),
+        score1: parseScore(first_record?.walking_distance),
+        score2: parseScore(previousRecord?.walking_distance),
+        score3: parseScore(recentRecord?.walking_distance),
       },
       {
         id: 6,
         name: 'TUG',
-        score1: parseScore(first_record.tug),
-        score2: parseScore(previousRecord.tug),
-        score3: parseScore(recentRecord.tug),
+        score1: parseScore(first_record?.tug),
+        score2: parseScore(previousRecord?.tug),
+        score3: parseScore(recentRecord?.tug),
       },
     ];
   } catch (error) {
