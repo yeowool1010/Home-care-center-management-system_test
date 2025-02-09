@@ -31,17 +31,18 @@ const dummyData: DataItem[] = [
   { id: 6, name: 'TUG', score1: { value: 0, level: 0 }, score2: { value: 0, level: 0 }, score3: { value: 0, level: 0 } },
 ];
 
-const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDetail: Member, reportArr: ReportDate[], selectedReport: Report | null } ) => {
+const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDetail: Member, reportArr: ReportDate[], selectedReport: Report | null } ) => {  
   const today = new Date().toISOString().split('T')[0]; 
   const contentRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
   const additionalPageRef = useRef<HTMLDivElement>(null);
 
   const [recordDataArr, setRecordDataArr] = useState(dummyData)
- 
+
   useEffect(()=>{
     if(selectedReport){
-      setRecordDataArr(transformData(selectedReport.first_record, reportArr))
+
+      setRecordDataArr(transformData(selectedReport.first_record, reportArr, selectedReport))
     }
   },[selectedReport])
   
@@ -65,7 +66,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
     }
   }
 
-  const [memberDetails, setMemberDetails] = useState<Member | null>(memberDetail);
+  const [memberDetails, setMemberDetails] = useState<Member | null>(memberDetail);  
   const searchParams = useSearchParams(); // 현재 경로의 쿼리 파라미터를 가져옵니다.
   const id = searchParams?.get('member_id') || '';  
   
@@ -85,6 +86,9 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
     
   
   const TableComponent = () => {
+
+    
+    
     return (
       <div className="overflow-x-auto text-black">
         <table className="min-w-full bg-white border border-gray-300 text-sm"> {/* 테이블 폰트 크기 줄임 */}
@@ -231,7 +235,8 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             <div className="bg-amber-100 rounded-lg flex flex-col items-center justify-center">
               <div className="mb-3 flex flex-col items-center justify-center">
                 <p className="text-2xl font-bold">보고서 작성일</p>
-                <p className="text-3xl font-bold text-amber-700">{today}</p>
+                {/* <p className="text-3xl font-bold text-amber-700">{today}</p> */}
+                <p className="text-3xl font-bold text-amber-700">{selectedReport?.record_date}</p>
               </div>
             </div>
 
@@ -324,60 +329,61 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
           <TableComponent />
 
           {/* 아이콘 및 설명 섹션 */}
-          <section className="grid grid-cols-3 gap-4 text-center m-8">
+          {/* <section className="grid grid-cols-3 gap-4 text-center m-8"> */}
+          <section className="grid grid-cols-3 text-center">
             <div>
-              <div className="mx-auto mb-4 flex justify-center items-center">
+              <div className="mx-auto flex justify-center items-center">
                 <img 
                   src="/img/아령.png" // 퍼블릭 위치에 있는 이미지 경로
                   // className=" rounded-full h-16 w-16" 
-                  className=" rounded-full h-44 w-36" 
+                  className=" rounded-full h-44 w-36 mt-2" 
                 />
               </div>
               {/* <h3 className="font-bold text-teal-500">상체근력</h3>
               <p className="text-sm text-gray-600">30초동안 아령 들기</p> */}
             </div>
             <div>
-              <div className="mx-auto mb-4 flex justify-center items-center">
+              <div className="mx-auto flex justify-center items-center">
                 <img 
                   src="/img/등뒤로손잡기.png" 
-                  className="h-44 w-36" 
+                  className="h-44 w-32" 
                 />
               </div>
               {/* <h3 className="font-bold text-teal-500">상체유연성</h3>
               <p className="text-sm text-gray-600">등 뒤로 손 맞닿기</p> */}
             </div>
             <div>
-              <div className="mx-auto mb-4 flex justify-center items-center">
+              <div className="mx-auto flex justify-center items-center">
                 <img 
                   src="/img/앉았다 일어나기.png" 
-                  className="h-44 w-36" 
+                  className="h-44 w-40" 
                 />
               </div>
               {/* <h3 className="font-bold text-teal-500">하체근력</h3>
               <p className="text-sm text-gray-600">30초동안 앉았다 일어서기</p> */}
             </div>
             <div>
-              <div className="mx-auto mb-4 flex justify-center items-center">
+              <div className="mx-auto flex justify-center items-center">
                 <img 
                   src="/img/앉아서손뻗기.png" 
-                  className="h-44 w-36" 
+                  className="h-44 w-36 mt-1"  
                 />
               </div>
               {/* <h3 className="font-bold text-teal-500">하체유연성</h3>
               <p className="text-sm text-gray-600">발 뻗고 발에 손 닿기</p> */}
             </div>
             <div>
-              <div className="mx-auto mb-4 flex justify-center items-center">
+              <div className="mx-auto flex justify-center items-center">
                 <img 
                   src="/img/제자리걷기.png" 
-                  className="h-44 w-36" 
+                  className="h-44 w-42 mt-1" 
                 />
               </div>
               {/* <h3 className="font-bold text-teal-500">2분제자리</h3>
               <p className="text-sm text-gray-600">2분동안 제자리 걷기 횟수</p> */}
             </div>
             <div>
-              <div className="mx-auto mb-4 flex justify-center items-center flex-row">
+              <div className="mx-auto flex justify-center items-center flex-row">
                 <img 
                   src="/img/앉아있는 사람.png" 
                   className="h-44 w-36" 
@@ -551,15 +557,15 @@ function getInstitutionName(code: string): string {
 //   score3: Score;
 // }
 
-const transformData = (first_record: FirstRecord | null, reportArr: Report[]): DataItem[] => {
+const transformData = (first_record: FirstRecord | null, reportArr: Report[], selected: Report | null): DataItem[] => {
   if (!first_record) return dummyData;
   if (!reportArr || reportArr.length === 0) return dummyData;
 
   const selectedReport = reportArr.reduce((max:any, item:any) => (item.id > max.id ? item : max), reportArr[0]);
   
   // 가장 최근 기록과 직전 기록 설정
-  const recentRecord = selectedReport?.record_5th[0] || {};
-  const previousRecord = selectedReport?.record_5th[1] || {};
+  const recentRecord = selected?.record_5th[0] || {};
+  const previousRecord = selected?.record_5th[1] || {};
 
   // 안전하게 값 파싱하는 함수
   const parseScore = (field: { level: string; value: string }): Score => {
