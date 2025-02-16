@@ -149,7 +149,30 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
     );
   };
 
+const handlereportSubmit = async () => {
 
+    if (confirm('수정사항을 저장 하시겠습니까?')) {
+      try {
+        const res = await fetch('/api/report', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: selectedReport?.id, comment })
+        });
+
+        if (!res.ok) {
+          const error = await res.json();
+          alert(`Error: ${error.message}`);
+          return;
+        }
+
+        alert('보고서가 저장되었습니다.');
+      
+      } catch (error) {
+        console.error('Failed to delete member:', error);
+        alert('보고서 저장 중 오류가 발생했습니다.');
+      }
+    }
+}
 
 
 
@@ -463,14 +486,14 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
             className="font-bold px-4 py-2 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[11vw] mx-5"
           >
             {/* PDF 다운로드 */}
-            PDF 다운로드 & 저장
+            PDF 다운로드 
           </button>
-          {/* <button
+          <button
             onClick={handlereportSubmit}
             className="font-bold px-4 py-2 bg-teal-500 text-white rounded-md shadow-md hover:bg-teal-600 max-w-[11vw] mx-5"
           >
             보고서 저장
-          </button> */}
+          </button>
         </div>
 
       </div>
