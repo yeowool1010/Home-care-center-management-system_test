@@ -113,8 +113,8 @@ const processReportData = (reportArr: ReportDate[], selectedReport: Report | nul
     individualData[1].data.push(parseJsonValue(report.upper_body_flexibility));
     individualData[2].data.push(parseJsonValue(report.lower_body_strength));
     individualData[3].data.push(parseJsonValue(report.lower_body_flexibility));
-    individualData[4].data.push(parseJsonValue(report.tug));
-    individualData[5].data.push(parseJsonValue(report.walking_distance));
+    individualData[4].data.push(parseJsonValue(report.walking_distance));
+    individualData[5].data.push(parseJsonValue(report.tug));
   });
 
   // 각 data 배열을 길이 5로 맞추기 (부족한 부분은 0으로 채움)
