@@ -60,7 +60,7 @@ const LevelTable: React.FC = () => {
 
   return (
     <div className="overflow-x-auto p-4 text-black">
-      <table className="min-w-full table-auto border-collapse border border-amber-300 text-sm">
+      <table className="min-w-full table-auto border-collapse border border-amber-300 text-xs">
         <thead className="bg-amber-200">
           <tr>
             <th className="border border-amber-300 px-4 pt-1 text-center font-bold pb-2">
