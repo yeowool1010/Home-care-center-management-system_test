@@ -40,6 +40,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
 
   const [recordDataArr, setRecordDataArr] = useState(dummyData)
   const [comment, setComment] = useState(selectedReport?.comment || '');
+  const [isFix, setIsFix] = useState(true);
 
   useEffect(()=>{
     if(selectedReport){
@@ -150,6 +151,7 @@ const PdfGenerator = ( { memberDetail, reportArr, selectedReport }: { memberDeta
   };
 
 const handlereportSubmit = async () => {
+  setIsFix(false)
 
     if (confirm('수정사항을 저장 하시겠습니까?')) {
       try {
@@ -177,6 +179,7 @@ const handlereportSubmit = async () => {
 
 
   const handleDownloadPdf = async () => {
+    setIsFix(false)
     try {
       // 1. 변경된 코멘트를 먼저 저장
       await fetch('/api/report', {
@@ -243,6 +246,30 @@ const handlereportSubmit = async () => {
       console.error("Error generating PDF:", error);
     }
   };
+
+const MAX_LINES = 7; // 최대 허용 줄 수
+const MAX_CHARS_PER_LINE = 53; // 한 줄에 허용되는 최대 문자 수 (적절한 값으로 조정)
+
+const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const value = e.target.value;
+  const lines = value.split("\n");
+
+  // 줄 개수 제한
+  if (lines.length > MAX_LINES) return;
+
+  // 너무 긴 줄 강제 개행 처리
+  const formattedLines = lines.flatMap(line => {
+    if (line.length > MAX_CHARS_PER_LINE) {
+      return line.match(new RegExp(`.{1,${MAX_CHARS_PER_LINE}}`, "g")) || [line];
+    }
+    return line;
+  });
+
+  if (formattedLines.length <= MAX_LINES) {
+    setComment(formattedLines.join("\n"));
+  }
+};
+
 
   return (
     <div className='flex flex-col bg-gray-100'>
@@ -318,13 +345,28 @@ const handlereportSubmit = async () => {
 
           <div ref={commentsRef}  className="bg-yellow-400 p-4 rounded-lg">
             <h2 className="text-white font-bold text-lg mb-2">Comments</h2>
-              <textarea
+            {isFix ? 
+             <textarea
                 name="comment"
                 placeholder="Comment"
-                value={comment} 
-                onChange={(e) => setComment(e.target.value)}
-               className="w-full h-40 p-2 border rounded-md text-black"
-              ></textarea>
+                value={comment}
+                onChange={handleCommentChange}
+                className="w-full h-48 p-2 border rounded-md text-black"
+              >
+              </textarea>
+              :
+              <div
+                onClick={() => setIsFix(true)}
+                className="w-[820px] h-48 p-2 border rounded-md text-black bg-white"
+                style={{
+                  whiteSpace: "pre-wrap", // 줄바꿈 유지
+                  wordBreak: "break-word", // 긴 단어 줄바꿈
+                  overflowWrap: "break-word",
+                  minHeight: "100px",
+                }}
+              >
+                {comment}
+              </div>}
           </div>
 
           {/* 아이콘 및 설명 섹션 */}
