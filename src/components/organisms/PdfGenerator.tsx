@@ -555,58 +555,6 @@ ChartJS.register(
   Legend
 );
 
-const data = {
-  labels: ['상체근력', '상체유연성', '하체근력', '하체유연성', 'TUG', '2분제자리걷기'],
-  datasets: [
-    {
-      label: '최초기록',
-      data: [3, 4.5, 2, 3, 2, 3],
-      backgroundColor: '#00bfae', // 차트 색상
-    },
-    {
-      label: '직전기록',
-      data: [5, 3.5, 2.2, 3, 3.2, 4],
-      backgroundColor: '#f39c12', // 차트 색상
-    },
-    {
-      label: '최근기록',
-      data: [3, 2, 4, 2.1, 4.3, 2.5],
-      backgroundColor: '#ff6347', // 차트 색상
-    },
-  ],
-};
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: true,
-      text: '최초 및 최근 기록 level 기준 그래프',
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      max: 5,
-      ticks: {
-        stepSize: 5,
-      },
-    },
-  },
-};
-
-// const BarChartComponent = () => {
-//   return (
-//     <div className="w-full">
-//       <div className="bg-amber-50 w-full mb-4">
-//         <Bar data={data} options={options} />
-//       </div>
-//     </div>
-//   );
-// };
 
 
 function getInstitutionName(code: string): string {

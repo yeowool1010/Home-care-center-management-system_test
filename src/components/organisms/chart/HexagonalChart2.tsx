@@ -41,7 +41,7 @@ const HexagonalChart2: React.FC<HexagonalChartProps> = ({ dummyData }) => {
 
   // 데이터 타입 정의
   const data = {
-    labels: [`上근력(${data1.value})`, `上유연성(${data2.value})`, `下근력(${data3.value})`, `下유연성(${data4.value})`, `TUG(${data5.value})`, `2분걷기(${data6.value})`],
+    labels: [`上근력(${data1.value})`, `上유연성(${data2.value})`, `下근력(${data3.value})`, `下유연성(${data4.value})`, `2분걷기(${data5.value})`, `TUG(${data6.value})`],
     datasets: [
       {
         label: "최근기록",
@@ -62,7 +62,7 @@ const HexagonalChart2: React.FC<HexagonalChartProps> = ({ dummyData }) => {
           display: true, // 방사형 축의 각도선 표시
         },
         suggestedMin: 0, // 최소값
-        suggestedMax: 5, // 최대값
+        suggestedMax: 6, // 최대값
         ticks: {
           stepSize: 1, // 값 간격
         },
